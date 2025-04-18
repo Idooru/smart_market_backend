@@ -28,6 +28,10 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
     super();
   }
 
+  private getAverageScore(averageScore: number): any {
+    return averageScore % 1 === 0 ? averageScore.toFixed(1) : averageScore.toString();
+  }
+
   private selectProduct(selects?: string[]): SelectQueryBuilder<ProductEntity> {
     const queryBuilder = this.repository.createQueryBuilder();
     if (selects && selects.length) {
@@ -46,7 +50,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
       imageUrls: !product.imageUrls
         ? [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")]
         : product.imageUrls.split(","),
-      averageScore: product.averageScore % 1 === 0 ? product.averageScore.toFixed(1) : product.averageScore.toString(),
+      averageScore: this.getAverageScore(product.averageScore),
       reviewCount: parseInt(product.reviewCount),
     }));
   }
@@ -130,7 +134,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
         imageUrls: product.ProductImage.length
           ? product.ProductImage.map((image) => image.url)
           : [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")],
-        averageScore: product.StarRate.averageScore,
+        averageScore: this.getAverageScore(product.StarRate.averageScore),
       },
       reviews: product.Review.map((review) => ({
         id: review.id,

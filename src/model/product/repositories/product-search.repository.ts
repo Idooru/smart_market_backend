@@ -46,7 +46,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
       imageUrls: !product.imageUrls
         ? [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")]
         : product.imageUrls.split(","),
-      averageScore: parseFloat(product.averageScore),
+      averageScore: product.averageScore % 1 === 0 ? product.averageScore.toFixed(1) : product.averageScore.toString(),
       reviewCount: parseInt(product.reviewCount),
     }));
   }

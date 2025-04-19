@@ -43,10 +43,8 @@ export class ReviewUtils {
   public async checkBeforeCreate(product: ProductEntity, userId: string): Promise<void> {
     if (!product.Review.length) return;
 
-    const alreadyWritten = product.Review.find(async (review) => {
-      const found = await this.entityFinder.findReview(review.id);
-      return found.ClientUser.id == userId;
-    });
+    const reviews = await Promise.all(product.Review.map((review) => this.entityFinder.findReview(review.id)));
+    const alreadyWritten = reviews.find((review) => review.ClientUser.id === userId);
 
     if (alreadyWritten) {
       const message = `해당 사용자(${userId})는 해당 상품(${product.id})에 대한 리뷰를 이미 남겼습니다.`;

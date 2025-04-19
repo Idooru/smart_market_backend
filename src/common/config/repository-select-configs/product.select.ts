@@ -30,6 +30,7 @@ export const productSelect: ProductSelect = {
     "Review.starRateScore",
     "ReviewImage.url",
     "ReviewVideo.url",
+    "Review.createdAt",
     "Reviewer.id",
     "User.id",
     "Auth.nickName",

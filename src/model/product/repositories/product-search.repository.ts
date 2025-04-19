@@ -143,6 +143,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
         starRateScore: review.starRateScore,
         imageUrls: review.ReviewImage.map((image) => image.url),
         videoUrls: review.ReviewVideo.map((video) => video.url),
+        createdAt: review.createdAt,
         nickName: review.ClientUser.User.UserAuth.nickName,
       })),
     };

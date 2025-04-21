@@ -8,6 +8,6 @@ export abstract class PostEntity extends CommonEntity {
   public title: string;
 
   @IsString()
-  @Column({ type: "varchar", length: 200, nullable: false })
+  @Column({ type: "varchar", length: 300, nullable: false })
   public content: string;
 }

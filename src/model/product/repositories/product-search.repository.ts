@@ -140,7 +140,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
         id: review.id,
         title: review.title,
         content: review.content,
-        starRateScore: review.starRateScore,
+        starRateScore: this.getAverageScore(review.starRateScore),
         imageUrls: review.ReviewImage.map((image) => image.url),
         videoUrls: review.ReviewVideo.map((video) => video.url),
         createdAt: review.createdAt,

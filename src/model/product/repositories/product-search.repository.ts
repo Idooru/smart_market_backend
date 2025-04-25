@@ -13,6 +13,7 @@ import {
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { FindAllProductsDto } from "../dto/request/find-all-products.dto";
 import { MediaUtils } from "../../media/logic/media.utils";
+import Hangul from "hangul-js";
 
 @Injectable()
 export class ProductSearchRepository extends SearchRepository<ProductEntity, FindAllProductsDto, ProductBasicRawDto> {
@@ -147,5 +148,21 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
         nickName: review.ClientUser.User.UserAuth.nickName,
       })),
     };
+  }
+
+  public async findProductAutocomplete(search: string): Promise<string[]> {
+    const query = this.selectProduct(["product.name as productName"]).groupBy("product.id");
+    let productNames: string[];
+
+    if (!Hangul.isConsonant(search)) {
+      productNames = (await query.where("product.name like :name", { name: `%${search}%` }).getRawMany()).map(
+        (raw) => raw.productName,
+      ) as string[];
+    } else {
+      productNames = (await query.getRawMany()).map((raw) => raw.productName) as string[];
+      productNames = productNames.filter((productName) => Hangul.search(productName, search) !== -1);
+    }
+
+    return productNames;
   }
 }

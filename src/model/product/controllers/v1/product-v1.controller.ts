@@ -15,6 +15,18 @@ import { FindAllProductsSwagger } from "../../docs/product-v1-controller/find-al
 export class ProductV1Controller {
   constructor(private readonly productSearcher: ProductSearcher) {}
 
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/autocomplete/:name")
+  public async findProductAutocomplete(@Param("name") name: string): Promise<JsonGeneralInterface<string[]>> {
+    const result = await this.productSearcher.findProductAutocomplete(name);
+
+    return {
+      statusCode: 200,
+      message: `${name}와 일치하는 자동완성 목록을 가져옵니다.`,
+      result,
+    };
+  }
+
   @FindAllProductsSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/all")

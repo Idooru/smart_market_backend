@@ -50,6 +50,7 @@
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "express-basic-auth": "^1.2.1",
+    "hangul-js": "^0.2.6",
     "hbs": "^4.2.0",
     "helmet": "^6.0.1",
     "joi": "^17.8.3",

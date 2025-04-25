@@ -28,4 +28,8 @@ export class ProductSearcher implements Searcher<ProductEntity, FindAllProductsD
   public findDetailRaw(id: string): Promise<ProductDetailRawDto> {
     return this.productSearchRepository.findDetailRaw(id);
   }
+
+  public findProductAutocomplete(name: string): Promise<string[]> {
+    return this.productSearchRepository.findProductAutocomplete(name);
+  }
 }

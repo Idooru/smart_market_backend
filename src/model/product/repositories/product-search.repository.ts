@@ -14,6 +14,7 @@ import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { FindAllProductsDto } from "../dto/request/find-all-products.dto";
 import { MediaUtils } from "../../media/logic/media.utils";
 import hangulJs from "hangul-js";
+import { SearchProductsDto } from "../dto/request/search-product.dto";
 
 @Injectable()
 export class ProductSearchRepository extends SearchRepository<ProductEntity, FindAllProductsDto, ProductBasicRawDto> {
@@ -170,5 +171,39 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
     }
 
     return productNames;
+  }
+
+  public async searchProduct(dto: SearchProductsDto): Promise<ProductBasicRawDto[]> {
+    const { autoCompletes, mode } = dto;
+    const keyword = dto.keyword.replace(/\s/g, "");
+    const query = this.selectProduct(this.select.products)
+      .leftJoin("product.ProductImage", "Image")
+      .innerJoin("product.StarRate", "StarRate")
+      .leftJoin("product.Review", "Review")
+      .groupBy("product.id");
+    let products: any[];
+
+    function isOnlyChoseong(str: string): boolean {
+      return [...str].every((char: string) => {
+        const [[first]] = hangulJs.disassemble(char, true);
+        return first !== undefined && hangulJs.isConsonant(first);
+      });
+    }
+
+    if (mode === "manual") {
+      // keyword가 한글 초성으로만 구성되어 있지 않다면 keyword를 데이터베이스에 대조하여 상품을 찾음
+      if (!isOnlyChoseong(keyword)) {
+        products = await query.where("product.name like :name", { name: `%${keyword}%` }).getRawMany();
+      } else {
+        // 그외에는 자동완성 목록에 있는 상품이름을 데이터베이스에 대조하여 상품을 찾음
+        const productNames = autoCompletes.split(", ");
+        products = await Promise.all(
+          productNames.map((productName) => query.where("product.name = :name", { name: productName }).getRawOne()),
+        );
+      }
+    } else if (mode === "category") {
+    }
+
+    return this.getManyProduct(products);
   }
 }

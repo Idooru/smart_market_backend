@@ -6,6 +6,7 @@ import { ProductSearchRepository } from "../repositories/product-search.reposito
 import { FindEntityArgs, Searcher } from "../../../common/interfaces/search/searcher";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { FindAllProductsDto } from "../dto/request/find-all-products.dto";
+import { SearchProductsDto } from "../dto/request/search-product.dto";
 
 @Injectable()
 export class ProductSearcher implements Searcher<ProductEntity, FindAllProductsDto, ProductBasicRawDto> {
@@ -31,5 +32,9 @@ export class ProductSearcher implements Searcher<ProductEntity, FindAllProductsD
 
   public findProductAutocomplete(name: string): Promise<string[]> {
     return this.productSearchRepository.findProductAutocomplete(name);
+  }
+
+  public async searchProduct(dto: SearchProductsDto): Promise<ProductBasicRawDto[]> {
+    return this.productSearchRepository.searchProduct(dto);
   }
 }

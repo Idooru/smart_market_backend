@@ -13,7 +13,7 @@ import {
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { FindAllProductsDto } from "../dto/request/find-all-products.dto";
 import { MediaUtils } from "../../media/logic/media.utils";
-import hangulJs from "hangul-js";
+import hangul from "hangul-js";
 import { SearchProductsDto } from "../dto/request/search-product.dto";
 
 @Injectable()
@@ -155,14 +155,14 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
     const query = this.selectProduct(["product.name as productName"]).groupBy("product.id");
     let productNames: string[];
 
-    if (!hangulJs.isConsonant(search)) {
+    if (!hangul.isConsonant(search)) {
       productNames = (await query.where("product.name like :name", { name: `%${search}%` }).getRawMany()).map(
         (raw) => raw.productName,
       ) as string[];
     } else {
       productNames = (await query.getRawMany()).map((raw) => raw.productName) as string[];
       productNames = productNames.filter((productName) =>
-        hangulJs
+        hangul
           .disassemble(productName, true)
           .map((arr) => arr[0])
           .join("")
@@ -174,8 +174,9 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
   }
 
   public async searchProduct(dto: SearchProductsDto): Promise<ProductBasicRawDto[]> {
-    const { autoCompletes, mode } = dto;
     const keyword = dto.keyword.replace(/\s/g, "");
+    const isOnlyChoseong = [...keyword].every((char) => hangul.isConsonant(char));
+
     const query = this.selectProduct(this.select.products)
       .leftJoin("product.ProductImage", "Image")
       .innerJoin("product.StarRate", "StarRate")
@@ -183,25 +184,39 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
       .groupBy("product.id");
     let products: any[];
 
-    function isOnlyChoseong(str: string): boolean {
-      return [...str].every((char: string) => {
-        const [[first]] = hangulJs.disassemble(char, true);
-        return first !== undefined && hangulJs.isConsonant(first);
-      });
-    }
-
-    if (mode === "manual") {
+    if (dto.mode === "manual") {
       // keyword가 한글 초성으로만 구성되어 있지 않다면 keyword를 데이터베이스에 대조하여 상품을 찾음
-      if (!isOnlyChoseong(keyword)) {
-        products = await query.where("product.name like :name", { name: `%${keyword}%` }).getRawMany();
-      } else {
-        // 그외에는 자동완성 목록에 있는 상품이름을 데이터베이스에 대조하여 상품을 찾음
-        const productNames = autoCompletes.split(", ");
+      if (isOnlyChoseong) {
+        // 전체 상품을 찾음
+        const allProductNames = (await query.getRawMany()).map((raw) => raw.productName) as string[];
+        // 전체 상품에서 상품 이름에 검색한 초성이 포함되어 있는 상품 이름을 찾음
+        const includedProductNames = allProductNames.filter((name) => {
+          const choseongOnly = [...name]
+            .map((char) => {
+              if (hangul.isComplete(char)) {
+                const [[choseong]] = hangul.disassemble(char, true);
+                return choseong;
+              } else {
+                return char; // 공백이나 숫자 같은 비한글 처리
+              }
+            })
+            .filter((char) => hangul.isConsonant(char)) // 초성만 남기기
+            .join("");
+
+          return choseongOnly.includes(keyword);
+        });
+
         products = await Promise.all(
-          productNames.map((productName) => query.where("product.name = :name", { name: productName }).getRawOne()),
+          includedProductNames.map((productName) =>
+            query.where("product.name = :name", { name: productName }).getRawOne(),
+          ),
         );
       }
-    } else if (mode === "category") {
+      // 그외에는 자동완성 목록에 있는 상품이름을 데이터베이스에 대조하여 상품을 찾음
+      else {
+        products = await query.where("product.name like :name", { name: `%${keyword}%` }).getRawMany();
+      }
+    } else if (dto.mode === "category") {
     }
 
     return this.getManyProduct(products);

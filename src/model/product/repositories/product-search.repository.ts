@@ -15,7 +15,6 @@ import { FindAllProductsDto } from "../dto/request/find-all-products.dto";
 import { MediaUtils } from "../../media/logic/media.utils";
 import hangul from "hangul-js";
 import { SearchProductsDto } from "../dto/request/search-product.dto";
-import { ProductAutocompleteDto } from "../dto/response/product-autocomplete.dto";
 
 @Injectable()
 export class ProductSearchRepository extends SearchRepository<ProductEntity, FindAllProductsDto, ProductBasicRawDto> {
@@ -152,21 +151,21 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
     };
   }
 
-  public async findProductAutocomplete(search: string): Promise<ProductAutocompleteDto> {
-    const query = this.selectProduct(["product.name as productName"]).groupBy("product.id");
-    query.take(15);
-
+  public async findProductAutocomplete(search: string): Promise<string[]> {
+    const query = this.selectProduct(["product.name as productName"]).groupBy("product.id").take(15);
     let productNames: string[];
 
     if (!hangul.isConsonant(search)) {
-      productNames = (await query.where("product.name like :name", { name: `%${search}%` }).getRawMany()).map(
-        (raw) => raw.productName,
-      );
-      return { isChoseongKeyword: false, productNames };
+      const queryBuilder = query.where("product.name like :name", { name: `%${search}%` });
+      const raws = await queryBuilder.getRawMany();
+      productNames = raws.map((raw) => raw.productName);
     } else {
-      productNames = (await query.getRawMany()).map((raw) => raw.productName) as string[];
-      return { isChoseongKeyword: true, productNames };
+      const queryBuilder = query.where("product.choseong like :choseong", { choseong: `%${search}%` });
+      const raws = await queryBuilder.getRawMany();
+      productNames = raws.map((raw) => raw.productName);
     }
+
+    return productNames;
   }
 
   public async searchProduct(dto: SearchProductsDto): Promise<ProductBasicRawDto[]> {

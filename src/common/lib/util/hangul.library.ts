@@ -7,4 +7,8 @@ export class HangulLibrary {
       .map((arr) => arr[0]) // 초성만 추출
       .join(""); // 초성 결합
   }
+
+  public isOnlyChoseong(search: string) {
+    return hangul.isConsonant(search);
+  }
 }

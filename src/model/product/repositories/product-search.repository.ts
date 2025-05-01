@@ -13,8 +13,8 @@ import {
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { FindAllProductsDto } from "../dto/request/find-all-products.dto";
 import { MediaUtils } from "../../media/logic/media.utils";
-import hangul from "hangul-js";
 import { SearchProductsDto } from "../dto/request/search-product.dto";
+import { HangulLibrary } from "../../../common/lib/util/hangul.library";
 
 @Injectable()
 export class ProductSearchRepository extends SearchRepository<ProductEntity, FindAllProductsDto, ProductBasicRawDto> {
@@ -26,6 +26,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
     @InjectRepository(ProductEntity)
     private readonly repository: Repository<ProductEntity>,
     private readonly mediaUtils: MediaUtils,
+    private readonly hangulLibrary: HangulLibrary,
   ) {
     super();
   }
@@ -151,17 +152,25 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
     };
   }
 
-  public async findProductAutocomplete(search: string): Promise<string[]> {
+  private queryWhereChoseong(query: SelectQueryBuilder<ProductEntity>, keyword: string) {
+    return query.where("REPLACE(product.choseong, ' ', '') like :choseong", {
+      choseong: `%${keyword}%`,
+    });
+  }
+
+  private queryWhereName(query: SelectQueryBuilder<ProductEntity>, keyword: string) {
+    return query.where("REPLACE(product.name, ' ', '') like :name", { name: `%${keyword}%` });
+  }
+
+  public async findProductAutocomplete(keyword: string): Promise<string[]> {
     const query = this.selectProduct(["product.name as productName"]).groupBy("product.id").take(15);
     let productNames: string[];
 
-    if (!hangul.isConsonant(search)) {
-      const queryBuilder = query.where("product.name like :name", { name: `%${search}%` });
-      const raws = await queryBuilder.getRawMany();
+    if (this.hangulLibrary.isOnlyChoseong(keyword)) {
+      const raws = await this.queryWhereChoseong(query, keyword).getRawMany();
       productNames = raws.map((raw) => raw.productName);
     } else {
-      const queryBuilder = query.where("product.choseong like :choseong", { choseong: `%${search}%` });
-      const raws = await queryBuilder.getRawMany();
+      const raws = await this.queryWhereName(query, keyword).getRawMany();
       productNames = raws.map((raw) => raw.productName);
     }
 
@@ -169,8 +178,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
   }
 
   public async searchProduct(dto: SearchProductsDto): Promise<ProductBasicRawDto[]> {
-    const keyword = dto.keyword.replace(/\s/g, "");
-    const isOnlyChoseong = [...keyword].every((char) => hangul.isConsonant(char));
+    const { keyword, mode } = dto;
 
     const query = this.selectProduct(this.select.products)
       .leftJoin("product.ProductImage", "Image")
@@ -179,37 +187,11 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
       .groupBy("product.id");
     let products: any[];
 
-    if (dto.mode === "manual") {
-      // keyword가 한글 초성으로만 구성되어 있지 않다면 keyword를 데이터베이스에 대조하여 상품을 찾음
-      if (isOnlyChoseong) {
-        // 전체 상품을 찾음
-        const allProductNames = (await query.getRawMany()).map((raw) => raw.productName) as string[];
-        // 전체 상품에서 상품 이름에 검색한 초성이 포함되어 있는 상품 이름을 찾음
-        const includedProductNames = allProductNames.filter((name) => {
-          const choseongOnly = [...name]
-            .map((char) => {
-              if (hangul.isComplete(char)) {
-                const [[choseong]] = hangul.disassemble(char, true);
-                return choseong;
-              } else {
-                return char; // 공백이나 숫자 같은 비한글 처리
-              }
-            })
-            .filter((char) => hangul.isConsonant(char)) // 초성만 남기기
-            .join("");
-
-          return choseongOnly.includes(keyword);
-        });
-
-        products = await Promise.all(
-          includedProductNames.map((productName) =>
-            query.where("product.name = :name", { name: productName }).getRawOne(),
-          ),
-        );
-      }
-      // 그외에는 자동완성 목록에 있는 상품이름을 데이터베이스에 대조하여 상품을 찾음
-      else {
-        products = await query.where("product.name like :name", { name: `%${keyword}%` }).getRawMany();
+    if (mode === "manual") {
+      if (this.hangulLibrary.isOnlyChoseong(keyword)) {
+        products = await this.queryWhereChoseong(query, keyword).getRawMany();
+      } else {
+        products = await this.queryWhereName(query, keyword).getRawMany();
       }
     } else if (dto.mode === "category") {
     }

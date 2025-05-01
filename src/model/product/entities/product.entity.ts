@@ -18,6 +18,11 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "varchar", length: 20, unique: true, nullable: false })
   public name: string;
 
+  @IsString()
+  @IsOptional()
+  @Column({ type: "varchar", length: 20, unique: false, nullable: true })
+  public choseong: string;
+
   @IsPositive()
   @IsNotEmpty()
   @Column({ type: "int", unsigned: true, nullable: false })

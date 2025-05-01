@@ -10,6 +10,7 @@ import { ProductRepositoryPayload } from "../logic/transaction/product-repositor
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "../../../common/decorators/general.decoration";
 import { InsertProductImageDto } from "../dto/request/insert-product-image.dto";
+import { HangulLibrary } from "../../../common/lib/util/hangul.library";
 
 @Injectable()
 export class ProductUpdateRepository {
@@ -17,14 +18,18 @@ export class ProductUpdateRepository {
     private readonly transaction: Transactional<ProductRepositoryPayload>,
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
+    private readonly hangulLibrary: HangulLibrary,
   ) {}
 
   @Transaction
-  public async createProduct({ body, admin }: CreateProductDto): Promise<ProductEntity> {
-    return await this.transaction.getRepository().product.save({
+  public createProduct({ body, admin }: CreateProductDto): Promise<ProductEntity> {
+    const newProduct = {
       ...body,
       AdminUser: admin,
-    });
+      choseong: this.hangulLibrary.getChoseong(body.name),
+    };
+
+    return this.transaction.getRepository().product.save(newProduct);
   }
 
   @Transaction
@@ -49,12 +54,22 @@ export class ProductUpdateRepository {
 
   @Transaction
   public async modifyProduct({ productId, body }: ModifyProductDto): Promise<void> {
-    await this.transaction.getRepository().product.update(productId, body);
+    const newProduct = {
+      ...body,
+      choseong: this.hangulLibrary.getChoseong(body.name),
+    };
+
+    await this.transaction.getRepository().product.update(productId, newProduct);
   }
 
   @General
   public async modifyProductName(productId: string, name: string): Promise<void> {
-    await this.productRepository.update(productId, { name });
+    const newProductName = {
+      name,
+      choseong: this.hangulLibrary.getChoseong(name),
+    };
+
+    await this.productRepository.update(productId, newProductName);
   }
 
   @General

@@ -7,6 +7,7 @@ import { FindEntityArgs, Searcher } from "../../../common/interfaces/search/sear
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { FindAllProductsDto } from "../dto/request/find-all-products.dto";
 import { SearchProductsDto } from "../dto/request/search-product.dto";
+import hangul from "hangul-js";
 
 @Injectable()
 export class ProductSearcher implements Searcher<ProductEntity, FindAllProductsDto, ProductBasicRawDto> {
@@ -30,8 +31,39 @@ export class ProductSearcher implements Searcher<ProductEntity, FindAllProductsD
     return this.productSearchRepository.findDetailRaw(id);
   }
 
-  public findProductAutocomplete(name: string): Promise<string[]> {
-    return this.productSearchRepository.findProductAutocomplete(name);
+  public async findProductAutocomplete(search: string): Promise<string[]> {
+    const autocompleteDto = await this.productSearchRepository.findProductAutocomplete(search);
+
+    if (autocompleteDto.isChoseongKeyword) {
+      autocompleteDto.productNames = autocompleteDto.productNames.filter((productName) =>
+        hangul
+          .disassemble(productName, true)
+          .map((arr) => arr[0])
+          .join("")
+          .includes(search),
+      );
+      const result = autocompleteDto.productNames.sort((a, b) => {
+        const [[aFirstChoseong]] = hangul.disassemble([...a][0], true);
+        const [[bFirstChoseong]] = hangul.disassemble([...b][0], true);
+        const aStartsWith = aFirstChoseong.startsWith(search) ? 0 : 1;
+        const bStartsWith = bFirstChoseong.startsWith(search) ? 0 : 1;
+
+        if (aStartsWith !== bStartsWith) {
+          return aStartsWith - bStartsWith;
+        }
+
+        // 2차 정렬: 가나다 순 (localeCompare)
+        return a.localeCompare(b, "ko");
+      });
+
+      return result;
+    } else {
+      return autocompleteDto.productNames.sort((a, b) => {
+        const aStartsWith = a.startsWith(search) ? 0 : 1;
+        const bStartsWith = b.startsWith(search) ? 0 : 1;
+        return aStartsWith - bStartsWith;
+      });
+    }
   }
 
   public async searchProduct(dto: SearchProductsDto): Promise<ProductBasicRawDto[]> {

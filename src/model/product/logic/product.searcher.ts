@@ -30,8 +30,9 @@ export class ProductSearcher implements Searcher<ProductEntity, FindAllProductsD
     return this.productSearchRepository.findDetailRaw(id);
   }
 
-  public findProductAutocomplete(name: string): Promise<string[]> {
-    return this.productSearchRepository.findProductAutocomplete(name);
+  public async findProductAutocomplete(search: string): Promise<string[]> {
+    const productNames = await this.productSearchRepository.findProductAutocomplete(search);
+    return productNames.sort((a, b) => a.localeCompare(b, "ko"));
   }
 
   public async searchProduct(dto: SearchProductsDto): Promise<ProductBasicRawDto[]> {

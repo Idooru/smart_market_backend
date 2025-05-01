@@ -152,22 +152,17 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
   }
 
   public async findProductAutocomplete(search: string): Promise<string[]> {
-    const query = this.selectProduct(["product.name as productName"]).groupBy("product.id");
+    const query = this.selectProduct(["product.name as productName"]).groupBy("product.id").take(15);
     let productNames: string[];
 
     if (!hangul.isConsonant(search)) {
-      productNames = (await query.where("product.name like :name", { name: `%${search}%` }).getRawMany()).map(
-        (raw) => raw.productName,
-      ) as string[];
+      const queryBuilder = query.where("product.name like :name", { name: `%${search}%` });
+      const raws = await queryBuilder.getRawMany();
+      productNames = raws.map((raw) => raw.productName);
     } else {
-      productNames = (await query.getRawMany()).map((raw) => raw.productName) as string[];
-      productNames = productNames.filter((productName) =>
-        hangul
-          .disassemble(productName, true)
-          .map((arr) => arr[0])
-          .join("")
-          .includes(search),
-      );
+      const queryBuilder = query.where("product.choseong like :choseong", { choseong: `%${search}%` });
+      const raws = await queryBuilder.getRawMany();
+      productNames = raws.map((raw) => raw.productName);
     }
 
     return productNames;

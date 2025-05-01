@@ -15,6 +15,7 @@ import { ValidateTokenLibrary } from "./security/validate-token.library";
 import { AuthModule } from "../../model/auth/auth.module";
 import { JwtErrorHandlerLibrary } from "./jwt/jwt-error-handler.library";
 import { TransactionHandler } from "./handler/transaction.handler";
+import { HangulLibrary } from "./util/hangul.library";
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { TransactionHandler } from "./handler/transaction.handler";
     CatchCallbackFactoryLibrary,
     ValidateTokenLibrary,
     JwtErrorHandlerLibrary,
+    HangulLibrary,
   ],
   exports: [
     SecurityLibrary,
@@ -47,6 +49,7 @@ import { TransactionHandler } from "./handler/transaction.handler";
     CatchCallbackFactoryLibrary,
     ValidateTokenLibrary,
     JwtErrorHandlerLibrary,
+    HangulLibrary,
   ],
 })
 export class LibraryModule {}

@@ -163,6 +163,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
   }
 
   public async findProductAutocomplete(keyword: string): Promise<string[]> {
+    keyword = keyword.replace(/\s+/g, "");
     const query = this.selectProduct(["product.name as productName"]).groupBy("product.id").take(15);
     let productNames: string[];
 
@@ -178,7 +179,8 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
   }
 
   public async searchProduct(dto: SearchProductsDto): Promise<ProductBasicRawDto[]> {
-    const { keyword, mode } = dto;
+    const keyword = dto.keyword.replace(/\s+/g, "");
+    const { mode } = dto;
 
     const query = this.selectProduct(this.select.products)
       .leftJoin("product.ProductImage", "Image")

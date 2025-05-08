@@ -196,6 +196,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
         products = await this.queryWhereName(query, keyword).getRawMany();
       }
     } else if (dto.mode === "category") {
+      products = await query.where("product.category = :category", { category: keyword }).getRawMany();
     }
 
     return this.getManyProduct(products);

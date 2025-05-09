@@ -12,14 +12,14 @@ class Product {
   description: string;
   stock: number;
   imageUrls: string[];
-  averageScore: number;
+  averageScore: string;
 }
 
 class Review {
   id: string;
   title: string;
   content: string;
-  starRateScore: number;
+  starRateScore: string;
   imageUrls: string[];
   videoUrls: string[];
   nickName: string;

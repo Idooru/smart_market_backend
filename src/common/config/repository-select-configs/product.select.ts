@@ -5,14 +5,14 @@ export interface ProductSelect {
 
 export const productSelect: ProductSelect = {
   products: [
-    "product.id AS productId",
-    "product.name AS productName",
-    "product.price AS productPrice",
-    "product.category as productCategory",
-    "product.createdAt as productCreatedAt",
-    "GROUP_CONCAT(DISTINCT Image.url SEPARATOR ',') AS imageUrls", // 여러 이미지 처리
-    "StarRate.averageScore AS averageScore",
-    "COUNT(DISTINCT Review.id) AS reviewCount",
+    "product.id",
+    "product.name",
+    "product.price",
+    "product.category",
+    "product.createdAt",
+    "Image.url",
+    "StarRate.averageScore",
+    "Review.id",
   ],
   product: [
     "product.id",

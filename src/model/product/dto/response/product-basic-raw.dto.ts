@@ -5,6 +5,6 @@ export class ProductBasicRawDto {
   category: string;
   createdAt: string;
   imageUrls: string[];
-  averageScore: number;
+  averageScore: string;
   reviewCount: number;
 }

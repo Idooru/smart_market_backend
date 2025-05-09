@@ -31,7 +31,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
     super();
   }
 
-  private getAverageScore(averageScore: number): any {
+  private getAverageScore(averageScore: number): string {
     return averageScore % 1 === 0 ? averageScore.toFixed(1) : averageScore.toString();
   }
 
@@ -43,19 +43,29 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
     return queryBuilder.select("product").from(ProductEntity, "product");
   }
 
-  private getManyProduct(products: any[]): ProductBasicRawDto[] {
+  private getManyProduct(products: ProductEntity[]): ProductBasicRawDto[] {
     return products.map((product) => ({
-      id: product.productId,
-      name: product.productName,
-      price: parseInt(product.productPrice),
-      category: product.productCategory,
-      createdAt: product.productCreatedAt,
-      imageUrls: !product.imageUrls
-        ? [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")]
-        : product.imageUrls.split(","),
-      averageScore: this.getAverageScore(product.averageScore),
-      reviewCount: parseInt(product.reviewCount),
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      category: product.category,
+      createdAt: product.createdAt.toISOString(),
+      imageUrls: product.ProductImage.length
+        ? product.ProductImage.map((image) => image.url)
+        : [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")],
+      averageScore: this.getAverageScore(product.StarRate.averageScore),
+      reviewCount: product.Review.length,
     }));
+  }
+
+  private queryWhereChoseong(query: SelectQueryBuilder<ProductEntity>, keyword: string): void {
+    query.where("REPLACE(product.choseong, ' ', '') like :choseong", {
+      choseong: `%${keyword}%`,
+    });
+  }
+
+  private queryWhereName(query: SelectQueryBuilder<ProductEntity>, keyword: string): void {
+    query.where("REPLACE(product.name, ' ', '') like :name", { name: `%${keyword}%` });
   }
 
   @Implemented
@@ -99,11 +109,11 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
 
     const productRaws = this.getManyProduct(await query.getRawMany());
 
-    if (align === "ASC" && column === "score") {
-      return productRaws.sort((a, b) => a.averageScore - b.averageScore);
-    } else if (align === "DESC" && column === "score") {
-      return productRaws.sort((a, b) => b.averageScore - a.averageScore);
-    }
+    // if (align === "ASC" && column === "score") {
+    //   return productRaws.sort((a, b) => a.averageScore - b.averageScore);
+    // } else if (align === "DESC" && column === "score") {
+    //   return productRaws.sort((a, b) => b.averageScore - a.averageScore);
+    // }
 
     if (align === "ASC" && column === "review") {
       return productRaws.sort((a, b) => a.reviewCount - b.reviewCount);
@@ -152,30 +162,16 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
     };
   }
 
-  private queryWhereChoseong(query: SelectQueryBuilder<ProductEntity>, keyword: string) {
-    return query.where("REPLACE(product.choseong, ' ', '') like :choseong", {
-      choseong: `%${keyword}%`,
-    });
-  }
-
-  private queryWhereName(query: SelectQueryBuilder<ProductEntity>, keyword: string) {
-    return query.where("REPLACE(product.name, ' ', '') like :name", { name: `%${keyword}%` });
-  }
-
   public async findProductAutocomplete(keyword: string): Promise<string[]> {
     keyword = keyword.replace(/\s+/g, "");
-    const query = this.selectProduct(["product.name as productName"]).groupBy("product.id").take(15);
-    let productNames: string[];
+    const query = this.selectProduct(["product.name"]).take(15);
 
-    if (this.hangulLibrary.isOnlyChoseong(keyword)) {
-      const raws = await this.queryWhereChoseong(query, keyword).getRawMany();
-      productNames = raws.map((raw) => raw.productName);
-    } else {
-      const raws = await this.queryWhereName(query, keyword).getRawMany();
-      productNames = raws.map((raw) => raw.productName);
-    }
+    this.hangulLibrary.isOnlyChoseong(keyword)
+      ? this.queryWhereChoseong(query, keyword)
+      : this.queryWhereName(query, keyword);
 
-    return productNames;
+    const products = await query.getMany();
+    return products.map((product) => product.name);
   }
 
   public async searchProduct(dto: SearchProductsDto): Promise<ProductBasicRawDto[]> {
@@ -185,20 +181,17 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
     const query = this.selectProduct(this.select.products)
       .leftJoin("product.ProductImage", "Image")
       .innerJoin("product.StarRate", "StarRate")
-      .leftJoin("product.Review", "Review")
-      .groupBy("product.id");
-    let products: any[];
+      .leftJoin("product.Review", "Review");
 
     if (mode === "manual") {
-      if (this.hangulLibrary.isOnlyChoseong(keyword)) {
-        products = await this.queryWhereChoseong(query, keyword).getRawMany();
-      } else {
-        products = await this.queryWhereName(query, keyword).getRawMany();
-      }
+      this.hangulLibrary.isOnlyChoseong(keyword)
+        ? this.queryWhereChoseong(query, keyword)
+        : this.queryWhereName(query, keyword);
     } else if (dto.mode === "category") {
-      products = await query.where("product.category = :category", { category: keyword }).getRawMany();
+      query.where("product.category = :category", { category: keyword });
     }
 
+    const products = await query.getMany();
     return this.getManyProduct(products);
   }
 }

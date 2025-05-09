@@ -15,6 +15,7 @@ import { FindAllProductsDto } from "../dto/request/find-all-products.dto";
 import { MediaUtils } from "../../media/logic/media.utils";
 import { SearchProductsDto } from "../dto/request/search-product.dto";
 import { HangulLibrary } from "../../../common/lib/util/hangul.library";
+import { FindConditionalProductDto } from "../dto/request/find-conditional-product.dto";
 
 @Injectable()
 export class ProductSearchRepository extends SearchRepository<ProductEntity, FindAllProductsDto, ProductBasicRawDto> {
@@ -193,5 +194,38 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
 
     const products = await query.getMany();
     return this.getManyProduct(products);
+  }
+
+  public async findConditionalRaws(dto: FindConditionalProductDto): Promise<ProductBasicRawDto[]> {
+    const query = this.selectProduct(this.select.products)
+      .leftJoin("product.ProductImage", "Image")
+      .innerJoin("product.StarRate", "StarRate")
+      .leftJoin("product.Review", "Review")
+      .take(dto.count);
+
+    if (dto.condition === "high-rated-product") {
+      query.orderBy("StarRate.averageScore", "DESC");
+      const products = await query.getMany();
+      return this.getManyProduct(products);
+    } else if (dto.condition === "most-review-product") {
+      const productIds = (
+        await this.repository
+          .createQueryBuilder("product")
+          .leftJoin("product.Review", "Review")
+          .select("product.id", "id")
+          .addSelect("COUNT(Review.id)", "reviewCount")
+          .groupBy("product.id")
+          .orderBy("reviewCount", "DESC")
+          .limit(dto.count)
+          .getRawMany()
+      ).map((p) => p.id);
+      if (!productIds.length) return [];
+
+      const products = await query.where("product.id IN (:...productIds)", { productIds }).getMany();
+      const productMap = new Map(products.map((product) => [product.id, product]));
+      const sortedProducts = productIds.map((id) => productMap.get(id)); // 이 부분에서 순서 보장
+
+      return this.getManyProduct(sortedProducts);
+    }
   }
 }

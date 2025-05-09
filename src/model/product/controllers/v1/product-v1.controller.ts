@@ -10,6 +10,7 @@ import { ProductDetailRawDto } from "../../dto/response/product-detail-raw.dto";
 import { FindAllProductsDto } from "../../dto/request/find-all-products.dto";
 import { FindAllProductsSwagger } from "../../docs/product-v1-controller/find-all-products.swagger";
 import { SearchProductsDto } from "../../dto/request/search-product.dto";
+import { FindConditionalProductDto } from "../../dto/request/find-conditional-product.dto";
 
 @ApiTags("v1 공용 Product API")
 @Controller({ path: "/product", version: "1" })
@@ -39,6 +40,20 @@ export class ProductV1Controller {
     return {
       statusCode: 200,
       message: "query 조건에 해당하는 전체 상품 정보를 가져옵니다.",
+      result,
+    };
+  }
+
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/conditional")
+  public async findConditionalProducts(
+    @Query() query: FindConditionalProductDto,
+  ): Promise<JsonGeneralInterface<ProductBasicRawDto[]>> {
+    const result = await this.productSearcher.findConditionalRaws(query);
+
+    return {
+      statusCode: 200,
+      message: "조건에 해당하는 상품 정보를 가져옵니다.",
       result,
     };
   }

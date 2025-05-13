@@ -36,7 +36,7 @@ export class IsRefreshTokenAvailableGuard implements CanActivate {
   @Implemented
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
-    const accessToken = req.signedCookies["access-token"];
+    const accessToken = req.headers["access-token"] as string;
 
     if (!accessToken) {
       const message = "access-token이 없으므로 access-token을 재발급 받기 위한 작업을 할 수 없습니다.";

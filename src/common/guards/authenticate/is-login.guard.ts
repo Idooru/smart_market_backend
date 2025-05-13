@@ -11,7 +11,7 @@ export class IsLoginGuard implements CanActivate {
   @Implemented
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
-    const accessToken = req.signedCookies["access-token"];
+    const accessToken = req.headers["access-token"] as string;
 
     if (!accessToken) {
       const message = "access-token이 없으므로 인증이 필요한 작업을 수행할 수 없습니다.";

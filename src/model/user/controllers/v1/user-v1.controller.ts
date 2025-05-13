@@ -36,20 +36,7 @@ import { FindEmailValidationPipe } from "../../pipe/exist/find-email-validation.
 import { UserSecurity } from "../../logic/user.security";
 import { UserRegisterEventInterceptor } from "../../interceptor/user-register-event.interceptor";
 import { LogoutGuard } from "../../../../common/guards/authenticate/logout.guard";
-import { RegisterSwagger } from "../../docs/user-v1-controller/register.swagger";
-import { ProfileSwagger } from "../../docs/user-v1-controller/profile.swagger";
-import { LoginSwagger } from "../../docs/user-v1-controller/login.swagger";
-import { FindForgottenEmailSwagger } from "../../docs/user-v1-controller/find-forgotten-email.swagger";
 import { RefreshTokenSwagger } from "../../docs/user-v1-controller/refresh-token.swagger";
-import { LogoutSwagger } from "../../docs/user-v1-controller/logout.swagger";
-import { ModifyUserSwagger } from "../../docs/user-v1-controller/modify-user.swagger";
-import { ModifyUserEmailSwagger } from "../../docs/user-v1-controller/modify-user-email.swagger";
-import { ModifyUserNickNameSwagger } from "../../docs/user-v1-controller/modify-user-nick-name.swagger";
-import { ModifyUserPhoneNumberSwagger } from "../../docs/user-v1-controller/modify-user-phone-number.swagger";
-import { ModifyUserPasswordSwagger } from "../../docs/user-v1-controller/modify-user-password.swagger";
-import { ModifyUserAddressSwagger } from "../../docs/user-v1-controller/modify-user-address.swagger";
-import { SecessionSwagger } from "../../docs/user-v1-controller/secession.swagger";
-import { ResetPasswordSwagger } from "../../docs/user-v1-controller/reset-password.swagger";
 import { RegisterUserDto } from "../../dto/request/register-user.dto";
 import { BasicAuthDto } from "../../dto/request/basic-auth.dto";
 import { ModifyUserBody } from "../../dto/request/modify-user.dto";
@@ -140,7 +127,7 @@ export class UserV1Controller {
 
     return {
       statusCode: 201,
-      message: "로그인을 완료하였습니다. 쿠키를 확인하세요.",
+      message: "로그인을 완료하였습니다. 헤더를 확인하세요.",
       accessToken,
     };
   }
@@ -154,7 +141,7 @@ export class UserV1Controller {
 
     return {
       statusCode: 200,
-      message: "토큰을 재발급 받았습니다. 쿠키를 확인하세요.",
+      message: "토큰을 재발급 받았습니다. 헤더를 확인하세요.",
       accessToken,
     };
   }

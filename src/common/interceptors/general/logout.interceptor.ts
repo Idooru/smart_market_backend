@@ -1,7 +1,6 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
 import { map, Observable } from "rxjs";
 import { Request, Response } from "express";
-import { LogoutInterface } from "../interface/logout.interface";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { Implemented } from "../../decorators/implemented.decoration";
 import { JsonGeneralInterface } from "../interface/json-general-interface";
@@ -22,8 +21,7 @@ export class LogoutInterceptor implements NestInterceptor {
         const { statusCode, message } = data;
 
         this.timeLoggerLibrary.sendResponse(req);
-        res.clearCookie("access-token");
-        // cookieKey.forEach((token: string) => res.clearCookie(token));
+        res.removeHeader("access-token");
 
         res.status(statusCode).setHeader("X-Powered-By", "");
 

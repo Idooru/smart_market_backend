@@ -26,6 +26,8 @@ import { UserEventMapSetter } from "./logic/user-event-map.setter";
 import { mailEventMap } from "../../common/config/event-configs";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
 import { UserTransactionContext } from "./logic/transaction/user-transaction.context";
+import { UserV1ValidateController } from "./controllers/v1/user-v1-validate.controller";
+import { UserValidateService } from "./services/user-validate.service";
 
 const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
 
@@ -38,7 +40,7 @@ const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
     JwtModule,
     LibraryModule,
   ],
-  controllers: [UserV1Controller, UserV1AdminController],
+  controllers: [UserV1Controller, UserV1AdminController, UserV1ValidateController],
   providers: [
     { provide: "user-select", useValue: userSelect },
     { provide: "mail-event-map", useValue: mailEventMap },
@@ -52,6 +54,7 @@ const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
     UserTransactionContext,
     UserEventMapSetter,
     UserService,
+    UserValidateService,
     UserSearchRepository,
     UserUpdateRepository,
     UserValidateRepository,

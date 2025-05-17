@@ -67,28 +67,11 @@ export class UserV1Controller {
     private readonly userValidator: UserValidator,
   ) {}
 
-  private async validateUserBody<T extends UserValidateBody>(dto: T): Promise<void> {
-    const { email, nickName, phoneNumber } = dto;
-
-    const validResult = await Promise.allSettled([
-      this.userValidator.isNoneExistEmail(email),
-      this.userValidator.isNoneExistNickname(nickName),
-      this.userValidator.isNoneExistPhoneNumber(phoneNumber),
-    ]);
-
-    const errors = validResult.filter((item) => item.status === "rejected");
-
-    if (errors.length) {
-      throw new BadRequestException(errors);
-    }
-  }
-
   // @RegisterSwagger()
   @UseInterceptors(JsonGeneralInterceptor, UserRegisterEventInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
   public async register(@Body() registerUserDto: RegisterUserDto): Promise<JsonGeneralInterface<void>> {
-    await this.validateUserBody(registerUserDto);
     await this.transaction.register(registerUserDto);
 
     return {

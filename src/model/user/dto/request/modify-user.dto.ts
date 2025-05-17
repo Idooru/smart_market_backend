@@ -20,7 +20,7 @@ export class ModifyUserProfileDto extends PickType(UserProfileEntity, ["phoneNum
   public address: string;
 }
 
-export class ModifyUserAuthDto extends PickType(UserAuthEntity, ["nickName"] as const) {
+export class ModifyUserAuthDto extends PickType(UserAuthEntity, ["nickName", "email"] as const) {
   @ApiProperty({
     description: "사용자 닉네임",
     example: "Idooru",
@@ -36,14 +36,6 @@ export class ModifyUserAuthDto extends PickType(UserAuthEntity, ["nickName"] as 
     uniqueItems: true,
   })
   public email: string;
-
-  @ApiProperty({
-    description: "사용자 비밀번호",
-    example: "password1234",
-    required: true,
-    uniqueItems: false,
-  })
-  public password: string;
 }
 
 export class ModifyUserBody extends IntersectionType(ModifyUserProfileDto, ModifyUserAuthDto) {}

@@ -87,12 +87,7 @@ export class UserV1Controller {
   @UseInterceptors(JsonGeneralInterceptor, UserRegisterEventInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
-  public async register(
-    @Body() registerUserDto: RegisterUserDto,
-    @GetBasicAuth() basicAuthDto: BasicAuthDto,
-  ): Promise<JsonGeneralInterface<void>> {
-    registerUserDto = { ...registerUserDto, ...basicAuthDto };
-
+  public async register(@Body() registerUserDto: RegisterUserDto): Promise<JsonGeneralInterface<void>> {
     await this.validateUserBody(registerUserDto);
     await this.transaction.register(registerUserDto);
 
@@ -166,19 +161,12 @@ export class UserV1Controller {
   public async modifyUser(
     @Body() modifyUserBody: ModifyUserBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-    @GetBasicAuth() basicAuthDto: BasicAuthDto,
   ): Promise<JsonGeneralInterface<void>> {
-    const body = {
-      ...modifyUserBody,
-      ...basicAuthDto,
-    };
-
     const modifyUserDto = {
       id: userId,
-      body,
+      body: modifyUserBody,
     };
 
-    await this.validateUserBody(body);
     await this.transaction.modifyUser(modifyUserDto);
 
     return {

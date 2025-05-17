@@ -79,11 +79,10 @@ export class UserService {
   @Transaction
   public async modifyUser(dto: ModifyUserDto): Promise<void> {
     const { id, body } = dto;
-    const { password, phoneNumber, email, nickName, address } = body;
-    const hashed = await this.userSecurity.hashPassword(password, true);
+    const { phoneNumber, email, nickName, address } = body;
 
     const modifyUserProfileDto: ModifyUserProfileDto = { phoneNumber, address };
-    const modifyUserAuthDto: ModifyUserAuthDto = { email, nickName, password: hashed };
+    const modifyUserAuthDto: ModifyUserAuthDto = { email, nickName };
 
     await Promise.all([
       this.userUpdateRepository.modifyUserProfile(modifyUserProfileDto, id),

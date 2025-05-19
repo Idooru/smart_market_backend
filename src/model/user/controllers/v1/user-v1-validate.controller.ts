@@ -12,16 +12,26 @@ export class UserV1ValidateController {
   public validateNickName(
     @Query("before-nickname") beforeNickName: string,
     @Query("current-nickname") currentNickName: string,
+    @Query("has-duplicate-validation") hasDuplicateValidation: "true" | "false",
   ): Promise<ResponseValidateDto> {
-    return this.service.validateNickName(beforeNickName, currentNickName);
+    return this.service.validateNickName(
+      beforeNickName,
+      currentNickName,
+      hasDuplicateValidation == "true" ? true : false,
+    );
   }
 
   @Get("/phonenumber")
   public validatePhoneNumber(
     @Query("before-phonenumber") beforePhonenumber: string,
     @Query("current-phonenumber") currentPhonenumber: string,
+    @Query("has-duplicate-validation") hasDuplicateValidation: "true" | "false",
   ): Promise<ResponseValidateDto> {
-    return this.service.validatePhoneNumber(beforePhonenumber, currentPhonenumber);
+    return this.service.validatePhoneNumber(
+      beforePhonenumber,
+      currentPhonenumber,
+      hasDuplicateValidation == "true" ? true : false,
+    );
   }
 
   @Get("/address")
@@ -36,8 +46,9 @@ export class UserV1ValidateController {
   public validateEmail(
     @Query("before-email") beforeEmail: string,
     @Query("current-email") currentEmail: string,
+    @Query("has-duplicate-validation") hasDuplicateValidation: "true" | "false",
   ): Promise<ResponseValidateDto> {
-    return this.service.validateEmail(beforeEmail, currentEmail);
+    return this.service.validateEmail(beforeEmail, currentEmail, hasDuplicateValidation == "true" ? true : false);
   }
 
   @Get("/password")

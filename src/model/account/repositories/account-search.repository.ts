@@ -52,16 +52,15 @@ export class AccountSearchRepository extends SearchRepository<AccountEntity, Fin
     const accounts = await this.selectAccount(this.select.account)
       .orderBy(`account.${column}`, align)
       .where("account.userId = :id", { id: userId })
-      .groupBy("account.id")
-      .getRawMany();
+      .getMany();
 
     return accounts.map((account) => ({
-      id: account.accountId,
-      bank: account.accountBank,
+      id: account.id,
+      bank: account.bank,
       accountNumber: account.accountNumber,
-      balance: parseInt(account.accountBalance),
-      isMainAccount: Boolean(account.isMainAccount),
-      createdAt: account.accountCreatedAt,
+      balance: account.balance,
+      isMainAccount: account.isMainAccount,
+      createdAt: account.createdAt.toISOString(),
     }));
   }
 }

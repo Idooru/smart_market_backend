@@ -16,10 +16,12 @@ import { AccountTransactionExecutor } from "./logic/transaction/account-transact
 import { AccountTransactionSearcher } from "./logic/transaction/account-transaction.searcher";
 import { AccountTransactionContext } from "./logic/transaction/account-transaction.context";
 import { accountSelect } from "src/common/config/repository-select-configs/account.select";
+import { AccountV1ValidateController } from "./controllers/v1/account-v1-validate.controller";
+import { AccountValidateService } from "./services/account-validate.service";
 
 @Module({
   imports: [TypeOrmModule.forFeature([AccountEntity]), UserModule, LibraryModule],
-  controllers: [AccountV1Controller],
+  controllers: [AccountV1Controller, AccountV1ValidateController],
   providers: [
     { provide: "account-select", useValue: accountSelect },
     { provide: Transactional, useClass: AccountTransactionInitializer },
@@ -30,6 +32,7 @@ import { accountSelect } from "src/common/config/repository-select-configs/accou
     AccountTransactionSearcher,
     AccountTransactionContext,
     AccountService,
+    AccountValidateService,
     AccountUpdateRepository,
     AccountSearchRepository,
     AccountValidateRepository,

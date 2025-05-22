@@ -105,7 +105,6 @@ export class AccountV1Controller {
   //   description: "계좌에 일정 금액을 입금합니다.",
   // })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(IsClientGuard)
   @Patch("/:accountId/deposit")
   public async deposit(
     @Param("accountId", AccountIdValidatePipe) accountId: string,

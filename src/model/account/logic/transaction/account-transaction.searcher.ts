@@ -59,11 +59,11 @@ export class AccountTransactionSearcher {
       this.entityFinder.findAccounts(userId),
     ]);
 
-    if (accounts.length >= 4) {
-      const message = "더 이상 계좌를 추가 할 수 없습니다.";
-      loggerFactory("Too Many Accounts").error(message);
-      throw new ForbiddenException(message);
-    }
+    // if (accounts.length > 5) {
+    //   const message = "더 이상 계좌를 추가 할 수 없습니다.";
+    //   loggerFactory("Too Many Accounts").error(message);
+    //   throw new ForbiddenException(message);
+    // }
 
     return { user, body };
   }

@@ -1,5 +1,5 @@
 import { UserUpdateRepository } from "../repositories/user-update.repository";
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { UserEntity } from "../entities/user.entity";
 import { UserSearcher } from "../logic/user.searcher";
 import { UserSecurity } from "../logic/user.security";
@@ -11,6 +11,7 @@ import { RegisterUserDto } from "../dto/request/register-user.dto";
 import { ModifyUserAuthDto, ModifyUserDto, ModifyUserProfileDto } from "../dto/request/modify-user.dto";
 import { UserAuthEntity } from "../entities/user-auth.entity";
 import { BasicAuthDto } from "../dto/request/basic-auth.dto";
+import { loggerFactory } from "src/common/functions/logger.factory";
 
 class EntityFinder {
   constructor(private readonly userSearcher: UserSearcher) {}
@@ -124,6 +125,12 @@ export class UserService {
       this.userSecurity.hashPassword(password, false),
       this.entityFinder.findUser(email),
     ]);
+
+    if (!user) {
+      const message = "존재하지 않은 이메일입니다.";
+      loggerFactory("NoneEmail").error(message);
+      throw new BadRequestException(message);
+    }
 
     await this.userUpdateRepository.modifyUserPassword(hashed, user.id);
   }

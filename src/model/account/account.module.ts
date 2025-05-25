@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AccountEntity } from "./entities/account.entity";
 import { AccountV1Controller } from "./controllers/v1/account-v1.controller";
@@ -18,9 +18,10 @@ import { AccountTransactionContext } from "./logic/transaction/account-transacti
 import { accountSelect } from "src/common/config/repository-select-configs/account.select";
 import { AccountV1ValidateController } from "./controllers/v1/account-v1-validate.controller";
 import { AccountValidateService } from "./services/account-validate.service";
+import { AuthModule } from "../auth/auth.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AccountEntity]), UserModule, LibraryModule],
+  imports: [TypeOrmModule.forFeature([AccountEntity]), forwardRef(() => AuthModule), UserModule, LibraryModule],
   controllers: [AccountV1Controller, AccountV1ValidateController],
   providers: [
     { provide: "account-select", useValue: accountSelect },

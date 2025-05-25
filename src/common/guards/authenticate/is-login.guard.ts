@@ -1,8 +1,8 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Request } from "express";
 import { loggerFactory } from "../../functions/logger.factory";
-import { ValidateTokenLibrary } from "../../lib/security/validate-token.library";
 import { Implemented } from "../../decorators/implemented.decoration";
+import { ValidateTokenLibrary } from "src/model/auth/providers/validate-token.library";
 
 @Injectable()
 export class IsLoginGuard implements CanActivate {

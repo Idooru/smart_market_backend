@@ -23,6 +23,7 @@ import { ProductIdValidatePipe } from "./pipe/exist/product-id-validate.pipe";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
 import { ProductTransactionSearcher } from "./logic/transaction/product-transaction.searcher";
 import { ProductTransactionContext } from "./logic/transaction/product-transaction.context";
+import { AuthModule } from "../auth/auth.module";
 
 const productIdFilter = { provide: "product-id-filter", useValue: "product.id = :id" };
 
@@ -33,6 +34,7 @@ const productIdFilter = { provide: "product-id-filter", useValue: "product.id = 
     forwardRef(() => MediaModule),
     forwardRef(() => ReviewModule),
     forwardRef(() => InquiryModule),
+    forwardRef(() => AuthModule),
     LibraryModule,
   ],
   controllers: [ProductV1Controller, ProductV1AdminController],

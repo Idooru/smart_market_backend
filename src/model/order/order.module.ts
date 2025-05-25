@@ -18,6 +18,7 @@ import { OrderSearcher } from "./logic/order.searcher";
 import { OrderSearchRepository } from "./repositories/order-search.repository";
 import { orderSelect } from "../../common/config/repository-select-configs/order.select";
 import { ProductModule } from "../product/product.module";
+import { AuthModule } from "../auth/auth.module";
 
 const surtaxPrice = { provide: "surtax-price", useValue: 5000 };
 
@@ -25,6 +26,7 @@ const surtaxPrice = { provide: "surtax-price", useValue: 5000 };
   imports: [
     TypeOrmModule.forFeature([OrderEntity, PaymentEntity]),
     forwardRef(() => CartModule),
+    forwardRef(() => AuthModule),
     LibraryModule,
     UserModule,
     AccountModule,

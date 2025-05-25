@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
-import { JwtException } from "../../errors/jwt.exception";
-import { JwtError } from "../../errors/jwt.error";
+import { JwtException } from "../../../common/errors/jwt.exception";
+import { JwtError } from "../../../common/errors/jwt.error";
 
 @Injectable()
 export class JwtErrorHandlerLibrary {

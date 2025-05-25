@@ -1,7 +1,7 @@
 import { ArgumentsHost, CallHandler, Injectable, NestInterceptor } from "@nestjs/common";
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
-import { SecurityLibrary } from "../../lib/security/security.library";
+import { SecurityLibrary } from "../../../model/auth/providers/security.library";
 import { JsonSendCookieParam } from "../interface/json-send-cookie-param.interface";
 import { Request, Response } from "express";
 import { Implemented } from "../../decorators/implemented.decoration";

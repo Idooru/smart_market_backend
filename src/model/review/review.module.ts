@@ -23,6 +23,7 @@ import { ReviewV1AdminController } from "./controllers/v1/review-v1-admin.contro
 import { Transactional } from "../../common/interfaces/initializer/transactional";
 import { ReviewTransactionContext } from "./logic/transaction/review-transaction.context";
 import { ReviewTransactionSearcher } from "./logic/transaction/review-transaction.searcher";
+import { AuthModule } from "../auth/auth.module";
 
 const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id" };
 
@@ -32,6 +33,7 @@ const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id
     forwardRef(() => MediaModule),
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
+    forwardRef(() => AuthModule),
     LibraryModule,
   ],
   controllers: [ReviewV1AdminController, ReviewV1ClientController],

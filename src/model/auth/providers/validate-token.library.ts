@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { SecurityLibrary } from "./security.library";
-import { JwtAccessTokenPayload } from "../../../model/auth/jwt/jwt-access-token-payload.interface";
-import { JwtRefreshTokenPayload } from "../../../model/auth/jwt/jwt-refresh-token-payload.interface";
-import { JwtErrorHandlerLibrary } from "../jwt/jwt-error-handler.library";
-import { UserUpdateRepository } from "../../../model/user/repositories/user-update.repository";
+import { JwtErrorHandlerLibrary } from "src/model/auth/providers/jwt-error-handler.library";
+import { JwtAccessTokenPayload } from "../jwt/jwt-access-token-payload.interface";
+import { JwtRefreshTokenPayload } from "../jwt/jwt-refresh-token-payload.interface";
+import { UserUpdateRepository } from "src/model/user/repositories/user-update.repository";
 
 @Injectable()
 export class ValidateTokenLibrary {

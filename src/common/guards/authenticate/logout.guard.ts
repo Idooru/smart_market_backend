@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Implemented } from "../../decorators/implemented.decoration";
 import { Request } from "express";
 import { loggerFactory } from "../../functions/logger.factory";
-import { ValidateTokenLibrary } from "../../lib/security/validate-token.library";
+import { ValidateTokenLibrary } from "src/model/auth/providers/validate-token.library";
 
 @Injectable()
 export class LogoutGuard implements CanActivate {

@@ -26,6 +26,7 @@ import { InquiryRequestSearcher } from "./logic/inquiry-request.searcher";
 import { InquiryRequestSearchRepository } from "./repositories/inquiry-request-search.repository";
 import { InquiryResponseSearcher } from "./logic/inquiry-response.searcher";
 import { InquiryResponseSearchRepository } from "./repositories/inquiry-response-search.repository";
+import { AuthModule } from "../auth/auth.module";
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { InquiryResponseSearchRepository } from "./repositories/inquiry-response
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
     forwardRef(() => LibraryModule),
+    forwardRef(() => AuthModule),
   ],
   controllers: [InquiryV1ClientController, InquiryV1AdminController],
   providers: [

@@ -1,4 +1,4 @@
-import { Implemented } from "../../decorators/implemented.decoration";
+import { Implemented } from "../../../common/decorators/implemented.decoration";
 
 export interface JwtExceptionMessageGenerator {
   generate(): string;

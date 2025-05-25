@@ -11,7 +11,7 @@ import {
   ExpiredRefreshToken,
   InvalidJwtPayload,
   JwtExceptionMessageGenerator,
-} from "../lib/jwt/jwt-exception-followup";
+} from "../../model/auth/jwt/jwt-exception-followup";
 
 @Catch(JwtException)
 export class JwtExceptionFilter implements ExceptionFilter {

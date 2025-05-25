@@ -14,11 +14,13 @@ import { CartValidator } from "./logic/cart.validator";
 import { CartValidateRepository } from "./repositories/cart-validate.repository";
 import { OrderModule } from "../order/order.module";
 import { MediaModule } from "../media/media.module";
+import { AuthModule } from "../auth/auth.module";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CartEntity]),
     forwardRef(() => OrderModule),
+    forwardRef(() => AuthModule),
     LibraryModule,
     UserModule,
     ProductModule,

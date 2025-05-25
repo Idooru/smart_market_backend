@@ -38,6 +38,7 @@ import { InquiryRequestImageSearcher } from "./logic/inquiry-request-image.searc
 import { InquiryRequestImageSearchRepository } from "./repositories/inquiry-request-image-search.repository";
 import { InquiryRequestVideoSearchRepository } from "./repositories/inquiry-request-video-search.repository";
 import { InquiryRequestVideoSearcher } from "./logic/inquiry-request-video.searcher";
+import { AuthModule } from "../auth/auth.module";
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { InquiryRequestVideoSearcher } from "./logic/inquiry-request-video.searc
     ]),
     forwardRef(() => UserModule),
     forwardRef(() => InquiryModule),
+    forwardRef(() => AuthModule),
     LibraryModule,
   ],
   controllers: [MediaV1ClientController, MediaV1AdminController],

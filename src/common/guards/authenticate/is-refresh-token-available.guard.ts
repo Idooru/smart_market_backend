@@ -1,11 +1,11 @@
 import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Request } from "express";
 import { loggerFactory } from "../../functions/logger.factory";
-import { ValidateTokenLibrary } from "../../lib/security/validate-token.library";
 import { Implemented } from "../../decorators/implemented.decoration";
 import { UserAuthEntity } from "../../../model/user/entities/user-auth.entity";
 import { UserEntity } from "../../../model/user/entities/user.entity";
 import { UserSearcher } from "../../../model/user/logic/user.searcher";
+import { ValidateTokenLibrary } from "src/model/auth/providers/validate-token.library";
 
 class EntityFinder {
   constructor(private readonly userIdFilter: string, private readonly userSearcher: UserSearcher) {}

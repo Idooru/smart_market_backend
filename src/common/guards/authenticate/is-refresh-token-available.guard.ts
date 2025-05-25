@@ -49,7 +49,7 @@ export class IsRefreshTokenAvailableGuard implements CanActivate {
 
     const refreshToken = user.UserAuth.refreshToken;
 
-    await this.validateTokenLibrary.validateRefreshToken(refreshToken);
+    await this.validateTokenLibrary.validateRefreshToken(refreshToken, payload.userId);
 
     req.user = payload;
     return true;

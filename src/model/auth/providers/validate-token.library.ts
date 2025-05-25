@@ -12,6 +12,7 @@ export class ValidateTokenLibrary {
     private readonly jwtService: JwtService,
     private readonly securityLibrary: SecurityLibrary,
     private readonly jwtErrorHandlerLibrary: JwtErrorHandlerLibrary,
+    private readonly userUpdateRepository: UserUpdateRepository,
   ) {}
 
   public async validateAccessToken(accessToken: string): Promise<JwtAccessTokenPayload> {
@@ -20,10 +21,11 @@ export class ValidateTokenLibrary {
       .catch(this.jwtErrorHandlerLibrary.catchVerifyAccessTokenError);
   }
 
-  public async validateRefreshToken(refreshToken: string): Promise<JwtRefreshTokenPayload> {
+  public async validateRefreshToken(refreshToken: string, userId: string): Promise<JwtRefreshTokenPayload> {
     return await this.jwtService
       .verifyAsync(refreshToken, this.securityLibrary.jwtRefreshTokenVerifyOption)
-      .catch((err) => {
+      .catch(async (err) => {
+        if (err.message == "jwt expired") await this.userUpdateRepository.removeRefreshToken(userId);
         this.jwtErrorHandlerLibrary.catchVerifyRefreshTokenError(err);
       });
   }

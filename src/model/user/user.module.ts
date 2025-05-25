@@ -59,6 +59,6 @@ const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
     UserUpdateRepository,
     UserValidateRepository,
   ],
-  exports: [userIdFilter, UserSearcher, UserValidator, UserService],
+  exports: [userIdFilter, UserSearcher, UserValidator, UserService, UserUpdateRepository],
 })
 export class UserModule {}

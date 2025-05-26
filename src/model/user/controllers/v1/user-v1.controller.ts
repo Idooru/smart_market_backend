@@ -110,6 +110,13 @@ export class UserV1Controller {
     };
   }
 
+  @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(IsLoginGuard)
+  @Get("/is-valid-access-token")
+  public async isValidAccessToken(): Promise<JsonGeneralInterface<void>> {
+    return { statusCode: 200, message: "access token이 유효합니다." };
+  }
+
   @RefreshTokenSwagger()
   @UseInterceptors(RefreshTokenInterceptor)
   @UseGuards(IsRefreshTokenAvailableGuard)

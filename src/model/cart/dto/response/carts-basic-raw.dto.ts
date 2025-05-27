@@ -1,13 +1,9 @@
-export class CartsBasicRawDto {
-  cart: Cart;
-  product: Product;
-}
-
-class Cart {
+export class CartBasicRawDto {
   id: string;
   quantity: number;
   totalPrice: number;
   createdAt: string;
+  product: Product;
 }
 
 class Product {

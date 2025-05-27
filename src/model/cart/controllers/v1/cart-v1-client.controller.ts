@@ -34,14 +34,14 @@ export class CartV1ClientController {
     @GetJWT() { userId }: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<CartsResponseDto>> {
     query.userId = userId;
-    const cartRaws = await this.searcher.findAllRaws(query);
-    const totalPrice = cartRaws.map((raw) => raw.cart.totalPrice).reduce((acc, cur) => acc + cur, 0);
+    const carts = await this.searcher.findAllRaws(query);
+    const totalPrice = carts.map((cart) => cart.totalPrice).reduce((acc, cur) => acc + cur, 0);
 
     return {
       statusCode: 200,
       message: `사용자아이디(${userId})에 해당하는 장바구니 정보를 가져옵니다.`,
       result: {
-        cartRaws,
+        carts,
         totalPrice,
       },
     };

@@ -4,10 +4,10 @@ import { FindEntityArgs, Searcher } from "../../../common/interfaces/search/sear
 import { CartEntity } from "../entities/cart.entity";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { FindAllCartsDto } from "../dto/request/find-all-carts.dto";
-import { CartsBasicRawDto } from "../dto/response/carts-basic-raw.dto";
+import { CartBasicRawDto } from "../dto/response/carts-basic-raw.dto";
 
 @Injectable()
-export class CartSearcher implements Searcher<CartEntity, FindAllCartsDto, CartsBasicRawDto> {
+export class CartSearcher implements Searcher<CartEntity, FindAllCartsDto, CartBasicRawDto> {
   constructor(private readonly cartSearchRepository: CartSearchRepository) {}
 
   @Implemented
@@ -20,7 +20,7 @@ export class CartSearcher implements Searcher<CartEntity, FindAllCartsDto, Carts
   }
 
   @Implemented
-  public async findAllRaws(dto: FindAllCartsDto): Promise<CartsBasicRawDto[]> {
+  public async findAllRaws(dto: FindAllCartsDto): Promise<CartBasicRawDto[]> {
     return this.cartSearchRepository.findAllRaws(dto);
   }
 }

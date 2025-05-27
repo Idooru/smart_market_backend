@@ -10,11 +10,11 @@ import {
 } from "../../../common/interfaces/search/search.repository";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { FindAllCartsDto } from "../dto/request/find-all-carts.dto";
-import { CartsBasicRawDto } from "../dto/response/carts-basic-raw.dto";
 import { MediaUtils } from "../../media/logic/media.utils";
+import { CartBasicRawDto } from "../dto/response/carts-basic-raw.dto";
 
 @Injectable()
-export class CartSearchRepository extends SearchRepository<CartEntity, FindAllCartsDto, CartsBasicRawDto> {
+export class CartSearchRepository extends SearchRepository<CartEntity, FindAllCartsDto, CartBasicRawDto> {
   constructor(
     @Inject("cart-select")
     private readonly select: CartSelect,
@@ -49,7 +49,7 @@ export class CartSearchRepository extends SearchRepository<CartEntity, FindAllCa
   }
 
   @Implemented
-  public async findAllRaws(dto: FindAllCartsDto): Promise<CartsBasicRawDto[]> {
+  public async findAllRaws(dto: FindAllCartsDto): Promise<CartBasicRawDto[]> {
     const { align, column, userId } = dto;
     const carts = await this.selectCart(this.select.carts)
       .innerJoin("cart.Product", "Product")
@@ -57,24 +57,21 @@ export class CartSearchRepository extends SearchRepository<CartEntity, FindAllCa
       .leftJoin("Product.ProductImage", "Image")
       .orderBy(`cart.${column}`, align)
       .where("ClientUser.id = :id", { id: userId })
-      .groupBy("cart.id")
-      .getRawMany();
+      .getMany();
 
     return carts.map((cart) => ({
-      cart: {
-        id: cart.cartId,
-        quantity: parseInt(cart.cartQuantity),
-        totalPrice: parseInt(cart.cartTotalPrice),
-        createdAt: cart.cartCreatedAt,
-      },
+      id: cart.id,
+      quantity: cart.quantity,
+      totalPrice: cart.totalPrice,
+      createdAt: cart.createdAt.toISOString(),
       product: {
-        id: cart.productId,
-        name: cart.productName,
-        price: parseInt(cart.productPrice),
-        category: cart.productCategory,
-        imageUrls: !cart.productImageUrls
-          ? [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")]
-          : cart.productImageUrls.split(","),
+        id: cart.Product.id,
+        name: cart.Product.name,
+        price: cart.Product.price,
+        category: cart.Product.category,
+        imageUrls: cart.Product.ProductImage.length
+          ? cart.Product.ProductImage.map((image) => image.url)
+          : [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")],
       },
     }));
   }

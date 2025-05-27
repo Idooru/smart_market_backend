@@ -1,6 +1,6 @@
-import { CartsBasicRawDto } from "./carts-basic-raw.dto";
+import { CartBasicRawDto } from "./carts-basic-raw.dto";
 
 export class CartsResponseDto {
-  public cartRaws: CartsBasicRawDto[];
+  public carts: CartBasicRawDto[];
   public totalPrice: number;
 }

@@ -11,6 +11,7 @@ import {
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { FindAllOrdersDto } from "../dto/request/find-all-orders.dto";
 import { OrderBasicRawDto } from "../dto/response/order-basic-raw.dto";
+import { MediaUtils } from "../../media/logic/media.utils";
 
 @Injectable()
 export class OrderSearchRepository extends SearchRepository<OrderEntity, FindAllOrdersDto, OrderBasicRawDto> {
@@ -21,6 +22,7 @@ export class OrderSearchRepository extends SearchRepository<OrderEntity, FindAll
     private readonly surtaxPrice: number,
     @InjectRepository(OrderEntity)
     private readonly repository: Repository<OrderEntity>,
+    private readonly mediaUtils: MediaUtils,
   ) {
     super();
   }
@@ -86,6 +88,9 @@ export class OrderSearchRepository extends SearchRepository<OrderEntity, FindAll
           name: payment.Product.name,
           price: payment.Product.price,
           category: payment.Product.category,
+          imageUrls: payment.Product.ProductImage.length
+            ? payment.Product.ProductImage.map((image) => image.url)
+            : [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")],
         },
       })),
     }));

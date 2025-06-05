@@ -11,6 +11,7 @@ import {
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { AccountBasicRawDto } from "../dtos/response/account-basic-raw.dto";
 import { FindAllAccountsDto } from "../dtos/request/find-all-accounts.dto";
+import { formatDate } from "src/common/functions/format-date";
 
 @Injectable()
 export class AccountSearchRepository extends SearchRepository<AccountEntity, FindAllAccountsDto, AccountBasicRawDto> {
@@ -60,7 +61,7 @@ export class AccountSearchRepository extends SearchRepository<AccountEntity, Fin
       accountNumber: account.accountNumber,
       balance: account.balance,
       isMainAccount: account.isMainAccount,
-      createdAt: account.createdAt.toISOString(),
+      createdAt: formatDate(account.createdAt),
     }));
   }
 }

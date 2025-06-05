@@ -12,6 +12,7 @@ import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { FindAllCartsDto } from "../dto/request/find-all-carts.dto";
 import { MediaUtils } from "../../media/logic/media.utils";
 import { CartBasicRawDto } from "../dto/response/carts-basic-raw.dto";
+import { formatDate } from "src/common/functions/format-date";
 
 @Injectable()
 export class CartSearchRepository extends SearchRepository<CartEntity, FindAllCartsDto, CartBasicRawDto> {
@@ -63,7 +64,7 @@ export class CartSearchRepository extends SearchRepository<CartEntity, FindAllCa
       id: cart.id,
       quantity: cart.quantity,
       totalPrice: cart.totalPrice,
-      createdAt: cart.createdAt.toISOString(),
+      createdAt: formatDate(cart.createdAt),
       product: {
         id: cart.Product.id,
         name: cart.Product.name,

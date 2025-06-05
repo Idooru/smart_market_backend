@@ -16,6 +16,7 @@ import { MediaUtils } from "../../media/logic/media.utils";
 import { SearchProductsDto } from "../dto/request/search-product.dto";
 import { HangulLibrary } from "../../../common/lib/util/hangul.library";
 import { FindConditionalProductDto } from "../dto/request/find-conditional-product.dto";
+import { formatDate } from "src/common/functions/format-date";
 
 @Injectable()
 export class ProductSearchRepository extends SearchRepository<ProductEntity, FindAllProductsDto, ProductBasicRawDto> {
@@ -50,7 +51,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
       name: product.name,
       price: product.price,
       category: product.category,
-      createdAt: product.createdAt.toISOString(),
+      createdAt: formatDate(product.createdAt),
       imageUrls: product.ProductImage.length
         ? product.ProductImage.map((image) => image.url)
         : [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")],
@@ -157,7 +158,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
         starRateScore: this.getAverageScore(review.starRateScore),
         imageUrls: review.ReviewImage.map((image) => image.url),
         videoUrls: review.ReviewVideo.map((video) => video.url),
-        createdAt: review.createdAt,
+        createdAt: formatDate(review.createdAt),
         nickName: review.ClientUser.User.UserAuth.nickName,
       })),
     };

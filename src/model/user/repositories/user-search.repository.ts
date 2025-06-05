@@ -14,6 +14,7 @@ import {
 } from "../../../common/interfaces/search/search.repository";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { FindAllUsersDto } from "../dto/request/find-all-users.dto";
+import { formatDate } from "src/common/functions/format-date";
 
 @Injectable()
 export class UserSearchRepository extends SearchRepository<UserEntity, FindAllUsersDto, UserBasicRawDto> {
@@ -75,7 +76,7 @@ export class UserSearchRepository extends SearchRepository<UserEntity, FindAllUs
       role: user.role,
       email: user.email,
       nickName: user.nickName,
-      createdAt: user.createdAt,
+      createdAt: formatDate(user.createdAt),
     }));
   }
 
@@ -90,7 +91,7 @@ export class UserSearchRepository extends SearchRepository<UserEntity, FindAllUs
       id: user.id,
       role: user.role,
       realName: user.realName,
-      birth: user.birth,
+      birth: formatDate(user.birth),
       gender: user.gender,
       phoneNumber: user.phoneNumber,
       address: user.address,

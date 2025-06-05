@@ -12,6 +12,7 @@ import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { FindAllOrdersDto } from "../dto/request/find-all-orders.dto";
 import { OrderBasicRawDto } from "../dto/response/order-basic-raw.dto";
 import { MediaUtils } from "../../media/logic/media.utils";
+import { formatDate } from "src/common/functions/format-date";
 
 @Injectable()
 export class OrderSearchRepository extends SearchRepository<OrderEntity, FindAllOrdersDto, OrderBasicRawDto> {
@@ -78,7 +79,7 @@ export class OrderSearchRepository extends SearchRepository<OrderEntity, FindAll
         transactionStatus: order.transactionStatus,
         surtaxPrice: order.deliveryOption == "safe" || order.deliveryOption == "speed" ? this.surtaxPrice : 0,
         totalPrice: order.totalPrice,
-        createdAt: order.createdAt,
+        createdAt: formatDate(order.createdAt),
       },
       payment: order.Payment.map((payment) => ({
         id: payment.id,

@@ -23,5 +23,5 @@ class Review {
   imageUrls: string[];
   videoUrls: string[];
   nickName: string;
-  createdAt: Date;
+  createdAt: string;
 }

@@ -78,6 +78,7 @@ export class OrderSearchRepository extends SearchRepository<OrderEntity, FindAll
         transactionStatus: order.transactionStatus,
         surtaxPrice: order.deliveryOption == "safe" || order.deliveryOption == "speed" ? this.surtaxPrice : 0,
         totalPrice: order.totalPrice,
+        createdAt: order.createdAt,
       },
       payment: order.Payment.map((payment) => ({
         id: payment.id,

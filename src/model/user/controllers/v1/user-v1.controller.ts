@@ -100,8 +100,11 @@ export class UserV1Controller {
   @UseInterceptors(LoginInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/login")
-  public async login(@GetBasicAuth() dto: BasicAuthDto): Promise<LoginInterface> {
-    const accessToken = await this.userSecurity.login(dto);
+  public async login(
+    @GetBasicAuth() dto: BasicAuthDto,
+    @Query("login-client") loginClient: string,
+  ): Promise<LoginInterface> {
+    const accessToken = await this.userSecurity.login(dto, loginClient);
 
     return {
       statusCode: 201,

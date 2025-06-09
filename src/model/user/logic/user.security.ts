@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Inject, Injectable } from "@nestjs/common";
 import { UserSearcher } from "./user.searcher";
 import { loggerFactory } from "src/common/functions/logger.factory";
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
@@ -52,7 +52,7 @@ export class UserSecurity {
       .catch(this.callbackFactory.getCatchHashPasswordFunc(hasTransaction));
   }
 
-  public async login(dto: BasicAuthDto): Promise<string> {
+  public async login(dto: BasicAuthDto, loginClient: string): Promise<string> {
     const { email, password } = dto;
 
     const user = await this.entityFinder.findUser("UserAuth.email = :email", { email }, [UserAuthEntity]);
@@ -67,6 +67,21 @@ export class UserSecurity {
       const message = "아이디 혹은 비밀번호가 일치하지 않습니다.";
       loggerFactory("Authenticate").error(message);
       throw new BadRequestException(message);
+    }
+
+    const invalidConnectAdmin = user.role === "admin" && loginClient === "mobile";
+    const invalidConnectClient = user.role === "client" && loginClient === "web";
+
+    if (invalidConnectAdmin) {
+      const message = "관리자 계정은 모바일 접근이 불가능합니다.";
+      loggerFactory("Authenticate").error(message);
+      throw new ForbiddenException(message);
+    }
+
+    if (invalidConnectClient) {
+      const message = "사용자 계정은 웹 접근이 불가능합니다.";
+      loggerFactory("Authenticate").error(message);
+      throw new ForbiddenException(message);
     }
 
     const jwtAccessTokenPayload: JwtAccessTokenPayload = {

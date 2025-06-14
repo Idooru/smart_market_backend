@@ -7,7 +7,7 @@ import { ReviewImageEntity } from "../entities/review-image.entity";
 import { ReviewImageSearchRepository } from "../repositories/review-image-search.repository";
 
 @Injectable()
-export class ReviewImageSearcher implements Searcher<ReviewImageEntity, MediaHeaderDto, MediaBasicRawDto> {
+export class ReviewImageSearcher implements Searcher<ReviewImageEntity, string[], MediaBasicRawDto> {
   constructor(private readonly inquiryResponseImageSearchRepository: ReviewImageSearchRepository) {}
 
   @Implemented
@@ -20,7 +20,7 @@ export class ReviewImageSearcher implements Searcher<ReviewImageEntity, MediaHea
   }
 
   @Implemented
-  public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
+  public async findAllRaws(dto: string[]): Promise<MediaBasicRawDto[]> {
     return this.inquiryResponseImageSearchRepository.findAllRaws(dto);
   }
 }

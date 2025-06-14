@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { MediaEventMapSetter } from "./media-event-map.setter";
-import { MediaHeaderDto } from "../dto/request/media-header.dto";
+// import { MediaHeaderDto } from "../dto/request/media-header.dto";
 import { UploadMediaDto } from "../dto/request/upload-media.dto";
 import { SetDeleteMediaFilesDto } from "../dto/response/set-delete-media-files.dto";
 import { DeleteMediaFilesDto } from "../dto/request/delete-media-files.dto";
@@ -19,19 +19,19 @@ export class MediaUtils {
     )}:${this.configService.get("APPLICATION_PORT")}/media/${path}/${mediaFileName}`.toLowerCase();
   }
 
-  public createMediaHeaderValues(
-    ids: string[],
-    files: Express.Multer.File[],
-    urls: string[],
-    whatHeader: string,
-  ): MediaHeaderDto[] {
-    return files.map((file, idx) => ({
-      id: ids[idx],
-      whatHeader,
-      url: urls[idx],
-      fileName: file.filename,
-    }));
-  }
+  // public createMediaHeaderValues(
+  //   ids: string[],
+  //   files: Express.Multer.File[],
+  //   urls: string[],
+  //   whatHeader: string,
+  // ): MediaHeaderDto[] {
+  //   return files.map((file, idx) => ({
+  //     id: ids[idx],
+  //     whatHeader,
+  //     url: urls[idx],
+  //     fileName: file.filename,
+  //   }));
+  // }
 
   public createStuffs(files: Express.Multer.File[], path: string): UploadMediaDto[] {
     return files.map((file: Express.Multer.File) => {
@@ -42,11 +42,11 @@ export class MediaUtils {
     });
   }
 
-  public getMediaHeaders(ids: string[], files: Express.Multer.File[], path: string, whatHeader: string) {
-    const urls = files.map((file) => this.setUrl(file.filename, path));
-
-    return this.createMediaHeaderValues(ids, files, urls, whatHeader);
-  }
+  // public getMediaHeaders(ids: string[], files: Express.Multer.File[], path: string, whatHeader: string) {
+  //   const urls = files.map((file) => this.setUrl(file.filename, path));
+  //
+  //   return this.createMediaHeaderValues(ids, files, urls, whatHeader);
+  // }
 
   public deleteMediaFiles<I extends { url: string }, V extends { url: string }>(
     dto: SetDeleteMediaFilesDto<I, V>,

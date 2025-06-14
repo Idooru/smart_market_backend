@@ -121,14 +121,14 @@ export class MediaV1AdminController {
   public async uploadProductImage(
     @UploadedFiles(ProductImagesValidatePipe)
     files: Express.Multer.File[],
-  ): Promise<JsonSetHeadersInterface<MediaHeaderDto>> {
-    const headerValues = await this.mediaService.uploadProductImages(files);
+  ): Promise<JsonSetHeadersInterface<string>> {
+    const productImageIds = await this.mediaService.uploadProductImages(files);
 
     return {
       statusCode: 201,
       message: "상품 사진을 업로드 하였습니다.",
       headerKey: this.productMedia.imageUrlHeader,
-      headerValues,
+      headerValues: productImageIds,
     };
   }
 
@@ -149,14 +149,14 @@ export class MediaV1AdminController {
   public async uploadInquiryResponseImage(
     @UploadedFiles(InquiryResponseImageValidatePipe)
     files: Express.Multer.File[],
-  ): Promise<JsonSetHeadersInterface<MediaHeaderDto>> {
-    const headerValues = await this.mediaService.uploadInquiryResponseImages(files);
+  ): Promise<JsonSetHeadersInterface<string>> {
+    const inquiryResponseImageIds = await this.mediaService.uploadInquiryResponseImages(files);
 
     return {
       statusCode: 201,
       message: "문의 응답 사진을 업로드 하였습니다.",
       headerKey: this.inquiryMedia.response.imageUrlHeader,
-      headerValues,
+      headerValues: inquiryResponseImageIds,
     };
   }
 
@@ -177,14 +177,14 @@ export class MediaV1AdminController {
   public async uploadInquiryResponseVideo(
     @UploadedFiles(InquiryResponseVideoValidatePipe)
     files: Array<Express.Multer.File>,
-  ): Promise<JsonSetHeadersInterface<MediaHeaderDto>> {
-    const headerValues = await this.mediaService.uploadInquiryResponseVideos(files);
+  ): Promise<JsonSetHeadersInterface<string>> {
+    const inquiryResponseVideoIds = await this.mediaService.uploadInquiryResponseVideos(files);
 
     return {
       statusCode: 201,
       message: "문의 응답 동영상을 업로드 하였습니다.",
       headerKey: this.inquiryMedia.response.videoUrlHeader,
-      headerValues,
+      headerValues: inquiryResponseVideoIds,
     };
   }
 

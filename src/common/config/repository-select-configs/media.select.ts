@@ -14,12 +14,7 @@ export const mediaSelect: MediaSelect = {
     "productImage.url as productImageUrl",
     "productImage.size as productImageSize",
   ],
-  reviewImages: [
-    "reviewImage.id as reviewImageId",
-    "reviewImage.url as reviewImageUrl",
-    // "reviewImage.Review",
-    "reviewImage.size as reviewImageSize",
-  ],
+  reviewImages: ["reviewImage.id", "reviewImage.url", "reviewImage.size"],
   reviewVideos: [
     "reviewVideo.id as reviewVideoId",
     "reviewVideo.url as reviewVideoUrl",

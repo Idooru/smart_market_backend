@@ -23,7 +23,7 @@ import { ModifyReviewDto } from "../../dto/request/modify-review.dto";
 import { DeleteReviewDto } from "../../dto/request/delete-review.dto";
 import { FindAllReviewsDto } from "../../dto/request/find-all-reviews.dto";
 import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
-import { reviewMediaHeaderKey } from "../../../../common/config/header-key-configs/media-header-keys/review-media-header.key";
+// import { reviewMediaHeaderKey } from "../../../../common/config/header-key-configs/media-header-keys/review-media-header.key";
 
 @ApiTags("v1 고객 Review API")
 @UseGuards(IsClientGuard)
@@ -74,9 +74,9 @@ export class ReviewV1ClientController {
   @Post("/product/:productId")
   public async createReview(
     @Param("productId", ProductIdValidatePipe) productId: string,
-    @MediaHeadersParser(reviewMediaHeaderKey.imageUrlHeader)
+    // @MediaHeadersParser(reviewMediaHeaderKey.imageUrlHeader)
     reviewImageHeaders: MediaHeaderDto[],
-    @MediaHeadersParser(reviewMediaHeaderKey.videoUrlHeader)
+    // @MediaHeadersParser(reviewMediaHeaderKey.videoUrlHeader)
     reviewVideoHeaders: MediaHeaderDto[],
     @Body() body: ReviewBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
@@ -110,9 +110,9 @@ export class ReviewV1ClientController {
   public async modifyReview(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
-    @MediaHeadersParser(reviewMediaHeaderKey.imageUrlHeader)
+    // @MediaHeadersParser(reviewMediaHeaderKey.imageUrlHeader)
     reviewImageHeaders: MediaHeaderDto[],
-    @MediaHeadersParser(reviewMediaHeaderKey.videoUrlHeader)
+    // @MediaHeadersParser(reviewMediaHeaderKey.videoUrlHeader)
     reviewVideoHeaders: MediaHeaderDto[],
     @Body() body: ReviewBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,

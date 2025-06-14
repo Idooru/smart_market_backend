@@ -24,14 +24,14 @@ import { InquiryRequestImageSearcher } from "../logic/inquiry-request-image.sear
 import { InquiryRequestVideoSearcher } from "../logic/inquiry-request-video.searcher";
 import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
 import {
-  reviewMediaHeaderKey,
-  ReviewMediaHeaderKey,
-} from "../../../common/config/header-key-configs/media-header-keys/review-media-header.key";
-import {
   inquiryMediaHeaderKey,
   InquiryMediaHeaderKey,
 } from "../../../common/config/header-key-configs/media-header-keys/inquiry-media-header.key";
 import { MediaHeadersParser } from "../../../common/decorators/media-headers-parser.decorator";
+import {
+  reviewMediaHeaderKey,
+  ReviewMediaHeaderKey,
+} from "../../../common/config/header-key-configs/media-header-keys/review-media-header.key";
 
 @ApiTags("v1 고객 Media API")
 @UseGuards(IsClientGuard)
@@ -58,9 +58,9 @@ export class MediaV1ClientController {
   @Get("/review/image")
   public async findUploadedReviewImage(
     @MediaHeadersParser(reviewMediaHeaderKey.imageUrlHeader)
-    reviewImageHeaders: MediaHeaderDto[],
+    reviewImageIds: string[],
   ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
-    const result = await this.reviewImageSearcher.findAllRaws(reviewImageHeaders);
+    const result = await this.reviewImageSearcher.findAllRaws(reviewImageIds);
 
     return {
       statusCode: 200,
@@ -144,14 +144,14 @@ export class MediaV1ClientController {
   @Post("/review/image")
   public async uploadReviewImage(
     @UploadedFiles(ReviewImageValidatePipe) files: Express.Multer.File[],
-  ): Promise<JsonSetHeadersInterface<MediaHeaderDto>> {
-    const headerValues = await this.mediaService.uploadReviewImages(files);
+  ): Promise<JsonSetHeadersInterface<string>> {
+    const reviewImageIds = await this.mediaService.uploadReviewImages(files);
 
     return {
       statusCode: 201,
       message: "리뷰 사진을 업로드 하였습니다.",
       headerKey: this.reviewMedia.imageUrlHeader,
-      headerValues,
+      headerValues: reviewImageIds,
     };
   }
 
@@ -167,14 +167,14 @@ export class MediaV1ClientController {
   @Post("/review/video")
   public async uploadReviewVideo(
     @UploadedFiles(ReviewVideoValidatePipe) files: Express.Multer.File[],
-  ): Promise<JsonSetHeadersInterface<MediaHeaderDto>> {
-    const headerValues = await this.mediaService.uploadReviewVideos(files);
+  ): Promise<JsonSetHeadersInterface<string>> {
+    const reviewVideoIds = await this.mediaService.uploadReviewVideos(files);
 
     return {
       statusCode: 201,
       message: "리뷰 동영상을 업로드 하였습니다.",
       headerKey: this.reviewMedia.videoUrlHeader,
-      headerValues,
+      headerValues: reviewVideoIds,
     };
   }
 
@@ -195,14 +195,14 @@ export class MediaV1ClientController {
   public async uploadInquiryRequestImage(
     @UploadedFiles(InquiryRequestImageValidatePipe)
     files: Express.Multer.File[],
-  ): Promise<JsonSetHeadersInterface<MediaHeaderDto>> {
-    const headerValues = await this.mediaService.uploadInquiryRequestImages(files);
+  ): Promise<JsonSetHeadersInterface<string>> {
+    const inquiryRequestImageIds = await this.mediaService.uploadInquiryRequestImages(files);
 
     return {
       statusCode: 201,
       message: "문의 요청 사진을 업로드 하였습니다.",
       headerKey: this.inquiryMedia.request.imageUrlHeader,
-      headerValues,
+      headerValues: inquiryRequestImageIds,
     };
   }
 
@@ -223,14 +223,14 @@ export class MediaV1ClientController {
   public async uploadInquiryRequestVideo(
     @UploadedFiles(InquiryRequestVideoValidatePipe)
     files: Express.Multer.File[],
-  ): Promise<JsonSetHeadersInterface<MediaHeaderDto>> {
-    const headerValues = await this.mediaService.uploadInquiryRequestVideos(files);
+  ): Promise<JsonSetHeadersInterface<string>> {
+    const inquiryRequestVideoIds = await this.mediaService.uploadInquiryRequestVideos(files);
 
     return {
       statusCode: 201,
       message: "문의 요청 동영상을 업로드 하였습니다.",
       headerKey: this.inquiryMedia.request.videoUrlHeader,
-      headerValues,
+      headerValues: inquiryRequestVideoIds,
     };
   }
 

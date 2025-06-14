@@ -13,7 +13,7 @@ import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
 import { ReviewImageEntity } from "../entities/review-image.entity";
 
 @Injectable()
-export class ReviewImageSearchRepository extends SearchRepository<ReviewImageEntity, MediaHeaderDto, MediaBasicRawDto> {
+export class ReviewImageSearchRepository extends SearchRepository<ReviewImageEntity, string[], MediaBasicRawDto> {
   constructor(
     @Inject("media-select")
     private readonly select: MediaSelect,
@@ -47,19 +47,17 @@ export class ReviewImageSearchRepository extends SearchRepository<ReviewImageEnt
   }
 
   @Implemented
-  public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
-    const raws = await Promise.all(
-      dto.map((MediaHeader) =>
-        this.selectReviewImage(this.select.inquiryResponseImages)
-          .where("reviewImage.id = :id", { id: MediaHeader.id })
-          .getRawOne(),
+  public async findAllRaws(dto: string[]): Promise<MediaBasicRawDto[]> {
+    const reviewImages = await Promise.all(
+      dto.map((reviewImageId) =>
+        this.selectReviewImage(this.select.reviewImages).where("reviewImage.id = :id", { id: reviewImageId }).getOne(),
       ),
     );
 
-    return raws.map((raw) => ({
-      id: raw.reviewImageId,
-      url: raw.reviewImageUrl,
-      size: parseInt(raw.reviewImageSize),
+    return reviewImages.map((reviewImage) => ({
+      id: reviewImage.id,
+      size: reviewImage.size,
+      url: reviewImage.url,
     }));
   }
 }

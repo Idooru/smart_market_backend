@@ -4,10 +4,10 @@ import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { ProductImageSearchRepository } from "../repositories/product-image-search.repository";
 import { ProductImageEntity } from "../entities/product-image.entity";
 import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
-import { MediaCookieDto } from "../dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../dto/request/media-header.dto";
 
 @Injectable()
-export class ProductImageSearcher implements Searcher<ProductImageEntity, MediaCookieDto, MediaBasicRawDto> {
+export class ProductImageSearcher implements Searcher<ProductImageEntity, MediaHeaderDto, MediaBasicRawDto> {
   constructor(private readonly productImageSearchRepository: ProductImageSearchRepository) {}
 
   @Implemented
@@ -20,7 +20,7 @@ export class ProductImageSearcher implements Searcher<ProductImageEntity, MediaC
   }
 
   @Implemented
-  public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
+  public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
     return this.productImageSearchRepository.findAllRaws(dto);
   }
 }

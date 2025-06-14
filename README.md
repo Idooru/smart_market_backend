@@ -39,10 +39,10 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┃ ┣ 📂cookie-key-configs
 ┃ ┃ ┃ ┣ 📂cart-cookie-keys
 ┃ ┃ ┃ ┃ ┗ 📜cart-cookie.key.ts
-┃ ┃ ┃ ┗ 📂media-cookie-keys
-┃ ┃ ┃ ┃ ┣ 📜inquiry-media-cookie.key.ts
-┃ ┃ ┃ ┃ ┣ 📜product-media-cookie.key.ts
-┃ ┃ ┃ ┃ ┗ 📜review-media-cookie.key.ts
+┃ ┃ ┃ ┗ 📂media-header-keys
+┃ ┃ ┃ ┃ ┣ 📜inquiry-media-header.key.ts
+┃ ┃ ┃ ┃ ┣ 📜product-media-header.key.ts
+┃ ┃ ┃ ┃ ┗ 📜review-media-header.key.ts
 ┃ ┃ ┣ 📂event-configs
 ┃ ┃ ┃ ┗ 📜index.ts
 ┃ ┃ ┣ 📂repository-select-configs
@@ -57,12 +57,12 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┃ ┗ 📂static-media-configs
 ┃ ┃ ┃ ┗ 📜index.ts
 ┃ ┣ 📂decorators
-┃ ┃ ┣ 📜cookies-filter.ts
+┃ ┃ ┣ 📜headers-filter.ts
 ┃ ┃ ┣ 📜general.decoration.ts
 ┃ ┃ ┣ 📜get-basic-auth.decorator.ts
 ┃ ┃ ┣ 📜get.jwt.decorator.ts
 ┃ ┃ ┣ 📜implemented.decoration.ts
-┃ ┃ ┣ 📜media-cookies-parser.decorator.ts
+┃ ┃ ┣ 📜media-headers-parser.decorator.ts
 ┃ ┃ ┗ 📜transaction.decorator.ts
 ┃ ┣ 📂docs
 ┃ ┃ ┣ 📜align.swagger.ts
@@ -103,20 +103,20 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┣ 📂interceptors
 ┃ ┃ ┣ 📂general
 ┃ ┃ ┃ ┣ 📜json-clear-cookie.interceptor.ts
-┃ ┃ ┃ ┣ 📜json-clear-cookies.interceptor.ts
+┃ ┃ ┃ ┣ 📜json-remove-headers.interceptor.ts
 ┃ ┃ ┃ ┣ 📜json-general.interceptor.ts
 ┃ ┃ ┃ ┣ 📜json-send-cookie.interceptor.ts
-┃ ┃ ┃ ┣ 📜json-send-cookies.interceptor.ts
+┃ ┃ ┃ ┣ 📜json-set-headers.interceptor.ts
 ┃ ┃ ┃ ┣ 📜login.interceptor.ts
 ┃ ┃ ┃ ┣ 📜logout.interceptor.ts
 ┃ ┃ ┃ ┗ 📜refresh-token.interceptor.ts
 ┃ ┃ ┗ 📂interface
 ┃ ┃ ┃ ┣ 📜json-clear-cookie.interface.ts
-┃ ┃ ┃ ┣ 📜json-clear-cookies.interface.ts
+┃ ┃ ┃ ┣ 📜json-remove-headers.interface.ts
 ┃ ┃ ┃ ┣ 📜json-general-interface.ts
 ┃ ┃ ┃ ┣ 📜json-send-cookie-param.interface.ts
-┃ ┃ ┃ ┣ 📜json-send-cookies-param.interface.ts
-┃ ┃ ┃ ┣ 📜json-send-cookies.interface.ts
+┃ ┃ ┃ ┣ 📜json-send-headers-param.interface.ts
+┃ ┃ ┃ ┣ 📜json-set-headers.interface.ts
 ┃ ┃ ┃ ┣ 📜login.interface.ts
 ┃ ┃ ┃ ┣ 📜logout.interface.ts
 ┃ ┃ ┃ ┣ 📜refresh-token.interface.ts
@@ -163,7 +163,7 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┗ 📂types
 ┃ ┃ ┣ 📜align-by.type.ts
 ┃ ┃ ┣ 📜express.d.ts
-┃ ┃ ┗ 📜media-cookies.ts
+┃ ┃ ┗ 📜media-headers.ts
 ┣ 📂deprecated
 ┃ ┣ 📜cookie.library.ts
 ┃ ┣ 📜find-email-logic.ts
@@ -324,7 +324,7 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┃ ┣ 📂dto
 ┃ ┃ ┃ ┣ 📂request
 ┃ ┃ ┃ ┃ ┣ 📜delete-media-files.dto.ts
-┃ ┃ ┃ ┃ ┣ 📜media-cookie.dto.ts
+┃ ┃ ┃ ┃ ┣ 📜media-header.dto.ts
 ┃ ┃ ┃ ┃ ┗ 📜upload-media.dto.ts
 ┃ ┃ ┃ ┗ 📂response
 ┃ ┃ ┃ ┃ ┣ 📜media-basic-raw.dto.ts

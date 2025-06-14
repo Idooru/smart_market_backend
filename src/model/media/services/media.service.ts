@@ -1,161 +1,162 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { MediaUtils } from "../logic/media.utils";
 import { MediaUpdateRepository } from "../repositories/media-update.repository";
-import { ProductMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
-import { InquiryMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
-import { ReviewMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
+
 import { General } from "../../../common/decorators/general.decoration";
-import { MediaCookieDto } from "../dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../dto/request/media-header.dto";
+import { ProductMediaHeaderKey } from "../../../common/config/header-key-configs/media-header-keys/product-media-header.key";
+import { ReviewMediaHeaderKey } from "../../../common/config/header-key-configs/media-header-keys/review-media-header.key";
+import { InquiryMediaHeaderKey } from "../../../common/config/header-key-configs/media-header-keys/inquiry-media-header.key";
 
 @Injectable()
 export class MediaService {
   constructor(
-    @Inject("product-media-cookie-key")
-    private readonly productMedia: ProductMediaCookieKey,
-    @Inject("review-media-cookie-key")
-    private readonly reviewMedia: ReviewMediaCookieKey,
-    @Inject("inquiry-media-cookie-key")
-    private readonly inquiryMedia: InquiryMediaCookieKey,
+    @Inject("product-media-header-key")
+    private readonly productMedia: ProductMediaHeaderKey,
+    @Inject("review-media-header-key")
+    private readonly reviewMedia: ReviewMediaHeaderKey,
+    @Inject("inquiry-media-header-key")
+    private readonly inquiryMedia: InquiryMediaHeaderKey,
     private readonly mediaUtils: MediaUtils,
     private readonly updateRepository: MediaUpdateRepository,
   ) {}
 
   @General
-  public async uploadProductImages(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
+  public async uploadProductImages(files: Express.Multer.File[]): Promise<MediaHeaderDto[]> {
     const path = "product/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
     const uploading = stuffs.map((stuff) => this.updateRepository.uploadProductImages(stuff));
     const productImages = await Promise.all(uploading);
     const ids = productImages.map((productImage) => productImage.id);
 
-    return this.mediaUtils.getMediaCookies(ids, files, path, this.productMedia.imageUrlCookie);
+    return this.mediaUtils.getMediaHeaders(ids, files, path, this.productMedia.imageUrlHeader);
   }
 
   @General
-  public async uploadReviewImages(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
+  public async uploadReviewImages(files: Express.Multer.File[]): Promise<MediaHeaderDto[]> {
     const path = "review/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
     const uploading = stuffs.map((stuff) => this.updateRepository.uploadReviewImage(stuff));
     const reviewImages = await Promise.all(uploading);
     const ids = reviewImages.map((reviewImage) => reviewImage.id);
 
-    return this.mediaUtils.getMediaCookies(ids, files, path, this.reviewMedia.imageUrlCookie);
+    return this.mediaUtils.getMediaHeaders(ids, files, path, this.reviewMedia.imageUrlHeader);
   }
 
   @General
-  public async uploadReviewVideos(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
+  public async uploadReviewVideos(files: Express.Multer.File[]): Promise<MediaHeaderDto[]> {
     const path = "review/videos";
     const stuffs = this.mediaUtils.createStuffs(files, path);
     const uploading = stuffs.map((stuff) => this.updateRepository.uploadReviewVideo(stuff));
     const reviewVideos = await Promise.all(uploading);
     const ids = reviewVideos.map((reviewVideo) => reviewVideo.id);
 
-    return this.mediaUtils.getMediaCookies(ids, files, path, this.reviewMedia.videoUrlCookie);
+    return this.mediaUtils.getMediaHeaders(ids, files, path, this.reviewMedia.videoUrlHeader);
   }
 
   @General
-  public async uploadInquiryRequestImages(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
+  public async uploadInquiryRequestImages(files: Express.Multer.File[]): Promise<MediaHeaderDto[]> {
     const path = "inquiry/request/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
     const uploading = stuffs.map((stuff) => this.updateRepository.uploadInquiryRequestImage(stuff));
     const inquiryRequestImages = await Promise.all(uploading);
     const ids = inquiryRequestImages.map((inquiryRequestImage) => inquiryRequestImage.id);
 
-    return this.mediaUtils.getMediaCookies(ids, files, path, this.inquiryMedia.request.imageUrlCookie);
+    return this.mediaUtils.getMediaHeaders(ids, files, path, this.inquiryMedia.request.imageUrlHeader);
   }
 
   @General
-  public async uploadInquiryRequestVideos(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
+  public async uploadInquiryRequestVideos(files: Express.Multer.File[]): Promise<MediaHeaderDto[]> {
     const path = "inquiry/request/videos";
     const stuffs = this.mediaUtils.createStuffs(files, path);
     const uploading = stuffs.map((stuff) => this.updateRepository.uploadInquiryRequestVideo(stuff));
     const inquiryRequestVideos = await Promise.all(uploading);
     const ids = inquiryRequestVideos.map((inquiryRequestVideo) => inquiryRequestVideo.id);
 
-    return this.mediaUtils.getMediaCookies(ids, files, path, this.inquiryMedia.request.videoUrlCookie);
+    return this.mediaUtils.getMediaHeaders(ids, files, path, this.inquiryMedia.request.videoUrlHeader);
   }
 
   @General
-  public async uploadInquiryResponseImages(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
+  public async uploadInquiryResponseImages(files: Express.Multer.File[]): Promise<MediaHeaderDto[]> {
     const path = "inquiry/response/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
     const uploading = stuffs.map((stuff) => this.updateRepository.uploadInquiryResponseImages(stuff));
     const inquiryResponseImages = await Promise.all(uploading);
     const ids = inquiryResponseImages.map((inquiryResponseImage) => inquiryResponseImage.id);
 
-    return this.mediaUtils.getMediaCookies(ids, files, path, this.inquiryMedia.response.imageUrlCookie);
+    return this.mediaUtils.getMediaHeaders(ids, files, path, this.inquiryMedia.response.imageUrlHeader);
   }
 
   @General
-  public async uploadInquiryResponseVideos(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
+  public async uploadInquiryResponseVideos(files: Express.Multer.File[]): Promise<MediaHeaderDto[]> {
     const path = "inquiry/response/videos";
     const stuffs = this.mediaUtils.createStuffs(files, path);
     const uploading = stuffs.map((stuff) => this.updateRepository.uploadInquiryResponseVideos(stuff));
     const inquiryResponseVideos = await Promise.all(uploading);
     const ids = inquiryResponseVideos.map((inquiryResponseVideo) => inquiryResponseVideo.id);
 
-    return this.mediaUtils.getMediaCookies(ids, files, path, this.inquiryMedia.response.videoUrlCookie);
+    return this.mediaUtils.getMediaHeaders(ids, files, path, this.inquiryMedia.response.videoUrlHeader);
   }
 
   @General
-  public async deleteProductImagesWithId(cookies: MediaCookieDto[]): Promise<string[]> {
-    const deleting = cookies.map((productImgCookie) =>
-      this.updateRepository.deleteProductImageWithId(productImgCookie.id),
+  public async deleteProductImagesWithId(headers: MediaHeaderDto[]): Promise<string[]> {
+    const deleting = headers.map((productImageHeader) =>
+      this.updateRepository.deleteProductImageWithId(productImageHeader.id),
     );
 
     this.mediaUtils.deleteMediaFiles({
-      images: cookies.map((img) => ({ url: img.fileName })),
+      images: headers.map((img) => ({ url: img.fileName })),
       mediaEntity: "product",
       callWhere: "cancel upload",
     });
 
     await Promise.all(deleting);
 
-    return cookies.map((productImgCookie) => productImgCookie.whatCookie);
+    return headers.map((productImageHeader) => productImageHeader.whatHeader);
   }
 
   @General
-  public async deleteReviewImagesWithId(cookies: MediaCookieDto[]): Promise<string[]> {
-    const deleting = cookies.map((reviewImgCookie) =>
-      this.updateRepository.deleteReviewImageWithId(reviewImgCookie.id),
+  public async deleteReviewImagesWithId(headers: MediaHeaderDto[]): Promise<string[]> {
+    const deleting = headers.map((reviewImageHeader) =>
+      this.updateRepository.deleteReviewImageWithId(reviewImageHeader.id),
     );
 
     this.mediaUtils.deleteMediaFiles({
-      images: cookies.map((img) => ({ url: img.fileName })),
+      images: headers.map((img) => ({ url: img.fileName })),
       mediaEntity: "review",
       callWhere: "cancel upload",
     });
 
     await Promise.all(deleting);
 
-    return cookies.map((reviewImgCookie) => reviewImgCookie.whatCookie);
+    return headers.map((reviewImageHeader) => reviewImageHeader.whatHeader);
   }
 
   @General
-  public async deleteReviewVideosWithId(cookies: MediaCookieDto[]): Promise<string[]> {
-    const deleting = cookies.map((reviewVdoCookie) =>
-      this.updateRepository.deleteReviewVideoWithId(reviewVdoCookie.id),
+  public async deleteReviewVideosWithId(headers: MediaHeaderDto[]): Promise<string[]> {
+    const deleting = headers.map((reviewVideoHeader) =>
+      this.updateRepository.deleteReviewVideoWithId(reviewVideoHeader.id),
     );
 
     this.mediaUtils.deleteMediaFiles({
-      videos: cookies.map((vdo) => ({ url: vdo.fileName })),
+      videos: headers.map((vdo) => ({ url: vdo.fileName })),
       mediaEntity: "review",
       callWhere: "cancel upload",
     });
 
     await Promise.all(deleting);
 
-    return cookies.map((reviewVdoCookie) => reviewVdoCookie.whatCookie);
+    return headers.map((reviewVideoHeader) => reviewVideoHeader.whatHeader);
   }
 
   @General
-  public async deleteInquiryRequestImagesWithId(cookies: MediaCookieDto[]): Promise<string[]> {
-    const deleting = cookies.map((inquiryRequestImgCookie) =>
-      this.updateRepository.deleteInquiryRequestImageWithId(inquiryRequestImgCookie.id),
+  public async deleteInquiryRequestImagesWithId(headers: MediaHeaderDto[]): Promise<string[]> {
+    const deleting = headers.map((inquiryRequestImageHeader) =>
+      this.updateRepository.deleteInquiryRequestImageWithId(inquiryRequestImageHeader.id),
     );
 
     this.mediaUtils.deleteMediaFiles({
-      images: cookies.map((img) => ({ url: img.fileName })),
+      images: headers.map((img) => ({ url: img.fileName })),
       mediaEntity: "inquiry",
       option: "request",
       callWhere: "cancel upload",
@@ -163,17 +164,17 @@ export class MediaService {
 
     await Promise.all(deleting);
 
-    return cookies.map((inquiryRequestImgCookie) => inquiryRequestImgCookie.whatCookie);
+    return headers.map((inquiryRequestImageHeader) => inquiryRequestImageHeader.whatHeader);
   }
 
   @General
-  public async deleteInquiryRequestVideosWithId(cookies: MediaCookieDto[]): Promise<string[]> {
-    const deleting = cookies.map((inquiryRequestVdoCookie) =>
-      this.updateRepository.deleteInquiryRequestVideoWithId(inquiryRequestVdoCookie.id),
+  public async deleteInquiryRequestVideosWithId(headers: MediaHeaderDto[]): Promise<string[]> {
+    const deleting = headers.map((inquiryRequestVideoHeader) =>
+      this.updateRepository.deleteInquiryRequestVideoWithId(inquiryRequestVideoHeader.id),
     );
 
     this.mediaUtils.deleteMediaFiles({
-      videos: cookies.map((vdo) => ({ url: vdo.fileName })),
+      videos: headers.map((vdo) => ({ url: vdo.fileName })),
       mediaEntity: "inquiry",
       option: "request",
       callWhere: "cancel upload",
@@ -181,17 +182,17 @@ export class MediaService {
 
     await Promise.all(deleting);
 
-    return cookies.map((inquiryRequestVdoCookie) => inquiryRequestVdoCookie.whatCookie);
+    return headers.map((inquiryRequestVideoHeader) => inquiryRequestVideoHeader.whatHeader);
   }
 
   @General
-  public async deleteInquiryResponseImagesWithId(cookies: MediaCookieDto[]): Promise<string[]> {
-    const deleting = cookies.map((inquiryResponseImgCookie) =>
-      this.updateRepository.deleteInquiryResponseImageWithId(inquiryResponseImgCookie.id),
+  public async deleteInquiryResponseImagesWithId(headers: MediaHeaderDto[]): Promise<string[]> {
+    const deleting = headers.map((inquiryResponseImageHeader) =>
+      this.updateRepository.deleteInquiryResponseImageWithId(inquiryResponseImageHeader.id),
     );
 
     this.mediaUtils.deleteMediaFiles({
-      images: cookies.map((img) => ({ url: img.fileName })),
+      images: headers.map((img) => ({ url: img.fileName })),
       mediaEntity: "inquiry",
       option: "response",
       callWhere: "cancel upload",
@@ -199,17 +200,17 @@ export class MediaService {
 
     await Promise.all(deleting);
 
-    return cookies.map((inquiryResponseImgCookie) => inquiryResponseImgCookie.whatCookie);
+    return headers.map((inquiryResponseImageHeader) => inquiryResponseImageHeader.whatHeader);
   }
 
   @General
-  public async deleteInquiryResponseVideosWithId(cookies: MediaCookieDto[]): Promise<string[]> {
-    const deleting = cookies.map((inquiryResponseVdoCookie) =>
-      this.updateRepository.deleteInquiryResponseVideoWithId(inquiryResponseVdoCookie.id),
+  public async deleteInquiryResponseVideosWithId(headers: MediaHeaderDto[]): Promise<string[]> {
+    const deleting = headers.map((inquiryResponseVideoHeader) =>
+      this.updateRepository.deleteInquiryResponseVideoWithId(inquiryResponseVideoHeader.id),
     );
 
     this.mediaUtils.deleteMediaFiles({
-      videos: cookies.map((vdo) => ({ url: vdo.fileName })),
+      videos: headers.map((vdo) => ({ url: vdo.fileName })),
       mediaEntity: "inquiry",
       option: "response",
       callWhere: "cancel upload",
@@ -217,6 +218,6 @@ export class MediaService {
 
     await Promise.all(deleting);
 
-    return cookies.map((inquiryResponseVdoCookie) => inquiryResponseVdoCookie.whatCookie);
+    return headers.map((inquiryResponseVideoHeader) => inquiryResponseVideoHeader.whatHeader);
   }
 }

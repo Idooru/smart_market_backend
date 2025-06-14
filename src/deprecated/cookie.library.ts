@@ -1,29 +1,29 @@
-export class CookieLibrary {
-  public insertNumberOnContinuousCookies<T>(
+export class HeaderLibrary {
+  public insertNumberOnContinuousHeaders<T>(
     stuff: T[],
-    cookieKey: string,
+    headerKey: string,
   ): ({
-    whatCookie: string;
+    whatHeader: string;
   } & T)[] {
     if (stuff.length >= 2) {
       return stuff.map((cookieValue, idx) => ({
-        whatCookie: cookieKey + (idx + 1),
+        whatHeader: headerKey + (idx + 1),
         ...cookieValue,
       }));
     } else {
       return stuff.map((cookieValue) => ({
-        whatCookie: cookieKey,
+        whatHeader: headerKey,
         ...cookieValue,
       }));
     }
   }
 
-  public wrapCookieKeyInCookieValue<T>(
+  public wrapHeaderKeyInHeaderValue<T>(
     stuff: T,
-    cookieKey: string,
+    headerKey: string,
   ): {
-    whatCookie: string;
+    whatHeader: string;
   } & T {
-    return { whatCookie: cookieKey, ...stuff };
+    return { whatHeader: headerKey, ...stuff };
   }
 }

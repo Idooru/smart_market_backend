@@ -1,6 +1,6 @@
-import { MediaCookieDto } from "../../../media/dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
 
 export class ModifyProductImageDto {
   productId: string;
-  productImgCookies: MediaCookieDto[];
+  productImageHeaders: MediaHeaderDto[];
 }

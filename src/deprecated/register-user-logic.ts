@@ -3,9 +3,9 @@
 // @UseInterceptors(JsonGeneralInterceptor)
 //   @UseGuards(
 //     new VerifyDataGuard(
-//       userVerifyCookieKey.is_not_exist.email_executed,
-//       userVerifyCookieKey.is_not_exist.nickname_executed,
-//       userVerifyCookieKey.is_not_exist.phonenumber_executed,
+//       userVerifyHeaderKey.is_not_exist.email_executed,
+//       userVerifyHeaderKey.is_not_exist.nickname_executed,
+//       userVerifyHeaderKey.is_not_exist.phonenumber_executed,
 //     ),
 //   )
 //   @UseGuards(IsNotLoginGuard)

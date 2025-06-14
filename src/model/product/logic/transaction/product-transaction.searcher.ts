@@ -11,7 +11,7 @@ import { AdminUserEntity } from "../../../user/entities/admin-user.entity";
 import { UserEntity } from "../../../user/entities/user.entity";
 import { ProductImageSearcher } from "../../../media/logic/product-image.searcher";
 import { ProductImageEntity } from "../../../media/entities/product-image.entity";
-import { MediaCookieDto } from "../../../media/dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
 
 class EntityFinder {
   constructor(
@@ -28,13 +28,13 @@ class EntityFinder {
     }) as Promise<ProductImageEntity[]>;
   }
 
-  public findProductImages(imageCookies: MediaCookieDto[], property: string): Promise<ProductImageEntity[]> {
+  public findProductImages(imageHeaders: MediaHeaderDto[], property: string): Promise<ProductImageEntity[]> {
     return Promise.all(
-      imageCookies.map(
-        (imgCookie) =>
+      imageHeaders.map(
+        (imgHeader) =>
           this.productImageSearcher.findEntity({
             property,
-            alias: { id: imgCookie.id },
+            alias: { id: imgHeader.id },
             getOne: true,
           }) as Promise<ProductImageEntity>,
       ),
@@ -64,21 +64,21 @@ export class ProductTransactionSearcher {
     this.entityFinder = new EntityFinder(this.userIdFilter, this.userSearcher, this.productImageSearcher);
   }
 
-  private async getProductImagesBeforeModify(productImgCookies: MediaCookieDto[], productId: string) {
+  private async getProductImagesBeforeModify(productImageHeaders: MediaHeaderDto[], productId: string) {
     const [beforeProductImages, newProductImages] = await Promise.all([
       this.entityFinder.findBeforeProductImages(productId),
-      this.entityFinder.findProductImages(productImgCookies, "product.id = :id"),
+      this.entityFinder.findProductImages(productImageHeaders, "product.id = :id"),
     ]);
 
     return { beforeProductImages, newProductImages };
   }
 
   public async searchCreateProduct(dto: CreateProductDto): Promise<SearchCreateProductDto> {
-    const { body, userId, productImgCookies } = dto;
+    const { body, userId, productImageHeaders } = dto;
 
     const [user, productImages] = await Promise.all([
       this.entityFinder.findUser(userId),
-      this.entityFinder.findProductImages(productImgCookies, "productImage.id = :id"),
+      this.entityFinder.findProductImages(productImageHeaders, "productImage.id = :id"),
     ]);
 
     return {
@@ -89,24 +89,24 @@ export class ProductTransactionSearcher {
   }
 
   public async searchModifyProduct(dto: ModifyProductDto): Promise<SearchModifyProductDto> {
-    const { productId, body, productImgCookies } = dto;
+    const { productId, body, productImageHeaders } = dto;
 
-    if (!productImgCookies.length) {
+    if (!productImageHeaders.length) {
       return { productId, body };
     }
 
-    return { productId, body, ...(await this.getProductImagesBeforeModify(productImgCookies, productId)) };
+    return { productId, body, ...(await this.getProductImagesBeforeModify(productImageHeaders, productId)) };
   }
 
   async searchModifyProductImage(dto: ModifyProductImageDto): Promise<SearchModifyProductImageDto> {
-    const { productId, productImgCookies } = dto;
+    const { productId, productImageHeaders } = dto;
 
-    if (!productImgCookies.length) {
+    if (!productImageHeaders.length) {
       const message = "업로드된 상품 이미지가 존재하지 않습니다. 상품 이미지를 먼저 업로드 해주세요.";
       loggerFactory("None Exist").error(message);
       throw new NotFoundException(message);
     }
 
-    return { productId, ...(await this.getProductImagesBeforeModify(productImgCookies, productId)) };
+    return { productId, ...(await this.getProductImagesBeforeModify(productImageHeaders, productId)) };
   }
 }

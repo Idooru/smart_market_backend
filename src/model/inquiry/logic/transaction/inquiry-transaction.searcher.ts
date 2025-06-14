@@ -11,7 +11,7 @@ import { CreateInquiryResponseDto } from "../../dto/inquiry-response/request/cre
 import { SearchCreateInquiryResponseDto } from "../../dto/inquiry-response/request/search-create-inquiry-response.dto";
 import { InquiryRequestSearcher } from "../inquiry-request.searcher";
 import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
-import { MediaCookieDto } from "../../../media/dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
 import { InquiryRequestImageEntity } from "../../../media/entities/inquiry-request-image.entity";
 import { InquiryRequestImageSearcher } from "../../../media/logic/inquiry-request-image.searcher";
 import { InquiryRequestVideoSearcher } from "../../../media/logic/inquiry-request-video.searcher";
@@ -60,52 +60,52 @@ class EntityFinder {
     }) as Promise<InquiryRequestEntity>;
   }
 
-  public findInquiryRequestImages(imageCookies: MediaCookieDto[]): Promise<InquiryRequestImageEntity[]> {
+  public findInquiryRequestImages(imageHeaders: MediaHeaderDto[]): Promise<InquiryRequestImageEntity[]> {
     return Promise.all(
-      imageCookies.map(
-        (imageCookie) =>
+      imageHeaders.map(
+        (imageHeader) =>
           this.inquiryRequestImageSearcher.findEntity({
             property: "inquiryRequestImage.id = :id",
-            alias: { id: imageCookie.id },
+            alias: { id: imageHeader.id },
             getOne: true,
           }) as Promise<InquiryRequestImageEntity>,
       ),
     );
   }
 
-  public findInquiryRequestVideos(videoCookies: MediaCookieDto[]): Promise<InquiryRequestVideoEntity[]> {
+  public findInquiryRequestVideos(videoHeaders: MediaHeaderDto[]): Promise<InquiryRequestVideoEntity[]> {
     return Promise.all(
-      videoCookies.map(
-        (videoCookie) =>
+      videoHeaders.map(
+        (videoHeader) =>
           this.inquiryRequestVideoSearcher.findEntity({
             property: "inquiryRequestVideo.id = :id",
-            alias: { id: videoCookie.id },
+            alias: { id: videoHeader.id },
             getOne: true,
           }) as Promise<InquiryRequestVideoEntity>,
       ),
     );
   }
 
-  public findInquiryResponseImages(imageCookies: MediaCookieDto[]): Promise<InquiryResponseImageEntity[]> {
+  public findInquiryResponseImages(imageHeaders: MediaHeaderDto[]): Promise<InquiryResponseImageEntity[]> {
     return Promise.all(
-      imageCookies.map(
-        (imageCookie) =>
+      imageHeaders.map(
+        (imageHeader) =>
           this.inquiryResponseImageSearcher.findEntity({
             property: "inquiryResponseImage.id = :id",
-            alias: { id: imageCookie.id },
+            alias: { id: imageHeader.id },
             getOne: true,
           }) as Promise<InquiryResponseImageEntity>,
       ),
     );
   }
 
-  public findInquiryResponseVideos(videoCookies: MediaCookieDto[]): Promise<InquiryResponseVideoEntity[]> {
+  public findInquiryResponseVideos(videoHeaders: MediaHeaderDto[]): Promise<InquiryResponseVideoEntity[]> {
     return Promise.all(
-      videoCookies.map(
-        (videoCookie) =>
+      videoHeaders.map(
+        (videoHeader) =>
           this.inquiryResponseVideoSearcher.findEntity({
             property: "inquiryResponseVideo.id = :id",
-            alias: { id: videoCookie.id },
+            alias: { id: videoHeader.id },
             getOne: true,
           }) as Promise<InquiryResponseVideoEntity>,
       ),
@@ -144,7 +144,7 @@ export class InquiryTransactionSearcher {
   }
 
   public async searchCreateInquiryRequest(dto: CreateInquiryRequestDto): Promise<SearchCreateInquiryRequestDto> {
-    const { body, userId, productId, imageCookies, videoCookies } = dto;
+    const { body, userId, productId, imageHeaders, videoHeaders } = dto;
 
     const [user, product] = await Promise.all([
       this.entityFinder.findUser(userId, [ClientUserEntity]),
@@ -152,8 +152,8 @@ export class InquiryTransactionSearcher {
     ]);
 
     const [inquiryRequestImages, inquiryRequestVideos] = await Promise.all([
-      this.entityFinder.findInquiryRequestImages(imageCookies),
-      this.entityFinder.findInquiryRequestVideos(videoCookies),
+      this.entityFinder.findInquiryRequestImages(imageHeaders),
+      this.entityFinder.findInquiryRequestVideos(videoHeaders),
     ]);
 
     return {
@@ -166,11 +166,11 @@ export class InquiryTransactionSearcher {
   }
 
   public async searchCreateInquiryResponse(dto: CreateInquiryResponseDto): Promise<SearchCreateInquiryResponseDto> {
-    const { body, inquiryRequesterId, inquiryRequestId, inquiryRespondentId, imageCookies, videoCookies } = dto;
+    const { body, inquiryRequesterId, inquiryRequestId, inquiryRespondentId, imageHeaders, videoHeaders } = dto;
 
     const [inquiryResponseImages, inquiryResponseVideos] = await Promise.all([
-      this.entityFinder.findInquiryResponseImages(imageCookies),
-      this.entityFinder.findInquiryResponseVideos(videoCookies),
+      this.entityFinder.findInquiryResponseImages(imageHeaders),
+      this.entityFinder.findInquiryResponseVideos(videoHeaders),
     ]);
 
     const [inquiryRequester, inquiryRespondent] = await Promise.all([

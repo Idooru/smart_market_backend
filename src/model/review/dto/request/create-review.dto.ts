@@ -1,12 +1,12 @@
 import { ReviewBody } from "./review-body.dto";
-import { MediaCookieDto } from "../../../media/dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
 
 export class CreateReviewDto {
   public body: ReviewBody;
   public reviewerId: string;
   public productId: string;
-  public reviewImgCookies: MediaCookieDto[];
-  public reviewVdoCookies: MediaCookieDto[];
+  public reviewImageHeaders: MediaHeaderDto[];
+  public reviewVideoHeaders: MediaHeaderDto[];
 }
 
 export class CreateReviewRowDto {

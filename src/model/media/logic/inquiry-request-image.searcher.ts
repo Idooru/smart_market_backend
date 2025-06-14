@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { FindEntityArgs, Searcher } from "../../../common/interfaces/search/searcher";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
-import { MediaCookieDto } from "../dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../dto/request/media-header.dto";
 import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestImageSearchRepository } from "../repositories/inquiry-request-image-search.repository";
 
 @Injectable()
 export class InquiryRequestImageSearcher
-  implements Searcher<InquiryRequestImageEntity, MediaCookieDto, MediaBasicRawDto>
+  implements Searcher<InquiryRequestImageEntity, MediaHeaderDto, MediaBasicRawDto>
 {
   constructor(private readonly inquiryRequestImageSearchRepository: InquiryRequestImageSearchRepository) {}
 
@@ -22,7 +22,7 @@ export class InquiryRequestImageSearcher
   }
 
   @Implemented
-  public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
+  public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
     return this.inquiryRequestImageSearchRepository.findAllRaws(dto);
   }
 }

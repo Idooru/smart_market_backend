@@ -2,14 +2,13 @@ import { Controller, Param, Body, UseGuards, Post, Put, Delete, Get, Query } fro
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { UseInterceptors } from "@nestjs/common";
-import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
+import { JsonRemoveHeadersInterceptor } from "src/common/interceptors/general/json-remove-headers.interceptor";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
+import { JsonRemoveHeadersInterface } from "src/common/interceptors/interface/json-remove-headers.interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
+import { MediaHeadersParser } from "src/common/decorators/media-headers-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
-import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { ReviewTransactionExecutor } from "../../logic/transaction/review-transaction.executor";
 import { ProductIdValidatePipe } from "../../../product/pipe/exist/product-id-validate.pipe";
@@ -23,7 +22,8 @@ import { CreateReviewDto } from "../../dto/request/create-review.dto";
 import { ModifyReviewDto } from "../../dto/request/modify-review.dto";
 import { DeleteReviewDto } from "../../dto/request/delete-review.dto";
 import { FindAllReviewsDto } from "../../dto/request/find-all-reviews.dto";
-import { MediaCookieDto } from "../../../media/dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
+import { reviewMediaHeaderKey } from "../../../../common/config/header-key-configs/media-header-keys/review-media-header.key";
 
 @ApiTags("v1 고객 Review API")
 @UseGuards(IsClientGuard)
@@ -70,23 +70,23 @@ export class ReviewV1ClientController {
   //   summary: "create review",
   //   description: "리뷰를 생성합니다. 리뷰에는 이미지 혹은 비디오가 포함될 수 있습니다.",
   // })
-  @UseInterceptors(JsonClearCookiesInterceptor)
+  @UseInterceptors(JsonRemoveHeadersInterceptor)
   @Post("/product/:productId")
   public async createReview(
     @Param("productId", ProductIdValidatePipe) productId: string,
-    @MediaCookiesParser(reviewMediaCookieKey.imageUrlCookie)
-    reviewImgCookies: MediaCookieDto[],
-    @MediaCookiesParser(reviewMediaCookieKey.videoUrlCookie)
-    reviewVdoCookies: MediaCookieDto[],
+    @MediaHeadersParser(reviewMediaHeaderKey.imageUrlHeader)
+    reviewImageHeaders: MediaHeaderDto[],
+    @MediaHeadersParser(reviewMediaHeaderKey.videoUrlHeader)
+    reviewVideoHeaders: MediaHeaderDto[],
     @Body() body: ReviewBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonClearCookiesInterface> {
+  ): Promise<JsonRemoveHeadersInterface> {
     const dto: CreateReviewDto = {
       body,
       reviewerId: userId,
       productId,
-      reviewImgCookies,
-      reviewVdoCookies,
+      reviewImageHeaders,
+      reviewVideoHeaders,
     };
 
     await this.transaction.createReview(dto);
@@ -94,9 +94,9 @@ export class ReviewV1ClientController {
     return {
       statusCode: 201,
       message: "리뷰를 생성하였습니다.",
-      cookieKey: [
-        ...reviewImgCookies.map((cookie) => cookie.whatCookie),
-        ...reviewVdoCookies.map((cookie) => cookie.whatCookie),
+      headerKey: [
+        ...reviewImageHeaders.map((header) => header.whatHeader),
+        ...reviewVideoHeaders.map((header) => header.whatHeader),
       ],
     };
   }
@@ -105,25 +105,25 @@ export class ReviewV1ClientController {
   //   summary: "modify review",
   //   description: "리뷰를 수정합니다. 리뷰에는 이미지 혹은 비디오가 포함될 수 있습니다.",
   // })
-  @UseInterceptors(JsonClearCookiesInterceptor, DeleteReviewMediaInterceptor)
+  @UseInterceptors(JsonRemoveHeadersInterceptor, DeleteReviewMediaInterceptor)
   @Put("/:reviewId/product/:productId")
   public async modifyReview(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
-    @MediaCookiesParser(reviewMediaCookieKey.imageUrlCookie)
-    reviewImgCookies: MediaCookieDto[],
-    @MediaCookiesParser(reviewMediaCookieKey.videoUrlCookie)
-    reviewVdoCookies: MediaCookieDto[],
+    @MediaHeadersParser(reviewMediaHeaderKey.imageUrlHeader)
+    reviewImageHeaders: MediaHeaderDto[],
+    @MediaHeadersParser(reviewMediaHeaderKey.videoUrlHeader)
+    reviewVideoHeaders: MediaHeaderDto[],
     @Body() body: ReviewBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonClearCookiesInterface> {
+  ): Promise<JsonRemoveHeadersInterface> {
     const dto: ModifyReviewDto = {
       body,
       productId,
       reviewId,
       userId,
-      reviewImgCookies,
-      reviewVdoCookies,
+      reviewImageHeaders,
+      reviewVideoHeaders,
     };
 
     await this.transaction.modifyReview(dto);
@@ -131,9 +131,9 @@ export class ReviewV1ClientController {
     return {
       statusCode: 200,
       message: `reviewId(${reviewId})에 해당하는 리뷰를 수정하였습니다`,
-      cookieKey: [
-        ...reviewImgCookies.map((cookie) => cookie.whatCookie),
-        ...reviewVdoCookies.map((cookie) => cookie.whatCookie),
+      headerKey: [
+        ...reviewImageHeaders.map((header) => header.whatHeader),
+        ...reviewVideoHeaders.map((header) => header.whatHeader),
       ],
     };
   }

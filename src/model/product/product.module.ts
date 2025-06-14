@@ -9,7 +9,6 @@ import { ProductImageEntity } from "../media/entities/product-image.entity";
 import { LibraryModule } from "src/common/lib/library.module";
 import { ProductV1AdminController } from "./controllers/v1/product-v1-admin.controller";
 import { productSelect } from "src/common/config/repository-select-configs/product.select";
-import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { ProductSearcher } from "./logic/product.searcher";
 import { ProductSearchRepository } from "./repositories/product-search.repository";
 import { ProductTransactionExecutor } from "./logic/transaction/product-transaction.executor";
@@ -24,6 +23,7 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
 import { ProductTransactionSearcher } from "./logic/transaction/product-transaction.searcher";
 import { ProductTransactionContext } from "./logic/transaction/product-transaction.context";
 import { AuthModule } from "../auth/auth.module";
+import { productMediaHeaderKey } from "../../common/config/header-key-configs/media-header-keys/product-media-header.key";
 
 const productIdFilter = { provide: "product-id-filter", useValue: "product.id = :id" };
 
@@ -39,7 +39,7 @@ const productIdFilter = { provide: "product-id-filter", useValue: "product.id = 
   ],
   controllers: [ProductV1Controller, ProductV1AdminController],
   providers: [
-    { provide: "product-media-cookie-key", useValue: productMediaCookieKey },
+    { provide: "product-media-header-key", useValue: productMediaHeaderKey },
     { provide: "product-select", useValue: productSelect },
     { provide: Transactional, useClass: ProductTransactionInitializer },
     productIdFilter,

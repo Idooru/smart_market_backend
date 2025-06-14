@@ -9,7 +9,6 @@ import { LibraryModule } from "src/common/lib/library.module";
 import { InquiryV1AdminController } from "./controllers/inquiry-v1-admin.controller";
 import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
 import { inquirySelect } from "src/common/config/repository-select-configs/inquiry.select";
-import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { InquiryService } from "./services/inquiry.service";
 import { InquiryTransactionExecutor } from "./logic/transaction/inquiry-transaction.executor";
 import { InquiryUpdateRepository } from "./repositories/inquiry-update.repository";
@@ -27,6 +26,7 @@ import { InquiryRequestSearchRepository } from "./repositories/inquiry-request-s
 import { InquiryResponseSearcher } from "./logic/inquiry-response.searcher";
 import { InquiryResponseSearchRepository } from "./repositories/inquiry-response-search.repository";
 import { AuthModule } from "../auth/auth.module";
+import { inquiryMediaHeaderKey } from "../../common/config/header-key-configs/media-header-keys/inquiry-media-header.key";
 
 @Module({
   imports: [
@@ -39,7 +39,7 @@ import { AuthModule } from "../auth/auth.module";
   ],
   controllers: [InquiryV1ClientController, InquiryV1AdminController],
   providers: [
-    { provide: "inquiry-media-cookie-key", useValue: inquiryMediaCookieKey },
+    { provide: "inquiry-media-header-key", useValue: inquiryMediaHeaderKey },
     { provide: "inquiry-select", useValue: inquirySelect },
     { provide: "mail-event-map", useValue: mailEventMap },
     { provide: Transactional, useClass: InquiryTransactionInitializer },

@@ -2,11 +2,11 @@ import { ArgumentsHost, CallHandler, Injectable, NestInterceptor } from "@nestjs
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { Request, Response } from "express";
-import { JsonClearCookieInterface } from "../interface/json-clear-cookie.interface";
+import { JsonSetHeadersInterface } from "../interface/json-set-headers.interface";
 import { Implemented } from "../../decorators/implemented.decoration";
 
 @Injectable()
-export class JsonClearCookieInterceptor implements NestInterceptor {
+export class JsonSetHeadersInterceptor<T> implements NestInterceptor {
   constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
 
   @Implemented
@@ -17,12 +17,19 @@ export class JsonClearCookieInterceptor implements NestInterceptor {
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data: JsonClearCookieInterface) => {
-        const { statusCode, message, cookieKey } = data;
+      map((data: JsonSetHeadersInterface<T>) => {
+        const { statusCode, message, headerKey, headerValues } = data;
         this.timeLoggerLibrary.sendResponse(req);
 
-        res.status(statusCode).setHeader("X-Powered-By", "").clearCookie(cookieKey);
+        if (headerValues.length >= 2) {
+          headerValues.forEach((headerValue, idx) => {
+            res.setHeader(headerKey + (idx + 1), JSON.stringify(headerValue));
+          });
+        } else {
+          res.setHeader(headerKey, JSON.stringify(headerValues[0]));
+        }
 
+        res.status(data.statusCode).setHeader("X-Powered-By", "");
         return { success: true, ...{ statusCode, message } };
       }),
     );

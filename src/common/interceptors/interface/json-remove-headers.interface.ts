@@ -1,7 +1,7 @@
 import { HttpStatus } from "@nestjs/common";
 
-export class JsonClearCookiesInterface {
+export class JsonRemoveHeadersInterface {
   statusCode: HttpStatus;
   message: string;
-  cookieKey: string[];
+  headerKey: string[];
 }

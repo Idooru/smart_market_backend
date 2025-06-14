@@ -1,8 +1,8 @@
 import { HttpStatus } from "@nestjs/common";
 
-export class JsonSendCookieParam {
+export class JsonSetHeadersInterface<T> {
   statusCode: HttpStatus;
   message: string;
-  cookieKey: string;
-  cookieValue: unknown;
+  headerKey: string;
+  headerValues: T[];
 }

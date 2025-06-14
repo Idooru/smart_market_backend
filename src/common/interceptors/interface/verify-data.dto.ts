@@ -1,4 +1,4 @@
 export class VerifyDataInterface {
   message: string;
-  setCookieKey: string;
+  setHeaderKey: string;
 }

@@ -259,7 +259,7 @@ export class UserV1Controller {
     return {
       statusCode: 200,
       message: "사용자 정보를 삭제하였습니다.",
-      cookieKey: ["access_token", "refresh_token"],
+      headerKey: ["access_token", "refresh_token"],
     };
   }
 

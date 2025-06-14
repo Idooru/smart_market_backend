@@ -8,12 +8,12 @@ import { MediaSelect } from "../../../common/config/repository-select-configs/me
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
-import { MediaCookieDto } from "../dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../dto/request/media-header.dto";
 import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
 import { ReviewImageEntity } from "../entities/review-image.entity";
 
 @Injectable()
-export class ReviewImageSearchRepository extends SearchRepository<ReviewImageEntity, MediaCookieDto, MediaBasicRawDto> {
+export class ReviewImageSearchRepository extends SearchRepository<ReviewImageEntity, MediaHeaderDto, MediaBasicRawDto> {
   constructor(
     @Inject("media-select")
     private readonly select: MediaSelect,
@@ -47,11 +47,11 @@ export class ReviewImageSearchRepository extends SearchRepository<ReviewImageEnt
   }
 
   @Implemented
-  public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
+  public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
     const raws = await Promise.all(
-      dto.map((mediaCookie) =>
+      dto.map((MediaHeader) =>
         this.selectReviewImage(this.select.inquiryResponseImages)
-          .where("reviewImage.id = :id", { id: mediaCookie.id })
+          .where("reviewImage.id = :id", { id: MediaHeader.id })
           .getRawOne(),
       ),
     );

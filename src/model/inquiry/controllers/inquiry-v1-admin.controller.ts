@@ -1,12 +1,11 @@
 import { Body, Controller, Get, Param, Post, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
-import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
+import { MediaHeadersParser } from "src/common/decorators/media-headers-parser.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
-import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
+import { JsonRemoveHeadersInterface } from "src/common/interceptors/interface/json-remove-headers.interface";
+import { JsonRemoveHeadersInterceptor } from "src/common/interceptors/general/json-remove-headers.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { InquiryTransactionExecutor } from "../logic/transaction/inquiry-transaction.executor";
 import { InquiryRequestIdValidatePipe } from "../pipe/exist/inquiry-request-id-validate.pipe";
@@ -23,7 +22,8 @@ import { InquiryRequestSearcher } from "../logic/inquiry-request.searcher";
 import { InquiryRequestFromAdminProductRawDto } from "../dto/inquiry-request/response/inquiry-request-from-admin-product-raw.dto";
 import { InquiryResponseDetailRawDto } from "../dto/inquiry-response/response/inquiry-response-detail-raw.dto";
 import { FindAllInquiryResponsesDto } from "../dto/inquiry-response/request/find-all-inquiry-responses.dto";
-import { MediaCookieDto } from "../../media/dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../../media/dto/request/media-header.dto";
+import { inquiryMediaHeaderKey } from "../../../common/config/header-key-configs/media-header-keys/inquiry-media-header.key";
 
 @ApiTags("v1 관리자 Inquiry API")
 @UseGuards(IsAdminGuard)
@@ -87,27 +87,27 @@ export class InquiryV1AdminController {
   //   summary: "create inquiry response",
   //   description: "문의 응답을 생성합니다. 문의 응답에는 이미지 혹은 비디오가 포함될 수 있습니다.",
   // })
-  @UseInterceptors(JsonClearCookiesInterceptor, InquiryAdminEventInterceptor)
+  @UseInterceptors(JsonRemoveHeadersInterceptor, InquiryAdminEventInterceptor)
   @Post("/inquiry-request/:inquiryRequestId/client-user/:inquiryRequesterId")
   public async createInquiryResponse(
     @Param("inquiryRequestId", InquiryRequestIdValidatePipe)
     inquiryRequestId: string,
     @Param("inquiryRequesterId", InquiryRequesterIdValidatePipe)
     inquiryRequesterId: string,
-    @MediaCookiesParser(inquiryMediaCookieKey.response.imageUrlCookie)
-    imageCookies: MediaCookieDto[],
-    @MediaCookiesParser(inquiryMediaCookieKey.response.videoUrlCookie)
-    videoCookies: MediaCookieDto[],
+    @MediaHeadersParser(inquiryMediaHeaderKey.response.imageUrlHeader)
+    imageHeaders: MediaHeaderDto[],
+    @MediaHeadersParser(inquiryMediaHeaderKey.response.videoUrlHeader)
+    videoHeaders: MediaHeaderDto[],
     @GetJWT() { userId }: JwtAccessTokenPayload,
     @Body() body: InquiryResponseBody,
-  ): Promise<JsonClearCookiesInterface> {
+  ): Promise<JsonRemoveHeadersInterface> {
     const dto: CreateInquiryResponseDto = {
       body,
       inquiryRequestId,
       inquiryRequesterId,
       inquiryRespondentId: userId,
-      imageCookies,
-      videoCookies,
+      imageHeaders,
+      videoHeaders,
     };
 
     await this.transaction.createInquiryResponse(dto);
@@ -115,9 +115,9 @@ export class InquiryV1AdminController {
     return {
       statusCode: 201,
       message: "문의 응답을 생성하였습니다.",
-      cookieKey: [
-        ...imageCookies.map((cookie) => cookie.whatCookie),
-        ...videoCookies.map((cookie) => cookie.whatCookie),
+      headerKey: [
+        ...imageHeaders.map((header) => header.whatHeader),
+        ...videoHeaders.map((header) => header.whatHeader),
       ],
     };
   }

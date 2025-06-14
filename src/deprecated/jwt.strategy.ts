@@ -14,7 +14,7 @@
 
 //     super({
 //       jwtFromRequest: ExtractJwt.fromExtractors([
-//         (request) => request?.cookies?.JWT_COOKIE,
+//         (request) => request?.headers?.JWT_COOKIE,
 //       ]),
 //       secretOrKey: new ConfigService().get("JWT_SECRET"),
 //       ignoreExpiration: true,

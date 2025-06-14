@@ -11,12 +11,12 @@ import { MediaSelect } from "../../../common/config/repository-select-configs/me
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { loggerFactory } from "../../../common/functions/logger.factory";
 import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
-import { MediaCookieDto } from "../dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../dto/request/media-header.dto";
 
 @Injectable()
 export class ProductImageSearchRepository extends SearchRepository<
   ProductImageEntity,
-  MediaCookieDto,
+  MediaHeaderDto,
   MediaBasicRawDto
 > {
   constructor(
@@ -65,11 +65,11 @@ export class ProductImageSearchRepository extends SearchRepository<
   }
 
   @Implemented
-  public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
+  public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
     const raws = await Promise.all(
-      dto.map((mediaCookie) =>
+      dto.map((MediaHeader) =>
         this.selectProductImage(this.select.productImages)
-          .where("productImage.id = :id", { id: mediaCookie.id })
+          .where("productImage.id = :id", { id: MediaHeader.id })
           .getRawOne(),
       ),
     );

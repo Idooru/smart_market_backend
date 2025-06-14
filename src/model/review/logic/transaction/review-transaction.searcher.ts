@@ -14,7 +14,7 @@ import { ReviewImageSearcher } from "../../../media/logic/review-image.searcher"
 import { ReviewImageEntity } from "../../../media/entities/review-image.entity";
 import { ReviewVideoSearcher } from "../../../media/logic/review-video.searcher";
 import { ReviewVideoEntity } from "../../../media/entities/review-video.entity";
-import { MediaCookieDto } from "../../../media/dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
 import { BaseEntity } from "typeorm";
 
 class EntityFinder {
@@ -34,26 +34,26 @@ class EntityFinder {
     }) as Promise<ProductEntity>;
   }
 
-  public findReviewImages(reviewImgCookies: MediaCookieDto[]): Promise<ReviewImageEntity[]> {
+  public findReviewImages(reviewImageHeaders: MediaHeaderDto[]): Promise<ReviewImageEntity[]> {
     return Promise.all(
-      reviewImgCookies.map(
-        (imgCookie) =>
+      reviewImageHeaders.map(
+        (imgHeader) =>
           this.reviewImageSearcher.findEntity({
             property: "reviewImage.id = :id",
-            alias: { id: imgCookie.id },
+            alias: { id: imgHeader.id },
             getOne: true,
           }) as Promise<ReviewImageEntity>,
       ),
     );
   }
 
-  public findReviewVideos(reviewVdoCookies: MediaCookieDto[]): Promise<ReviewVideoEntity[]> {
+  public findReviewVideos(reviewVideoHeaders: MediaHeaderDto[]): Promise<ReviewVideoEntity[]> {
     return Promise.all(
-      reviewVdoCookies.map(
-        (vdoCookie) =>
+      reviewVideoHeaders.map(
+        (vdoHeader) =>
           this.reviewVideoSearcher.findEntity({
             property: "reviewVideo.id = :id",
-            alias: { id: vdoCookie.id },
+            alias: { id: vdoHeader.id },
             getOne: true,
           }) as Promise<ReviewVideoEntity>,
       ),
@@ -98,14 +98,14 @@ export class ReviewTransactionSearcher {
   }
 
   public async searchCreateReview(dto: CreateReviewDto): Promise<SearchCreateReviewDto> {
-    const { body, reviewerId, productId, reviewImgCookies, reviewVdoCookies } = dto;
+    const { body, reviewerId, productId, reviewImageHeaders, reviewVideoHeaders } = dto;
     const product = await this.entityFinder.findProduct(productId, [ReviewEntity, StarRateEntity]);
 
     await this.reviewUtils.checkBeforeCreate(product, reviewerId);
 
     const [reviewImages, reviewVideos] = await Promise.all([
-      this.entityFinder.findReviewImages(reviewImgCookies),
-      this.entityFinder.findReviewVideos(reviewVdoCookies),
+      this.entityFinder.findReviewImages(reviewImageHeaders),
+      this.entityFinder.findReviewVideos(reviewVideoHeaders),
     ]);
 
     return {
@@ -119,7 +119,7 @@ export class ReviewTransactionSearcher {
   }
 
   public async searchModifyReview(dto: ModifyReviewDto): Promise<SearchModifyReviewDto> {
-    const { body, userId, productId, reviewId, reviewImgCookies, reviewVdoCookies } = dto;
+    const { body, userId, productId, reviewId, reviewImageHeaders, reviewVideoHeaders } = dto;
     const [review, product] = await Promise.all([
       this.reviewUtils.checkBeforeModify(reviewId, userId),
       this.entityFinder.findProduct(productId, [StarRateEntity]),
@@ -127,9 +127,9 @@ export class ReviewTransactionSearcher {
 
     const [beforeReviewImages, newReviewImages, beforeReviewVideos, newReviewVideos] = await Promise.all([
       this.entityFinder.findBeforeReviewImages(review.id),
-      this.entityFinder.findReviewImages(reviewImgCookies),
+      this.entityFinder.findReviewImages(reviewImageHeaders),
       this.entityFinder.findBeforeReviewVideos(review.id),
-      this.entityFinder.findReviewVideos(reviewVdoCookies),
+      this.entityFinder.findReviewVideos(reviewVideoHeaders),
     ]);
 
     return {

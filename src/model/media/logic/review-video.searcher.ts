@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { FindEntityArgs, Searcher } from "../../../common/interfaces/search/searcher";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
-import { MediaCookieDto } from "../dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../dto/request/media-header.dto";
 import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
 import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { ReviewVideoSearchRepository } from "../repositories/review-video-search.repository";
 
 @Injectable()
-export class ReviewVideoSearcher implements Searcher<ReviewVideoEntity, MediaCookieDto, MediaBasicRawDto> {
+export class ReviewVideoSearcher implements Searcher<ReviewVideoEntity, MediaHeaderDto, MediaBasicRawDto> {
   constructor(private readonly inquiryResponseVideoSearchRepository: ReviewVideoSearchRepository) {}
 
   @Implemented
@@ -20,7 +20,7 @@ export class ReviewVideoSearcher implements Searcher<ReviewVideoEntity, MediaCoo
   }
 
   @Implemented
-  public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
+  public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
     return this.inquiryResponseVideoSearchRepository.findAllRaws(dto);
   }
 }

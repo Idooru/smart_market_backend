@@ -8,7 +8,6 @@ import { LibraryModule } from "src/common/lib/library.module";
 import { MediaModule } from "../media/media.module";
 import { ReviewV1ClientController } from "./controllers/v1/review-v1-client.controller";
 import { reviewSelect } from "src/common/config/repository-select-configs/review.select";
-import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { ReviewUpdateRepository } from "./repositories/review-update.repository";
 import { ReviewService } from "./services/review.service";
 import { ReviewTransactionInitializer } from "./logic/transaction/review-transaction.initializer";
@@ -24,6 +23,7 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
 import { ReviewTransactionContext } from "./logic/transaction/review-transaction.context";
 import { ReviewTransactionSearcher } from "./logic/transaction/review-transaction.searcher";
 import { AuthModule } from "../auth/auth.module";
+import { reviewMediaHeaderKey } from "../../common/config/header-key-configs/media-header-keys/review-media-header.key";
 
 const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id" };
 
@@ -38,7 +38,7 @@ const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id
   ],
   controllers: [ReviewV1AdminController, ReviewV1ClientController],
   providers: [
-    { provide: "review-media-cookie-key", useValue: reviewMediaCookieKey },
+    { provide: "review-media-header-key", useValue: reviewMediaHeaderKey },
     { provide: "review-select", useValue: reviewSelect },
     { provide: Transactional, useClass: ReviewTransactionInitializer },
     reviewIdFilter,

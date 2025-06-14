@@ -14,9 +14,6 @@ import { InquiryModule } from "../inquiry/inquiry.module";
 import { InquiryResponseImageEntity } from "./entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "./entities/inquiry-response-video.entity";
 import { mediaSelect } from "src/common/config/repository-select-configs/media.select";
-import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
-import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
-import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { MediaValidator } from "./logic/media.validator";
 import { MediaUtils } from "./logic/media.utils";
 import { MediaUpdateRepository } from "./repositories/media-update.repository";
@@ -39,6 +36,9 @@ import { InquiryRequestImageSearchRepository } from "./repositories/inquiry-requ
 import { InquiryRequestVideoSearchRepository } from "./repositories/inquiry-request-video-search.repository";
 import { InquiryRequestVideoSearcher } from "./logic/inquiry-request-video.searcher";
 import { AuthModule } from "../auth/auth.module";
+import { productMediaHeaderKey } from "../../common/config/header-key-configs/media-header-keys/product-media-header.key";
+import { reviewMediaHeaderKey } from "../../common/config/header-key-configs/media-header-keys/review-media-header.key";
+import { inquiryMediaHeaderKey } from "../../common/config/header-key-configs/media-header-keys/inquiry-media-header.key";
 
 @Module({
   imports: [
@@ -59,9 +59,9 @@ import { AuthModule } from "../auth/auth.module";
   ],
   controllers: [MediaV1ClientController, MediaV1AdminController],
   providers: [
-    { provide: "product-media-cookie-key", useValue: productMediaCookieKey },
-    { provide: "review-media-cookie-key", useValue: reviewMediaCookieKey },
-    { provide: "inquiry-media-cookie-key", useValue: inquiryMediaCookieKey },
+    { provide: "product-media-header-key", useValue: productMediaHeaderKey },
+    { provide: "review-media-header-key", useValue: reviewMediaHeaderKey },
+    { provide: "inquiry-media-header-key", useValue: inquiryMediaHeaderKey },
     { provide: "delete-media-event-map", useValue: deleteMediaEventMap },
     { provide: "media-select", useValue: mediaSelect },
     ProductImageSearcher,

@@ -1,14 +1,14 @@
 import { ReviewBody } from "./review-body.dto";
 import { ReviewEntity } from "../../entities/review.entity";
-import { MediaCookieDto } from "../../../media/dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
 
 export class ModifyReviewDto {
   body: ReviewBody;
   userId: string;
   productId: string;
   reviewId: string;
-  reviewImgCookies: MediaCookieDto[];
-  reviewVdoCookies: MediaCookieDto[];
+  reviewImageHeaders: MediaHeaderDto[];
+  reviewVideoHeaders: MediaHeaderDto[];
 }
 
 export class ModifyReviewRowDto {

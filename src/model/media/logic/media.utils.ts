@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { MediaEventMapSetter } from "./media-event-map.setter";
-import { MediaCookieDto } from "../dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../dto/request/media-header.dto";
 import { UploadMediaDto } from "../dto/request/upload-media.dto";
 import { SetDeleteMediaFilesDto } from "../dto/response/set-delete-media-files.dto";
 import { DeleteMediaFilesDto } from "../dto/request/delete-media-files.dto";
@@ -19,15 +19,15 @@ export class MediaUtils {
     )}:${this.configService.get("APPLICATION_PORT")}/media/${path}/${mediaFileName}`.toLowerCase();
   }
 
-  public createMediaCookieValues(
+  public createMediaHeaderValues(
     ids: string[],
     files: Express.Multer.File[],
     urls: string[],
-    whatCookie: string,
-  ): MediaCookieDto[] {
+    whatHeader: string,
+  ): MediaHeaderDto[] {
     return files.map((file, idx) => ({
       id: ids[idx],
-      whatCookie,
+      whatHeader,
       url: urls[idx],
       fileName: file.filename,
     }));
@@ -42,10 +42,10 @@ export class MediaUtils {
     });
   }
 
-  public getMediaCookies(ids: string[], files: Express.Multer.File[], path: string, whatCookie: string) {
+  public getMediaHeaders(ids: string[], files: Express.Multer.File[], path: string, whatHeader: string) {
     const urls = files.map((file) => this.setUrl(file.filename, path));
 
-    return this.createMediaCookieValues(ids, files, urls, whatCookie);
+    return this.createMediaHeaderValues(ids, files, urls, whatHeader);
   }
 
   public deleteMediaFiles<I extends { url: string }, V extends { url: string }>(

@@ -10,13 +10,13 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { loggerFactory } from "../../../common/functions/logger.factory";
-import { MediaCookieDto } from "../dto/request/media-cookie.dto";
+import { MediaHeaderDto } from "../dto/request/media-header.dto";
 import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
 
 @Injectable()
 export class InquiryRequestImageSearchRepository extends SearchRepository<
   InquiryRequestImageEntity,
-  MediaCookieDto,
+  MediaHeaderDto,
   MediaBasicRawDto
 > {
   constructor(
@@ -67,11 +67,11 @@ export class InquiryRequestImageSearchRepository extends SearchRepository<
   }
 
   @Implemented
-  public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
+  public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
     const raws = await Promise.all(
-      dto.map((mediaCookie) =>
+      dto.map((MediaHeader) =>
         this.selectInquiryRequestImage(this.select.inquiryRequestImages)
-          .where("inquiryRequestImage.id = :id", { id: mediaCookie.id })
+          .where("inquiryRequestImage.id = :id", { id: MediaHeader.id })
           .getRawOne(),
       ),
     );

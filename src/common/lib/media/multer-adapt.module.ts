@@ -84,7 +84,7 @@ export class MulterConfigService implements MulterOptionsFactory {
       destination(req, file, cb) {
         if (folder.includes("images") && !file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
           return cb(new UnsupportedMediaTypeException("해당 파일은 이미지 파일 형식이 아닙니다."), null);
-        } else if (folder.includes("videos") && !file.mimetype.match(/\/(mp4|MOV|AVI)$/)) {
+        } else if (folder.includes("videos") && !file.mimetype.match(/\/(mp4|mov|MOV|AVI|quicktime)$/)) {
           return cb(new UnsupportedMediaTypeException("해당 파일은 비디오 파일 형식이 아닙니다."), null);
         }
 

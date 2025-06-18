@@ -9,7 +9,7 @@ import * as path from "path";
 import * as multer from "multer";
 
 export class MulterConfigService implements MulterOptionsFactory {
-  static maxContentsCount = 5;
+  static maxContentsCount = 10;
   private readonly logger = loggerFactory("MulterConfiguration");
   private readonly inquiry = ["request", "response"];
 

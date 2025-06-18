@@ -9,17 +9,22 @@ import { DeleteMediaFilesDto } from "../dto/request/delete-media-files.dto";
 export class MediaFileEraser {
   @OnEvent(eventConfigs.deleteMediaFile, { async: true })
   public async deleteMediaFile(dto: DeleteMediaFilesDto): Promise<void> {
-    dto.imageFiles.fileName.forEach((image) => {
+    const deleteImagePromises = dto.imageFiles.fileName.map(async (image) => {
       const prefix = dto.imageFiles.imagePrefix;
       const mediaFilePrefix = prefix.concat("/").concat(image);
       const mediaFileUrl = path.join(__dirname, "../../../../uploads", mediaFilePrefix);
-      fs.unlink(mediaFileUrl);
+
+      await fs.unlink(mediaFileUrl);
     });
-    dto.videoFiles.fileName.forEach((video) => {
+
+    const deleteVideoPromises = dto.videoFiles.fileName.map(async (video) => {
       const prefix = dto.videoFiles.videoPrefix;
       const mediaFilePrefix = prefix.concat("/").concat(video);
       const mediaFileUrl = path.join(__dirname, "../../../../uploads", mediaFilePrefix);
-      fs.unlink(mediaFileUrl);
+
+      await fs.unlink(mediaFileUrl);
     });
+
+    await Promise.all([...deleteImagePromises, ...deleteVideoPromises]);
   }
 }

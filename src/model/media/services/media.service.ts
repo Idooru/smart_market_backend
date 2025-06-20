@@ -7,6 +7,8 @@ import { MediaHeaderDto } from "../dto/request/media-header.dto";
 import { ProductMediaHeaderKey } from "../../../common/config/header-key-configs/media-header-keys/product-media-header.key";
 import { InquiryMediaHeaderKey } from "../../../common/config/header-key-configs/media-header-keys/inquiry-media-header.key";
 import { ReviewMediaHeaderKey } from "../../../common/config/header-key-configs/media-header-keys/review-media-header.key";
+import { ReviewImageEntity } from "../entities/review-image.entity";
+import { ReviewVideoEntity } from "../entities/review-video.entity";
 
 @Injectable()
 export class MediaService {
@@ -32,22 +34,22 @@ export class MediaService {
   }
 
   @General
-  public async uploadReviewImages(files: Express.Multer.File[]): Promise<string[]> {
+  public async uploadReviewImages(files: Express.Multer.File[]): Promise<ReviewImageEntity[]> {
     const path = "review/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
     const uploading = stuffs.map((stuff) => this.updateRepository.uploadReviewImage(stuff));
-    const reviewImages = await Promise.all(uploading);
-    return reviewImages.map((reviewImage) => reviewImage.id);
+    return Promise.all(uploading);
+    // return reviewImages.map((reviewImage) => reviewImage.id);
     // return this.mediaUtils.getMediaHeaders(ids, files, path, this.reviewMedia.imageUrlHeader);
   }
 
   @General
-  public async uploadReviewVideos(files: Express.Multer.File[]): Promise<string[]> {
+  public async uploadReviewVideos(files: Express.Multer.File[]): Promise<ReviewVideoEntity[]> {
     const path = "review/videos";
     const stuffs = this.mediaUtils.createStuffs(files, path);
     const uploading = stuffs.map((stuff) => this.updateRepository.uploadReviewVideo(stuff));
-    const reviewVideos = await Promise.all(uploading);
-    return reviewVideos.map((reviewVideo) => reviewVideo.id);
+    return Promise.all(uploading);
+    // return reviewVideos.map((reviewVideo) => reviewVideo.id);
     // return this.mediaUtils.getMediaHeaders(ids, files, path, this.reviewMedia.videoUrlHeader);
   }
 

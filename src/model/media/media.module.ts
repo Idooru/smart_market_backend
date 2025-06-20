@@ -95,6 +95,8 @@ import { inquiryMediaHeaderKey } from "../../common/config/header-key-configs/me
     InquiryResponseImageSearcher,
     InquiryResponseVideoSearcher,
     MediaEventMapSetter,
+    MediaValidator,
+    MediaService,
     MediaUtils,
     MediaUpdateRepository,
   ],

@@ -1,6 +1,7 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
 import { ReviewEntity } from "../../entities/review.entity";
 import { StarRateScore } from "../../types/star-rate-score.type";
+import { Transform } from "class-transformer";
 
 export class ReviewBody extends PickType(ReviewEntity, [
   "title",
@@ -32,5 +33,6 @@ export class ReviewBody extends PickType(ReviewEntity, [
     required: true,
     uniqueItems: false,
   })
+  @Transform(({ value }) => parseInt(value, 10))
   starRateScore: StarRateScore;
 }

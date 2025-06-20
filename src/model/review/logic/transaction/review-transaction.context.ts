@@ -11,13 +11,18 @@ import { ChangeReviewImageDto } from "../../dto/request/change-review-image.dto"
 import { ChangeReviewVideoDto } from "../../dto/request/change-review-video.dto";
 import { ModifyStarRateDto } from "../../dto/request/modify-star-rate.dto";
 import { SearchDeleteReviewDto } from "../../dto/request/search-delete-review.dto";
+import { MediaService } from "../../../media/services/media.service";
 
 @Injectable()
 export class ReviewTransactionContext {
-  constructor(private readonly reviewService: ReviewService, private readonly mediaUtils: MediaUtils) {}
+  constructor(
+    private readonly reviewService: ReviewService,
+    private readonly mediaService: MediaService,
+    private readonly mediaUtils: MediaUtils,
+  ) {}
 
   public async createReviewContext(dto: SearchCreateReviewDto): Promise<void> {
-    const { productId, body, reviewImages, reviewVideos, starRate, reviewerId } = dto;
+    const { productId, body, reviewImageFiles, reviewVideoFiles, starRate, reviewerId } = dto;
 
     const createReviewDto: CreateReviewRowDto = {
       body,
@@ -25,7 +30,11 @@ export class ReviewTransactionContext {
       reviewerId,
     };
 
-    const review = await this.reviewService.createReview(createReviewDto);
+    const [review, reviewImages, reviewVideos] = await Promise.all([
+      this.reviewService.createReview(createReviewDto),
+      this.mediaService.uploadReviewImages(reviewImageFiles),
+      this.mediaService.uploadReviewVideos(reviewVideoFiles),
+    ]);
 
     const insertReviewImagesDto: InsertReviewImagesDto = {
       reviewId: review.id,

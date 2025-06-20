@@ -98,22 +98,22 @@ export class ReviewTransactionSearcher {
   }
 
   public async searchCreateReview(dto: CreateReviewDto): Promise<SearchCreateReviewDto> {
-    const { body, reviewerId, productId, reviewImageHeaders, reviewVideoHeaders } = dto;
+    const { body, reviewerId, productId, reviewImageFiles, reviewVideoFiles } = dto;
     const product = await this.entityFinder.findProduct(productId, [ReviewEntity, StarRateEntity]);
 
     await this.reviewUtils.checkBeforeCreate(product, reviewerId);
 
-    const [reviewImages, reviewVideos] = await Promise.all([
-      this.entityFinder.findReviewImages(reviewImageHeaders),
-      this.entityFinder.findReviewVideos(reviewVideoHeaders),
-    ]);
+    // const [reviewImages, reviewVideos] = await Promise.all([
+    //   this.entityFinder.findReviewImages(reviewImageFiles),
+    //   this.entityFinder.findReviewVideos(reviewVideoFiles),
+    // ]);
 
     return {
       body,
       productId,
       reviewerId,
-      reviewImages,
-      reviewVideos,
+      reviewImageFiles,
+      reviewVideoFiles,
       starRate: product.StarRate,
     };
   }

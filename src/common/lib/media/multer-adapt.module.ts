@@ -1,4 +1,4 @@
-import { Module, UnsupportedMediaTypeException } from "@nestjs/common";
+import { BadRequestException, Module, UnsupportedMediaTypeException } from "@nestjs/common";
 import { MulterModule, MulterOptionsFactory } from "@nestjs/platform-express";
 import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 import { promises as fsPromises } from "fs";
@@ -10,6 +10,9 @@ import * as multer from "multer";
 
 export class MulterConfigService implements MulterOptionsFactory {
   static maxContentsCount = 10;
+  static imageMaxCount = 10;
+  static videoMaxCount = 5;
+  static totalMaxCount = 15;
   private readonly logger = loggerFactory("MulterConfiguration");
   private readonly inquiry = ["request", "response"];
 
@@ -79,17 +82,26 @@ export class MulterConfigService implements MulterOptionsFactory {
     await Promise.all([this.createUploadFolder(), this.createImageFolder(), this.createVideoFolder()]);
   }
 
-  private static storage(folder: string): multer.StorageEngine {
+  public static storage(folder: string): multer.StorageEngine {
     return multer.diskStorage({
       destination(req, file, cb) {
-        if (folder.includes("images") && !file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
-          return cb(new UnsupportedMediaTypeException("해당 파일은 이미지 파일 형식이 아닙니다."), null);
-        } else if (folder.includes("videos") && !file.mimetype.match(/\/(mp4|mov|MOV|AVI|quicktime)$/)) {
-          return cb(new UnsupportedMediaTypeException("해당 파일은 비디오 파일 형식이 아닙니다."), null);
+        let subFolder = "";
+
+        if (file.fieldname.includes("image")) {
+          if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+            return cb(new UnsupportedMediaTypeException("해당 파일은 이미지 파일 형식이 아닙니다."), null);
+          }
+          subFolder = `/images/${folder}`;
+        } else if (file.fieldname.includes("video")) {
+          if (!file.mimetype.match(/\/(mp4|mov|MOV|AVI|quicktime)$/)) {
+            return cb(new UnsupportedMediaTypeException("해당 파일은 비디오 파일 형식이 아닙니다."), null);
+          }
+          subFolder = `/videos/${folder}`;
+        } else {
+          return cb(new BadRequestException("지원하지 않는 필드 이름입니다."), null);
         }
 
-        const folderName = path.join(__dirname, `../../../../uploads/${folder}`);
-
+        const folderName = path.join(__dirname, `../../../../uploads/${subFolder}`);
         cb(null, folderName);
       },
       filename(req, file, cb) {

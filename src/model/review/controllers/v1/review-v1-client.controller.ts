@@ -1,4 +1,4 @@
-import { Controller, Param, Body, UseGuards, Post, Put, Delete, Get, Query } from "@nestjs/common";
+import { Controller, Param, Body, UseGuards, Post, Put, Delete, Get, Query, UploadedFiles } from "@nestjs/common";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { UseInterceptors } from "@nestjs/common";
@@ -7,9 +7,8 @@ import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonRemoveHeadersInterface } from "src/common/interceptors/interface/json-remove-headers.interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { MediaHeadersParser } from "src/common/decorators/media-headers-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { ReviewTransactionExecutor } from "../../logic/transaction/review-transaction.executor";
 import { ProductIdValidatePipe } from "../../../product/pipe/exist/product-id-validate.pipe";
 import { ReviewIdValidatePipe } from "../../pipe/exist/review-id-validate.pipe";
@@ -23,7 +22,8 @@ import { ModifyReviewDto } from "../../dto/request/modify-review.dto";
 import { DeleteReviewDto } from "../../dto/request/delete-review.dto";
 import { FindAllReviewsDto } from "../../dto/request/find-all-reviews.dto";
 import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
-// import { reviewMediaHeaderKey } from "../../../../common/config/header-key-configs/media-header-keys/review-media-header.key";
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import { MulterConfigService } from "../../../../common/lib/media/multer-adapt.module";
 
 @ApiTags("v1 고객 Review API")
 @UseGuards(IsClientGuard)
@@ -66,27 +66,32 @@ export class ReviewV1ClientController {
     };
   }
 
-  // @ApiOperation({
-  //   summary: "create review",
-  //   description: "리뷰를 생성합니다. 리뷰에는 이미지 혹은 비디오가 포함될 수 있습니다.",
-  // })
-  @UseInterceptors(JsonRemoveHeadersInterceptor)
+  @UseInterceptors(
+    JsonGeneralInterceptor,
+    FileFieldsInterceptor(
+      [
+        { name: "review_image", maxCount: MulterConfigService.imageMaxCount },
+        { name: "review_video", maxCount: MulterConfigService.videoMaxCount },
+      ],
+      {
+        storage: MulterConfigService.storage("review"),
+        limits: { files: MulterConfigService.totalMaxCount, fileSize: 50 * 1024 * 1024 },
+      },
+    ),
+  )
   @Post("/product/:productId")
   public async createReview(
     @Param("productId", ProductIdValidatePipe) productId: string,
-    // @MediaHeadersParser(reviewMediaHeaderKey.imageUrlHeader)
-    reviewImageHeaders: MediaHeaderDto[],
-    // @MediaHeadersParser(reviewMediaHeaderKey.videoUrlHeader)
-    reviewVideoHeaders: MediaHeaderDto[],
+    @UploadedFiles() mediaFiles: unknown,
     @Body() body: ReviewBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonRemoveHeadersInterface> {
+  ): Promise<JsonGeneralInterface<void>> {
     const dto: CreateReviewDto = {
       body,
       reviewerId: userId,
       productId,
-      reviewImageHeaders,
-      reviewVideoHeaders,
+      reviewImageFiles: mediaFiles["review_image"] ?? [],
+      reviewVideoFiles: mediaFiles["review_video"] ?? [],
     };
 
     await this.transaction.createReview(dto);
@@ -94,10 +99,6 @@ export class ReviewV1ClientController {
     return {
       statusCode: 201,
       message: "리뷰를 생성하였습니다.",
-      headerKey: [
-        ...reviewImageHeaders.map((header) => header.whatHeader),
-        ...reviewVideoHeaders.map((header) => header.whatHeader),
-      ],
     };
   }
 

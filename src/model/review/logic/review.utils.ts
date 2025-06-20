@@ -47,7 +47,7 @@ export class ReviewUtils {
     const alreadyWritten = reviews.find((review) => review.ClientUser.id === userId);
 
     if (alreadyWritten) {
-      const message = `해당 사용자(${userId})는 해당 상품(${product.id})에 대한 리뷰를 이미 남겼습니다.`;
+      const message = `이미 리뷰를 작성하였습니다.`;
       loggerFactory("Already Writen").warn(message);
       throw new BadRequestException(message);
     }

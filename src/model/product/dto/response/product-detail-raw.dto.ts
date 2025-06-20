@@ -17,7 +17,6 @@ class Product {
 
 class Review {
   id: string;
-  title: string;
   content: string;
   starRateScore: string;
   imageUrls: string[];

@@ -145,7 +145,6 @@ export class UserSearchRepository extends SearchRepository<UserEntity, FindAllUs
       })),
       reviews: user.ClientUser.Review.map((review) => ({
         id: review.id,
-        title: review.title,
         content: review.content,
         starRateScore: review.starRateScore,
         countForModify: review.countForModify,

@@ -67,7 +67,6 @@ export class ReviewSearchRepository extends SearchRepository<ReviewEntity, FindA
     return reviews.map((review) => ({
       review: {
         id: review.reviewId,
-        title: review.reviewTitle,
         createdAt: review.reviewCreatedAt,
         starRateScore: parseInt(review.starRateScore),
         countForModify: parseInt(review.countForModify),
@@ -89,7 +88,6 @@ export class ReviewSearchRepository extends SearchRepository<ReviewEntity, FindA
 
     return reviews.map((review) => ({
       reviewId: review.reviewId,
-      reviewTitle: review.reviewTitle,
       reviewContent: review.reviewContent,
       starRateScore: parseInt(review.starRateScore),
       countForModify: parseInt(review.countForModify),
@@ -109,7 +107,6 @@ export class ReviewSearchRepository extends SearchRepository<ReviewEntity, FindA
     return {
       review: {
         id: reviewRaw[0].reviewerId,
-        title: reviewRaw[0].reviewTitle,
         content: reviewRaw[0].reviewContent,
         starRateScore: parseInt(reviewRaw[0].starRateScore),
         countForModify: parseInt(reviewRaw[0].countForModify),

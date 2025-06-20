@@ -153,7 +153,6 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
       },
       reviews: product.Review.map((review) => ({
         id: review.id,
-        title: review.title,
         content: review.content,
         starRateScore: this.getAverageScore(review.starRateScore),
         imageUrls: review.ReviewImage.map((image) => image.url),

@@ -22,9 +22,9 @@ export class ReviewUpdateRepository {
 
     await this.transaction.getRepository().review.query(
       `INSERT INTO
-       reviews (id, title, content, starRateScore, clientUserId, productId)
-       VALUES(?, ?, ?, ?, ?, ?)`,
-      [reviewId, body.title, body.content, body.starRateScore, reviewerId, productId],
+       reviews (id, content, starRateScore, clientUserId, productId)
+       VALUES(?, ?, ?, ?, ?)`,
+      [reviewId, body.content, body.starRateScore, reviewerId, productId],
     );
 
     const insertedReview = await this.transaction

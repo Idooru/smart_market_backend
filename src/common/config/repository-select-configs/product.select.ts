@@ -25,7 +25,6 @@ export const productSelect: ProductSelect = {
     "ProductImage.url",
     "StarRate.averageScore",
     "Review.id",
-    "Review.title",
     "Review.content",
     "Review.starRateScore",
     "ReviewImage.url",

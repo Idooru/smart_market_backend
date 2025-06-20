@@ -4,20 +4,11 @@ import { StarRateScore } from "../../types/star-rate-score.type";
 import { Transform } from "class-transformer";
 
 export class ReviewBody extends PickType(ReviewEntity, [
-  "title",
   "content",
   "starRateScore",
   "ReviewImage",
   "ReviewVideo",
 ] as const) {
-  @ApiProperty({
-    description: "리뷰 제목",
-    example: "리뷰 제목 예시",
-    required: true,
-    uniqueItems: false,
-  })
-  title: string;
-
   @ApiProperty({
     description: "리뷰 본문",
     example: "리뷰 본문 예시",

@@ -5,7 +5,6 @@ export class ReviewBasicRawDto {
 
 class Review {
   id: string;
-  title: string;
   createdAt: string;
   starRateScore: number;
   countForModify: number;

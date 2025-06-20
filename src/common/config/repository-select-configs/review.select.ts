@@ -5,32 +5,7 @@ export interface ReviewSelect {
 }
 
 export const reviewSelect: ReviewSelect = {
-  reviews: [
-    "review.id as reviewId",
-    "review.createdAt as reviewCreatedAt",
-    "review.starRateScore as starRateScore",
-    "review.countForModify as countForModify",
-    "Product.id as productId",
-    "Product.name as productName",
-    "Product.price as productPrice",
-    "Product.category as productCategory",
-  ],
-  review: [
-    "review.id as reviewId",
-    "review.content as reviewContent",
-    "review.starRateScore as starRateScore",
-    "review.countForModify as countForModify",
-    "ReviewImage.url as reviewImageUrl",
-    "ReviewVideo.url as reviewVideoUrl",
-    "Product.id as productId",
-    "Product.name as productName",
-    "Product.price as productPrice",
-    "Product.category as productCategory",
-  ],
-  reviewWithProducts: [
-    "review.id as reviewId",
-    "review.content as reviewContent",
-    "review.starRateScore as starRateScore",
-    "review.countForModify as countForModify",
-  ],
+  reviews: ["review.id", "review.createdAt", "review.starRateScore", "Product.id", "Product.name", "Image.url"],
+  review: ["review.id", "review.content", "review.starRateScore", "review.countForModify", "Image.url", "Video.url"],
+  reviewWithProducts: ["review.id", "review.content", "review.starRateScore", "review.countForModify"],
 };

@@ -7,12 +7,10 @@ class Review {
   id: string;
   createdAt: string;
   starRateScore: number;
-  countForModify: number;
 }
 
 class Product {
   id: string;
   name: string;
-  price: number;
-  category: string;
+  imageUrls: string[];
 }

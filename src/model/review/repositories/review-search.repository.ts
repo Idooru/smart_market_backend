@@ -13,6 +13,8 @@ import {
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { ReviewFromProductRawDto } from "../dto/response/review-from-product-raw.dto";
 import { FindAllReviewsDto } from "../dto/request/find-all-reviews.dto";
+import { MediaUtils } from "../../media/logic/media.utils";
+import { formatDate } from "../../../common/functions/format-date";
 
 @Injectable()
 export class ReviewSearchRepository extends SearchRepository<ReviewEntity, FindAllReviewsDto, ReviewBasicRawDto> {
@@ -23,6 +25,7 @@ export class ReviewSearchRepository extends SearchRepository<ReviewEntity, FindA
     private readonly reviewIdFilter: string,
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,
+    private readonly mediaUtils: MediaUtils,
   ) {
     super();
   }
@@ -55,27 +58,24 @@ export class ReviewSearchRepository extends SearchRepository<ReviewEntity, FindA
     const { align, column, userId } = dto;
     const reviews = await this.selectReview(this.select.reviews)
       .innerJoin("review.Product", "Product")
-      .leftJoin("Product.ProductImage", "ProductImage")
+      .leftJoin("Product.ProductImage", "Image")
       .innerJoin("review.ClientUser", "Client")
-      .leftJoin("review.ReviewImage", "Image")
-      .leftJoin("review.ReviewVideo", "Video")
       .orderBy(`review.${column}`, align)
       .where("Client.id = :id", { id: userId })
-      .groupBy("review.id")
-      .getRawMany();
+      .getMany();
 
     return reviews.map((review) => ({
       review: {
-        id: review.reviewId,
-        createdAt: review.reviewCreatedAt,
-        starRateScore: parseInt(review.starRateScore),
-        countForModify: parseInt(review.countForModify),
+        id: review.id,
+        createdAt: formatDate(review.createdAt),
+        starRateScore: review.starRateScore,
       },
       product: {
-        id: review.productId,
-        name: review.productName,
-        price: parseInt(review.productPrice),
-        category: review.productCategory,
+        id: review.Product.id,
+        name: review.Product.name,
+        imageUrls: review.Product.ProductImage.length
+          ? review.Product.ProductImage.map((image) => image.url)
+          : [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")],
       },
     }));
   }
@@ -84,41 +84,31 @@ export class ReviewSearchRepository extends SearchRepository<ReviewEntity, FindA
     const reviews = await this.selectReview(this.select.reviewWithProducts)
       .innerJoin("review.Product", "Product")
       .where("Product.id = :id", { id })
-      .getRawMany();
+      .getMany();
 
     return reviews.map((review) => ({
-      reviewId: review.reviewId,
-      reviewContent: review.reviewContent,
-      starRateScore: parseInt(review.starRateScore),
-      countForModify: parseInt(review.countForModify),
+      reviewId: review.id,
+      reviewContent: review.content,
+      starRateScore: review.starRateScore,
+      countForModify: review.countForModify,
     }));
   }
 
   public async findDetailRaw(id: string): Promise<ReviewDetailRawDto> {
-    const reviewRaw = await this.selectReview(this.select.review)
-      .innerJoin("review.Product", "Product")
-      .leftJoin("Product.ProductImage", "ProductImage")
+    const review = await this.selectReview(this.select.review)
       .innerJoin("review.ClientUser", "Client")
-      .leftJoin("review.ReviewImage", "ReviewImage")
-      .leftJoin("review.ReviewVideo", "ReviewVideo")
+      .leftJoin("review.ReviewImage", "Image")
+      .leftJoin("review.ReviewVideo", "Video")
       .where(this.reviewIdFilter, { id })
-      .getRawMany();
+      .getOne();
 
     return {
-      review: {
-        id: reviewRaw[0].reviewerId,
-        content: reviewRaw[0].reviewContent,
-        starRateScore: parseInt(reviewRaw[0].starRateScore),
-        countForModify: parseInt(reviewRaw[0].countForModify),
-        imageUrls: [...new Set(reviewRaw.map((item) => item.reviewImageUrl).filter(Boolean))],
-        videoUrls: [...new Set(reviewRaw.map((item) => item.reviewVideoUrl).filter(Boolean))],
-      },
-      product: {
-        id: reviewRaw[0].productId,
-        name: reviewRaw[0].productName,
-        price: parseInt(reviewRaw[0].productPrice),
-        category: reviewRaw[0].productCategory,
-      },
+      id: review.id,
+      content: review.content,
+      starRateScore: review.starRateScore,
+      countForModify: review.countForModify,
+      imageUrls: review.ReviewImage.map((image) => image.url),
+      videoUrls: review.ReviewVideo.map((video) => video.url),
     };
   }
 }

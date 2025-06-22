@@ -8,6 +8,7 @@ export const cartSelect: CartSelect = {
     "cart.quantity",
     "cart.totalPrice",
     "cart.createdAt",
+    "cart.isPayNow",
     "Product.id",
     "Product.name",
     "Product.price",

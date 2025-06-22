@@ -65,6 +65,7 @@ export class CartSearchRepository extends SearchRepository<CartEntity, FindAllCa
       quantity: cart.quantity,
       totalPrice: cart.totalPrice,
       createdAt: formatDate(cart.createdAt),
+      isPayNow: cart.isPayNow,
       product: {
         id: cart.Product.id,
         name: cart.Product.name,

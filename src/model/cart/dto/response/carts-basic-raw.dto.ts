@@ -3,6 +3,7 @@ export class CartBasicRawDto {
   quantity: number;
   totalPrice: number;
   createdAt: string;
+  isPayNow: boolean;
   product: Product;
 }
 

@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { CommonEntity } from "../../../common/entities/common.entity";
 import { ProductEntity } from "../../product/entities/product.entity";
 import { ClientUserEntity } from "../../user/entities/client-user.entity";
-import { IsNotEmpty, IsPositive, Max } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsPositive, Max } from "class-validator";
 
 @Entity({ name: "carts", synchronize: true })
 export class CartEntity extends CommonEntity {
@@ -16,6 +16,11 @@ export class CartEntity extends CommonEntity {
   @IsNotEmpty()
   @Column({ type: "int", unsigned: true, nullable: false })
   public totalPrice: number;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  @Column({ type: "boolean" })
+  public isPayNow: boolean;
 
   @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.Cart, { onDelete: "CASCADE" })
   @JoinColumn({ name: "clientId" })

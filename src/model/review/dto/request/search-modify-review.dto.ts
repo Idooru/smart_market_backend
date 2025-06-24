@@ -7,9 +7,9 @@ import { StarRateEntity } from "../../entities/star-rate.entity";
 export class SearchModifyReviewDto {
   body: ReviewBody;
   review: ReviewEntity;
+  reviewImageFiles: Express.Multer.File[];
+  reviewVideoFiles: Express.Multer.File[];
   beforeReviewImages: ReviewImageEntity[];
-  newReviewImages: ReviewImageEntity[];
   beforeReviewVideos: ReviewVideoEntity[];
-  newReviewVideos: ReviewVideoEntity[];
   starRate: StarRateEntity;
 }

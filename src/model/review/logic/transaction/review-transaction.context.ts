@@ -56,7 +56,7 @@ export class ReviewTransactionContext {
   }
 
   public async modifyReviewContext(dto: SearchModifyReviewDto): Promise<void> {
-    const { body, review, beforeReviewImages, newReviewImages, beforeReviewVideos, newReviewVideos, starRate } = dto;
+    const { body, review, beforeReviewImages, reviewImageFiles, beforeReviewVideos, reviewVideoFiles, starRate } = dto;
 
     const modifyReviewDto: ModifyReviewRowDto = {
       review,
@@ -66,13 +66,13 @@ export class ReviewTransactionContext {
     const changeReviewImageDto: ChangeReviewImageDto = {
       reviewId: review.id,
       beforeReviewImages,
-      newReviewImages,
+      newReviewImages: reviewImageFiles,
     };
 
     const changeReviewVideoDto: ChangeReviewVideoDto = {
       reviewId: review.id,
       beforeReviewVideos,
-      newReviewVideos,
+      newReviewVideos: reviewVideoFiles,
     };
 
     const modifyStarRateDto: ModifyStarRateDto = {

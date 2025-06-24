@@ -3,15 +3,15 @@ import { ReviewEntity } from "../../entities/review.entity";
 import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
 
 export class ModifyReviewDto {
-  body: ReviewBody;
-  userId: string;
-  productId: string;
-  reviewId: string;
-  reviewImageHeaders: MediaHeaderDto[];
-  reviewVideoHeaders: MediaHeaderDto[];
+  public body: ReviewBody;
+  public userId: string;
+  public productId: string;
+  public reviewId: string;
+  public reviewImageFiles: Express.Multer.File[];
+  public reviewVideoFiles: Express.Multer.File[];
 }
 
 export class ModifyReviewRowDto {
-  review: ReviewEntity;
-  body: ReviewBody;
+  public review: ReviewEntity;
+  public body: ReviewBody;
 }

@@ -17,6 +17,7 @@ import { ModifyReviewRowDto } from "../dto/request/modify-review.dto";
 import { ChangeReviewImageDto } from "../dto/request/change-review-image.dto";
 import { ChangeReviewVideoDto } from "../dto/request/change-review-video.dto";
 import { ModifyStarRateDto } from "../dto/request/modify-star-rate.dto";
+import { MediaService } from "../../media/services/media.service";
 
 class EntityFinder {
   constructor(private readonly reviewIdFilter: string, private readonly reviewSearcher: ReviewSearcher) {}
@@ -42,6 +43,7 @@ export class ReviewService {
     private readonly reviewUpdateRepository: ReviewUpdateRepository,
     private readonly reviewSearcher: ReviewSearcher,
     private readonly mediaUtils: MediaUtils,
+    private readonly mediaService: MediaService,
   ) {
     this.entityFinder = new EntityFinder(this.reviewIdFilter, this.reviewSearcher);
   }
@@ -88,7 +90,7 @@ export class ReviewService {
   public async changeReviewImages(dto: ChangeReviewImageDto): Promise<void> {
     const { beforeReviewImages, newReviewImages, reviewId } = dto;
 
-    const inserting = newReviewImages.map((reviewImage) => {
+    const inserting = (await this.mediaService.uploadReviewImages(newReviewImages)).map((reviewImage) => {
       const insertReviewImageDto = { reviewId, reviewImageId: reviewImage.id };
       return this.reviewUpdateRepository.insertReviewIdOnReviewImage(insertReviewImageDto);
     });
@@ -108,7 +110,7 @@ export class ReviewService {
   public async changeReviewVideos(dto: ChangeReviewVideoDto): Promise<void> {
     const { beforeReviewVideos, newReviewVideos, reviewId } = dto;
 
-    const inserting = newReviewVideos.map((reviewVideo) => {
+    const inserting = (await this.mediaService.uploadReviewVideos(newReviewVideos)).map((reviewVideo) => {
       const insertReviewImageDto = { reviewId, reviewVideoId: reviewVideo.id };
       return this.reviewUpdateRepository.insertReviewIdOnReviewVideo(insertReviewImageDto);
     });

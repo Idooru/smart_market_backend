@@ -75,7 +75,7 @@ export class ReviewV1ClientController {
       ],
       {
         storage: MulterConfigService.storage("review"),
-        limits: { files: MulterConfigService.totalMaxCount, fileSize: 50 * 1024 * 1024 },
+        limits: { files: MulterConfigService.totalMaxCount },
       },
     ),
   )
@@ -102,29 +102,35 @@ export class ReviewV1ClientController {
     };
   }
 
-  // @ApiOperation({
-  //   summary: "modify review",
-  //   description: "리뷰를 수정합니다. 리뷰에는 이미지 혹은 비디오가 포함될 수 있습니다.",
-  // })
-  @UseInterceptors(JsonRemoveHeadersInterceptor, DeleteReviewMediaInterceptor)
+  @UseInterceptors(
+    JsonGeneralInterceptor,
+    FileFieldsInterceptor(
+      [
+        { name: "review_image", maxCount: MulterConfigService.imageMaxCount },
+        { name: "review_video", maxCount: MulterConfigService.videoMaxCount },
+      ],
+      {
+        storage: MulterConfigService.storage("review"),
+        limits: { files: MulterConfigService.totalMaxCount },
+      },
+    ),
+  )
+  @UseInterceptors(DeleteReviewMediaInterceptor)
   @Put("/:reviewId/product/:productId")
   public async modifyReview(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
-    // @MediaHeadersParser(reviewMediaHeaderKey.imageUrlHeader)
-    reviewImageHeaders: MediaHeaderDto[],
-    // @MediaHeadersParser(reviewMediaHeaderKey.videoUrlHeader)
-    reviewVideoHeaders: MediaHeaderDto[],
+    @UploadedFiles() mediaFiles: unknown,
     @Body() body: ReviewBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonRemoveHeadersInterface> {
+  ): Promise<JsonGeneralInterface<void>> {
     const dto: ModifyReviewDto = {
       body,
       productId,
       reviewId,
       userId,
-      reviewImageHeaders,
-      reviewVideoHeaders,
+      reviewImageFiles: mediaFiles["review_image"] ?? [],
+      reviewVideoFiles: mediaFiles["review_video"] ?? [],
     };
 
     await this.transaction.modifyReview(dto);
@@ -132,10 +138,6 @@ export class ReviewV1ClientController {
     return {
       statusCode: 200,
       message: `reviewId(${reviewId})에 해당하는 리뷰를 수정하였습니다`,
-      headerKey: [
-        ...reviewImageHeaders.map((header) => header.whatHeader),
-        ...reviewVideoHeaders.map((header) => header.whatHeader),
-      ],
     };
   }
 

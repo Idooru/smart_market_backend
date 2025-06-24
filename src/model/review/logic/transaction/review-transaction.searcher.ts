@@ -16,14 +16,26 @@ import { ReviewVideoSearcher } from "../../../media/logic/review-video.searcher"
 import { ReviewVideoEntity } from "../../../media/entities/review-video.entity";
 import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
 import { BaseEntity } from "typeorm";
+import { ReviewSearcher } from "../review.searcher";
 
 class EntityFinder {
   constructor(
+    private readonly reviewIdFilter: string,
     private readonly productIdFilter: string,
+    private readonly reviewSearcher: ReviewSearcher,
     private readonly productSearcher: ProductSearcher,
     private readonly reviewImageSearcher: ReviewImageSearcher,
     private readonly reviewVideoSearcher: ReviewVideoSearcher,
   ) {}
+
+  public findReview(reviewId: string, entities: (typeof BaseEntity)[]): Promise<ReviewEntity> {
+    return this.reviewSearcher.findEntity({
+      property: this.reviewIdFilter,
+      alias: { id: reviewId },
+      getOne: true,
+      entities,
+    }) as Promise<ReviewEntity>;
+  }
 
   public findProduct(productId: string, entities: (typeof BaseEntity)[]) {
     return this.productSearcher.findEntity({
@@ -32,32 +44,6 @@ class EntityFinder {
       getOne: true,
       entities,
     }) as Promise<ProductEntity>;
-  }
-
-  public findReviewImages(reviewImageHeaders: MediaHeaderDto[]): Promise<ReviewImageEntity[]> {
-    return Promise.all(
-      reviewImageHeaders.map(
-        (imgHeader) =>
-          this.reviewImageSearcher.findEntity({
-            property: "reviewImage.id = :id",
-            alias: { id: imgHeader.id },
-            getOne: true,
-          }) as Promise<ReviewImageEntity>,
-      ),
-    );
-  }
-
-  public findReviewVideos(reviewVideoHeaders: MediaHeaderDto[]): Promise<ReviewVideoEntity[]> {
-    return Promise.all(
-      reviewVideoHeaders.map(
-        (vdoHeader) =>
-          this.reviewVideoSearcher.findEntity({
-            property: "reviewVideo.id = :id",
-            alias: { id: vdoHeader.id },
-            getOne: true,
-          }) as Promise<ReviewVideoEntity>,
-      ),
-    );
   }
 
   public findBeforeReviewImages(reviewId: string): Promise<ReviewImageEntity[]> {
@@ -82,15 +68,20 @@ export class ReviewTransactionSearcher {
   private readonly entityFinder: EntityFinder;
 
   constructor(
+    @Inject("review-id-filter")
+    private readonly reviewIdFilter: string,
     @Inject("product-id-filter")
     private readonly productIdFilter: string,
+    private readonly reviewSearcher: ReviewSearcher,
     private readonly productSearcher: ProductSearcher,
     private readonly reviewImageSearcher: ReviewImageSearcher,
     private readonly reviewVideoSearcher: ReviewVideoSearcher,
     private readonly reviewUtils: ReviewUtils,
   ) {
     this.entityFinder = new EntityFinder(
+      this.reviewIdFilter,
       this.productIdFilter,
+      this.reviewSearcher,
       this.productSearcher,
       this.reviewImageSearcher,
       this.reviewVideoSearcher,
@@ -102,11 +93,6 @@ export class ReviewTransactionSearcher {
     const product = await this.entityFinder.findProduct(productId, [ReviewEntity, StarRateEntity]);
 
     await this.reviewUtils.checkBeforeCreate(product, reviewerId);
-
-    // const [reviewImages, reviewVideos] = await Promise.all([
-    //   this.entityFinder.findReviewImages(reviewImageFiles),
-    //   this.entityFinder.findReviewVideos(reviewVideoFiles),
-    // ]);
 
     return {
       body,
@@ -142,9 +128,9 @@ export class ReviewTransactionSearcher {
   }
 
   public async searchDeleteReview(dto: DeleteReviewDto): Promise<SearchDeleteReviewDto> {
-    const { reviewId, userId } = dto;
+    const { reviewId } = dto;
 
-    const review = await this.reviewUtils.checkBeforeModify(reviewId, userId);
+    const review = await this.entityFinder.findReview(reviewId, [ProductEntity]);
     const product = await this.entityFinder.findProduct(review.Product.id, [StarRateEntity]);
 
     return { review, starRate: product.StarRate };

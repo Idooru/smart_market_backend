@@ -1,9 +1,9 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { RequestProductSearchMode, requestProductSearchMode } from "../../types/request-search-mode.type";
 import { warnEnumMessage } from "src/common/functions/none-enum";
 
 export class SearchProductsDto {
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   public keyword: string;
 

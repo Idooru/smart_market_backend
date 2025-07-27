@@ -127,13 +127,13 @@ export class EmailSenderLibrary {
   public async sendMailToClientAboutRegister(dto: SendMailToClientAboutRegisterDto): Promise<void> {
     const { email, nickName } = dto;
 
-    await this.mailerService
-      .sendMail({
-        to: email,
-        from: this.configService.get("MAIL_USER"),
-        subject: `${nickName}님, 저희 서비스에 회원 가입을 해주셔서 진심으로 감사드립니다!`,
-        text: `환영합니다!`,
-      })
-      .catch(this.callbackFactory.getCatchSendMailFunc());
+    // await this.mailerService
+    //   .sendMail({
+    //     to: email,
+    //     from: this.configService.get("MAIL_USER"),
+    //     subject: `${nickName}님, 저희 서비스에 회원 가입을 해주셔서 진심으로 감사드립니다!`,
+    //     text: `환영합니다!`,
+    //   })
+    //   .catch(this.callbackFactory.getCatchSendMailFunc());
   }
 }

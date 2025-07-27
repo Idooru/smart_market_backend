@@ -1,6 +1,6 @@
 // controller
 
-// @UseInterceptors(JsonGeneralInterceptor)
+// @UseInterceptors(GeneralInterceptor)
 //   @UseGuards(
 //     new VerifyDataGuard(
 //       userVerifyHeaderKey.is_not_exist.email_executed,
@@ -12,7 +12,7 @@
 //   @Post("/register")
 //   async register(
 //     @Body() registerUserDto: RegisterUserDto,
-//   ): Promise<JsonGeneralInterface<void>> {
+//   ): Promise<GeneralResponseInterface<void>> {
 
 //     const userBase = await this.userGeneralService.createUserBase(
 //         registerUserDto,

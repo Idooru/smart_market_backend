@@ -6,8 +6,8 @@ import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
 import { CartService } from "../../services/cart.service";
-import { JsonGeneralInterceptor } from "../../../../common/interceptors/general/json-general.interceptor";
-import { JsonGeneralInterface } from "../../../../common/interceptors/interface/json-general-interface";
+import { GeneralInterceptor } from "../../../../common/interceptors/general/general.interceptor";
+import { GeneralResponseInterface } from "../../../../common/interceptors/interface/general-response.interface";
 import { CartSearcher } from "../../logic/cart.searcher";
 import { CartIdValidatePipe } from "../../pipe/cart-id-validate.pipe";
 import { CartsResponseDto } from "../../dto/response/carts-response.dto";
@@ -27,12 +27,12 @@ export class CartV1ClientController {
   //   summary: "find carts with id",
   //   description: "사용자의 장바구니를 모두 가져옵니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/all")
   public async findAllCarts(
     @Query() query: FindAllCartsDto,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<CartsResponseDto>> {
+  ): Promise<GeneralResponseInterface<CartsResponseDto>> {
     query.userId = userId;
     const carts = await this.searcher.findAllRaws(query);
     const totalPrice = carts.map((cart) => cart.totalPrice).reduce((acc, cur) => acc + cur, 0);
@@ -51,13 +51,13 @@ export class CartV1ClientController {
   //   summary: "create cart",
   //   description: "장바구니를 생성합니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Post("/product/:productId")
   public async createCart(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @GetJWT() { userId }: JwtAccessTokenPayload,
     @Body() body: CartBody,
-  ): Promise<JsonGeneralInterface<null>> {
+  ): Promise<GeneralResponseInterface<null>> {
     const dto: CreateCartDto = { productId, clientUserId: userId, body };
     await this.service.createCart(dto);
 
@@ -71,13 +71,13 @@ export class CartV1ClientController {
   //   summary: "modify cart with id",
   //   description: "아이디에 해당하는 장바구니를 수정합니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Put("/:cartId/product/:productId")
   public async modifyCart(
     @Param("cartId", CartIdValidatePipe) cartId: string,
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Body() body: CartBody,
-  ): Promise<JsonGeneralInterface<null>> {
+  ): Promise<GeneralResponseInterface<null>> {
     const dto: ModifyCartDto = { cartId, productId, body };
     await this.service.modifyCart(dto);
 
@@ -91,9 +91,9 @@ export class CartV1ClientController {
   //   summary: "delete all cart with user id",
   //   description: "사용자의 장바구니를 모두 비웁니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Delete("/")
-  public async deleteAllCart(@GetJWT() jwtPayload: JwtAccessTokenPayload): Promise<JsonGeneralInterface<null>> {
+  public async deleteAllCart(@GetJWT() jwtPayload: JwtAccessTokenPayload): Promise<GeneralResponseInterface<null>> {
     await this.service.deleteAllCarts(jwtPayload.userId);
 
     return {
@@ -106,9 +106,9 @@ export class CartV1ClientController {
   //   summary: "delete cart with id",
   //   description: "아이디에 해당하는 장바구니를 제거합니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Delete("/:cartId")
-  public async deleteCart(@Param("cartId", CartIdValidatePipe) id: string): Promise<JsonGeneralInterface<null>> {
+  public async deleteCart(@Param("cartId", CartIdValidatePipe) id: string): Promise<GeneralResponseInterface<null>> {
     await this.service.deleteCart(id);
 
     return {

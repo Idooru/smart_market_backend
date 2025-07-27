@@ -1,14 +1,14 @@
 import { Controller, Post, UseGuards, UseInterceptors, UploadedFiles, Delete, Inject, Get } from "@nestjs/common";
 import { MulterConfigService } from "src/common/lib/media/multer-adapt.module";
 import { FilesInterceptor } from "@nestjs/platform-express";
-import { JsonSetHeadersInterceptor } from "src/common/interceptors/general/json-set-headers.interceptor";
+import { SetHeadersInterceptor } from "src/common/interceptors/general/set-headers.interceptor";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { JsonSetHeadersInterface } from "src/common/interceptors/interface/json-set-headers.interface";
-import { JsonRemoveHeadersInterceptor } from "src/common/interceptors/general/json-remove-headers.interceptor";
-import { JsonRemoveHeadersInterface } from "src/common/interceptors/interface/json-remove-headers.interface";
+import { SetHeadersResponseInterface } from "src/common/interceptors/interface/set-headers-response.interface";
+import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove-headers.interceptor";
+import { RemoveHeadersResponseInterface } from "src/common/interceptors/interface/remove-headers-response.interface";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
-import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
-import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
+import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
+import { GeneralResponseInterface } from "src/common/interceptors/interface/general-response.interface";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { MediaService } from "../services/media.service";
 // import { ReviewImageValidatePipe } from "../pipe/exist/review-image-validate.pipe";
@@ -54,12 +54,12 @@ export class MediaV1ClientController {
   // //   summary: "find uploaded review image",
   // //   description: "업로드된 리뷰 이미지를 가져옵니다. 리뷰 이미지를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // // })
-  // @UseInterceptors(JsonGeneralInterceptor)
+  // @UseInterceptors(GeneralInterceptor)
   // @Get("/review/image")
   // public async findUploadedReviewImage(
   //   @MediaHeadersParser(reviewMediaHeaderKey.imageUrlHeader)
   //   reviewImageIds: string[],
-  // ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+  // ): Promise<GeneralResponseInterface<MediaBasicRawDto[]>> {
   //   const result = await this.reviewImageSearcher.findAllRaws(reviewImageIds);
   //
   //   return {
@@ -73,12 +73,12 @@ export class MediaV1ClientController {
   // //   summary: "find uploaded review video",
   // //   description: "업로드된 리뷰 비디오를 가져옵니다. 리뷰 비디오를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // // })
-  // @UseInterceptors(JsonGeneralInterceptor)
+  // @UseInterceptors(GeneralInterceptor)
   // @Get("/review/video")
   // public async findUploadedReviewVideo(
   //   @MediaHeadersParser(reviewMediaHeaderKey.videoUrlHeader)
   //   reviewVideoHeaders: MediaHeaderDto[],
-  // ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+  // ): Promise<GeneralResponseInterface<MediaBasicRawDto[]>> {
   //   const result = await this.reviewVideoSearcher.findAllRaws(reviewVideoHeaders);
   //
   //   return {
@@ -93,12 +93,12 @@ export class MediaV1ClientController {
   // //   description:
   // //     "업로드된 문의 요청 이미지를 가져옵니다. 문의 요청 이미지를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // // })
-  // @UseInterceptors(JsonGeneralInterceptor)
+  // @UseInterceptors(GeneralInterceptor)
   // @Get("/inquiry/request/image")
   // public async findUploadedInquiryRequestImage(
   //   @MediaHeadersParser(inquiryMediaHeaderKey.request.imageUrlHeader)
   //   imageHeaders: MediaHeaderDto[],
-  // ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+  // ): Promise<GeneralResponseInterface<MediaBasicRawDto[]>> {
   //   const result = await this.inquiryRequestImageSearcher.findAllRaws(imageHeaders);
   //
   //   return {
@@ -113,12 +113,12 @@ export class MediaV1ClientController {
   // //   description:
   // //     "업로드된 문의 요청 비디오를 가져옵니다. 문의 요청 비디오를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // // })
-  // @UseInterceptors(JsonGeneralInterceptor)
+  // @UseInterceptors(GeneralInterceptor)
   // @Get("/inquiry/request/video")
   // public async findUploadedInquiryRequestVideo(
   //   @MediaHeadersParser(inquiryMediaHeaderKey.request.videoUrlHeader)
   //   videoHeaders: MediaHeaderDto[],
-  // ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+  // ): Promise<GeneralResponseInterface<MediaBasicRawDto[]>> {
   //   const result = await this.inquiryRequestVideoSearcher.findAllRaws(videoHeaders);
   //
   //   return {
@@ -133,7 +133,7 @@ export class MediaV1ClientController {
   // //   description:
   // //     "리뷰 이미지를 업로드합니다. 리뷰 이미지는 api를 호출할 때 최대 5개 업로드가 가능합니다. 업로드된 리뷰 이미지는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
   // // })
-  // @UseInterceptors(JsonSetHeadersInterceptor)
+  // @UseInterceptors(SetHeadersInterceptor)
   // @UseInterceptors(
   //   FilesInterceptor(
   //     "review_image",
@@ -144,7 +144,7 @@ export class MediaV1ClientController {
   // @Post("/review/image")
   // public async uploadReviewImage(
   //   @UploadedFiles(ReviewImageValidatePipe) files: Express.Multer.File[],
-  // ): Promise<JsonSetHeadersInterface<string>> {
+  // ): Promise<SetHeadersResponseInterface<string>> {
   //   const reviewImageIds = await this.mediaService.uploadReviewImages(files);
   //
   //   return {
@@ -160,14 +160,14 @@ export class MediaV1ClientController {
   // //   description:
   // //     "리뷰 비디오를 업로드합니다. 리뷰 비디오는 api를 호출할 때 최대 5개 업로드가 가능합니다. 업로드된 리뷰 비디오는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
   // // })
-  // @UseInterceptors(JsonSetHeadersInterceptor)
+  // @UseInterceptors(SetHeadersInterceptor)
   // @UseInterceptors(
   //   FilesInterceptor("review_video", MulterConfigService.maxContentsCount, MulterConfigService.upload("videos/review")),
   // )
   // @Post("/review/video")
   // public async uploadReviewVideo(
   //   @UploadedFiles(ReviewVideoValidatePipe) files: Express.Multer.File[],
-  // ): Promise<JsonSetHeadersInterface<string>> {
+  // ): Promise<SetHeadersResponseInterface<string>> {
   //   const reviewVideoIds = await this.mediaService.uploadReviewVideos(files);
   //
   //   return {
@@ -183,7 +183,7 @@ export class MediaV1ClientController {
   // //   description:
   // //     "문의 요청 이미지를 업로드합니다. 문의 요청 이미지는 api를 호출할 때 최대 5개 업로드가 가능합니다. 업로드된 문의 요청 이미지는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
   // // })
-  // @UseInterceptors(JsonSetHeadersInterceptor)
+  // @UseInterceptors(SetHeadersInterceptor)
   // @UseInterceptors(
   //   FilesInterceptor(
   //     "inquiry_request_image",
@@ -195,7 +195,7 @@ export class MediaV1ClientController {
   // public async uploadInquiryRequestImage(
   //   @UploadedFiles(InquiryRequestImageValidatePipe)
   //   files: Express.Multer.File[],
-  // ): Promise<JsonSetHeadersInterface<string>> {
+  // ): Promise<SetHeadersResponseInterface<string>> {
   //   const inquiryRequestImageIds = await this.mediaService.uploadInquiryRequestImages(files);
   //
   //   return {
@@ -211,7 +211,7 @@ export class MediaV1ClientController {
   // //   description:
   // //     "문의 요청 비디오를 업로드합니다. 문의 요청 비디오는 api를 호출할 때 최대 5개 업로드가 가능합니다. 업로드된 문의 요청 비디오는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
   // // })
-  // @UseInterceptors(JsonSetHeadersInterceptor)
+  // @UseInterceptors(SetHeadersInterceptor)
   // @UseInterceptors(
   //   FilesInterceptor(
   //     "inquiry_request_video",
@@ -223,7 +223,7 @@ export class MediaV1ClientController {
   // public async uploadInquiryRequestVideo(
   //   @UploadedFiles(InquiryRequestVideoValidatePipe)
   //   files: Express.Multer.File[],
-  // ): Promise<JsonSetHeadersInterface<string>> {
+  // ): Promise<SetHeadersResponseInterface<string>> {
   //   const inquiryRequestVideoIds = await this.mediaService.uploadInquiryRequestVideos(files);
   //
   //   return {
@@ -238,12 +238,12 @@ export class MediaV1ClientController {
   // //   summary: "cancel review image upload",
   // //   description: "리뷰 이미지 업로드를 취소합니다. 클라이언트에 저장되어 있던 리뷰 이미지 쿠키를 제거합니다.",
   // // })
-  // @UseInterceptors(JsonRemoveHeadersInterceptor, DeleteReviewMediaInterceptor)
+  // @UseInterceptors(RemoveHeadersInterceptor, DeleteReviewMediaInterceptor)
   // @Delete("/review/image")
   // public async cancelReviewImageUpload(
   //   @MediaHeadersParser(reviewMediaHeaderKey.imageUrlHeader)
   //   reviewImageHeaders: MediaHeaderDto[],
-  // ): Promise<JsonRemoveHeadersInterface> {
+  // ): Promise<RemoveHeadersResponseInterface> {
   //   const headerKey = await this.mediaService.deleteReviewImagesWithId(reviewImageHeaders);
   //
   //   return {
@@ -257,12 +257,12 @@ export class MediaV1ClientController {
   // //   summary: "cancel review video upload",
   // //   description: "리뷰 비디오 업로드를 취소합니다. 클라이언트에 저장되어 있던 리뷰 비디오 쿠키를 제거합니다.",
   // // })
-  // @UseInterceptors(JsonRemoveHeadersInterceptor, DeleteReviewMediaInterceptor)
+  // @UseInterceptors(RemoveHeadersInterceptor, DeleteReviewMediaInterceptor)
   // @Delete("/review/video")
   // public async cancelReviewVideoUpload(
   //   @MediaHeadersParser(reviewMediaHeaderKey.videoUrlHeader)
   //   reviewVideoHeaders: MediaHeaderDto[],
-  // ): Promise<JsonRemoveHeadersInterface> {
+  // ): Promise<RemoveHeadersResponseInterface> {
   //   const headerKey = await this.mediaService.deleteReviewVideosWithId(reviewVideoHeaders);
   //
   //   return {
@@ -276,12 +276,12 @@ export class MediaV1ClientController {
   // //   summary: "cancel inquiry request image upload",
   // //   description: "문의 요청 이미지 업로드를 취소합니다. 클라이언트에 저장되어 있던 문의 요청 이미지 쿠키를 제거합니다.",
   // // })
-  // @UseInterceptors(JsonRemoveHeadersInterceptor, DeleteInquiryRequestMediaInterceptor)
+  // @UseInterceptors(RemoveHeadersInterceptor, DeleteInquiryRequestMediaInterceptor)
   // @Delete("/inquiry/request/image")
   // public async cancelInquiryRequestImageUpload(
   //   @MediaHeadersParser(inquiryMediaHeaderKey.request.imageUrlHeader)
   //   imageHeaders: MediaHeaderDto[],
-  // ): Promise<JsonRemoveHeadersInterface> {
+  // ): Promise<RemoveHeadersResponseInterface> {
   //   const headerKey = await this.mediaService.deleteInquiryRequestImagesWithId(imageHeaders);
   //
   //   return {
@@ -296,12 +296,12 @@ export class MediaV1ClientController {
   // //   summary: "cancel inquiry request video upload",
   // //   description: "문의 요청 비디오 업로드를 취소합니다. 클라이언트에 저장되어 있던 문의 요청 비디오 쿠키를 제거합니다.",
   // // })
-  // @UseInterceptors(JsonRemoveHeadersInterceptor, DeleteInquiryRequestMediaInterceptor)
+  // @UseInterceptors(RemoveHeadersInterceptor, DeleteInquiryRequestMediaInterceptor)
   // @Delete("/inquiry/request/video")
   // public async cancelInquiryRequestVideoUpload(
   //   @MediaHeadersParser(inquiryMediaHeaderKey.request.videoUrlHeader)
   //   videoHeaders: MediaHeaderDto[],
-  // ): Promise<JsonRemoveHeadersInterface> {
+  // ): Promise<RemoveHeadersResponseInterface> {
   //   const headerKey = await this.mediaService.deleteInquiryRequestVideosWithId(videoHeaders);
   //
   //   return {

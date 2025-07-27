@@ -1,12 +1,12 @@
 import { ArgumentsHost, CallHandler, Injectable, NestInterceptor } from "@nestjs/common";
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
+import { RemoveHeadersResponseInterface } from "../interface/remove-headers-response.interface";
 import { Request, Response } from "express";
-import { JsonGeneralInterface } from "../interface/json-general-interface";
 import { Implemented } from "../../decorators/implemented.decoration";
 
 @Injectable()
-export class JsonGeneralInterceptor<T> implements NestInterceptor {
+export class RemoveHeadersInterceptor implements NestInterceptor {
   constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
 
   @Implemented()
@@ -17,12 +17,19 @@ export class JsonGeneralInterceptor<T> implements NestInterceptor {
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data: JsonGeneralInterface<T>) => {
+      map((data: RemoveHeadersResponseInterface) => {
+        const { statusCode, message, headerKey } = data;
         this.timeLoggerLibrary.sendResponse(req);
+
+        if (headerKey.length >= 2) {
+          headerKey.forEach((idx: string) => res.removeHeader(idx));
+        } else {
+          res.removeHeader(headerKey[0]);
+        }
 
         res.status(data.statusCode).setHeader("X-Powered-By", "");
 
-        return { success: true, ...data };
+        return { success: true, ...{ statusCode, message } };
       }),
     );
   }

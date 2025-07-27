@@ -1,6 +1,6 @@
 import { HttpStatus } from "@nestjs/common";
 
-export class LoginInterface {
+export class LoginResponseInterface {
   statusCode: HttpStatus;
   message: string;
   accessToken: string;

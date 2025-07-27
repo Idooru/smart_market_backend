@@ -1,7 +1,8 @@
 import { HttpStatus } from "@nestjs/common";
 
-export class JsonGeneralInterface<T> {
+export class SetHeadersResponseInterface<T> {
   statusCode: HttpStatus;
   message: string;
-  result?: T;
+  headerKey: string;
+  headerValues: T[];
 }

@@ -103,23 +103,23 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┣ 📂interceptors
 ┃ ┃ ┣ 📂general
 ┃ ┃ ┃ ┣ 📜json-clear-cookie.interceptor.ts
-┃ ┃ ┃ ┣ 📜json-remove-headers.interceptor.ts
-┃ ┃ ┃ ┣ 📜json-general.interceptor.ts
+┃ ┃ ┃ ┣ 📜remove-headers.interceptor.ts
+┃ ┃ ┃ ┣ 📜general.interceptor.ts
 ┃ ┃ ┃ ┣ 📜json-send-cookie.interceptor.ts
-┃ ┃ ┃ ┣ 📜json-set-headers.interceptor.ts
+┃ ┃ ┃ ┣ 📜set-headers.interceptor.ts
 ┃ ┃ ┃ ┣ 📜login.interceptor.ts
 ┃ ┃ ┃ ┣ 📜logout.interceptor.ts
 ┃ ┃ ┃ ┗ 📜refresh-token.interceptor.ts
 ┃ ┃ ┗ 📂interface
 ┃ ┃ ┃ ┣ 📜json-clear-cookie.interface.ts
-┃ ┃ ┃ ┣ 📜json-remove-headers.interface.ts
-┃ ┃ ┃ ┣ 📜json-general-interface.ts
+┃ ┃ ┃ ┣ 📜remove-headers-response.interface.ts
+┃ ┃ ┃ ┣ 📜general-response.interface.ts
 ┃ ┃ ┃ ┣ 📜json-send-cookie-param.interface.ts
 ┃ ┃ ┃ ┣ 📜json-send-headers-param.interface.ts
-┃ ┃ ┃ ┣ 📜json-set-headers.interface.ts
-┃ ┃ ┃ ┣ 📜login.interface.ts
-┃ ┃ ┃ ┣ 📜logout.interface.ts
-┃ ┃ ┃ ┣ 📜refresh-token.interface.ts
+┃ ┃ ┃ ┣ 📜set-headers-response.interface.ts
+┃ ┃ ┃ ┣ 📜login-response.interface.ts
+┃ ┃ ┃ ┣ 📜logout-response.interface.ts
+┃ ┃ ┃ ┣ 📜refresh-token-response.interface.ts
 ┃ ┃ ┃ ┗ 📜verify-data.dto.ts
 ┃ ┣ 📂interfaces
 ┃ ┃ ┣ 📂initializer

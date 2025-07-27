@@ -3,13 +3,13 @@ import { MulterConfigService } from "src/common/lib/media/multer-adapt.module";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { JsonSetHeadersInterface } from "src/common/interceptors/interface/json-set-headers.interface";
-import { JsonSetHeadersInterceptor } from "src/common/interceptors/general/json-set-headers.interceptor";
+import { SetHeadersResponseInterface } from "src/common/interceptors/interface/set-headers-response.interface";
+import { SetHeadersInterceptor } from "src/common/interceptors/general/set-headers.interceptor";
 import { MediaHeadersParser } from "src/common/decorators/media-headers-parser.decorator";
-import { JsonRemoveHeadersInterceptor } from "src/common/interceptors/general/json-remove-headers.interceptor";
-import { JsonRemoveHeadersInterface } from "src/common/interceptors/interface/json-remove-headers.interface";
-import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
-import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
+import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove-headers.interceptor";
+import { RemoveHeadersResponseInterface } from "src/common/interceptors/interface/remove-headers-response.interface";
+import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
+import { GeneralResponseInterface } from "src/common/interceptors/interface/general-response.interface";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { ProductImagesValidatePipe } from "../pipe/exist/product-images-validate.pipe";
 import { InquiryResponseImageValidatePipe } from "../pipe/exist/inquiry-response-image-validate.pipe";
@@ -51,11 +51,11 @@ export class MediaV1AdminController {
   //   summary: "find uploaded product image",
   //   description: "업로드된 상품 이미지를 가져옵니다. 상품 이미지를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/product/image")
   public async findAllUploadedProductImages(
     @MediaHeadersParser(productMediaHeaderKey.imageUrlHeader) productImageHeaders: MediaHeaderDto[],
-  ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+  ): Promise<GeneralResponseInterface<MediaBasicRawDto[]>> {
     const result = await this.productImageSearcher.findAllRaws(productImageHeaders);
 
     return {
@@ -70,11 +70,11 @@ export class MediaV1AdminController {
   //   description:
   //     "업로드된 문의 응답 이미지를 가져옵니다. 문의 응답 이미지를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/inquiry/response/image")
   public async findUploadedInquiryResponseImages(
     @MediaHeadersParser(inquiryMediaHeaderKey.response.imageUrlHeader) inquiryResponseImageHeaders: MediaHeaderDto[],
-  ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+  ): Promise<GeneralResponseInterface<MediaBasicRawDto[]>> {
     const result = await this.inquiryResponseImageSearcher.findAllRaws(inquiryResponseImageHeaders);
 
     return {
@@ -89,12 +89,12 @@ export class MediaV1AdminController {
   //   description:
   //     "업로드된 문의 응답 비디오를 가져옵니다. 문의 응답 비디오를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/inquiry/response/video")
   public async findUploadedInquiryResponseVideos(
     @MediaHeadersParser(inquiryMediaHeaderKey.response.videoUrlHeader)
     inquiryResponseVideoHeaders: MediaHeaderDto[],
-  ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+  ): Promise<GeneralResponseInterface<MediaBasicRawDto[]>> {
     const result = await this.inquiryResponseVideoSearcher.findAllRaws(inquiryResponseVideoHeaders);
 
     return {
@@ -109,7 +109,7 @@ export class MediaV1AdminController {
   //   description:
   //     "상품 이미지를 업로드합니다. 상품 이미지는 api를 호출할 때 하나씩만 업로드가 가능합니다. 업로드된 상품 이미지는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
   // })
-  @UseInterceptors(JsonSetHeadersInterceptor)
+  @UseInterceptors(SetHeadersInterceptor)
   @UseInterceptors(
     FilesInterceptor(
       "product_image",
@@ -121,7 +121,7 @@ export class MediaV1AdminController {
   public async uploadProductImage(
     @UploadedFiles(ProductImagesValidatePipe)
     files: Express.Multer.File[],
-  ): Promise<JsonSetHeadersInterface<string>> {
+  ): Promise<SetHeadersResponseInterface<string>> {
     const productImageIds = await this.mediaService.uploadProductImages(files);
 
     return {
@@ -137,7 +137,7 @@ export class MediaV1AdminController {
   //   description:
   //     "문의 응답 이미지를 업로드합니다. 문의 응답 이미지는 api를 호출할 때 최대 5개 업로드가 가능합니다. 업로드된 문의 응답 이미지는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
   // })
-  @UseInterceptors(JsonSetHeadersInterceptor)
+  @UseInterceptors(SetHeadersInterceptor)
   @UseInterceptors(
     FilesInterceptor(
       "inquiry_response_image",
@@ -149,7 +149,7 @@ export class MediaV1AdminController {
   public async uploadInquiryResponseImage(
     @UploadedFiles(InquiryResponseImageValidatePipe)
     files: Express.Multer.File[],
-  ): Promise<JsonSetHeadersInterface<string>> {
+  ): Promise<SetHeadersResponseInterface<string>> {
     const inquiryResponseImageIds = await this.mediaService.uploadInquiryResponseImages(files);
 
     return {
@@ -165,7 +165,7 @@ export class MediaV1AdminController {
   //   description:
   //     "문의 응답 비디오를 업로드합니다. 문의 응답 비디오는 api를 호출할 때 최대 5개 업로드가 가능합니다. 업로드된 문의 응답 비디오는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
   // })
-  @UseInterceptors(JsonSetHeadersInterceptor)
+  @UseInterceptors(SetHeadersInterceptor)
   @UseInterceptors(
     FilesInterceptor(
       "inquiry_response_video",
@@ -177,7 +177,7 @@ export class MediaV1AdminController {
   public async uploadInquiryResponseVideo(
     @UploadedFiles(InquiryResponseVideoValidatePipe)
     files: Array<Express.Multer.File>,
-  ): Promise<JsonSetHeadersInterface<string>> {
+  ): Promise<SetHeadersResponseInterface<string>> {
     const inquiryResponseVideoIds = await this.mediaService.uploadInquiryResponseVideos(files);
 
     return {
@@ -192,12 +192,12 @@ export class MediaV1AdminController {
   //   summary: "cancel product image upload",
   //   description: "상품 이미지 업로드를 취소합니다. 클라이언트에 저장되어 있던 상품 이미지 쿠키를 제거합니다.",
   // })
-  @UseInterceptors(JsonRemoveHeadersInterceptor, DeleteProductMediaInterceptor)
+  @UseInterceptors(RemoveHeadersInterceptor, DeleteProductMediaInterceptor)
   @Delete("/product/image")
   public async cancelProductImageUpload(
     @MediaHeadersParser(productMediaHeaderKey.imageUrlHeader)
     productImageHeaders: MediaHeaderDto[],
-  ): Promise<JsonRemoveHeadersInterface> {
+  ): Promise<RemoveHeadersResponseInterface> {
     const headerKey = await this.mediaService.deleteProductImagesWithId(productImageHeaders);
 
     return {
@@ -211,12 +211,12 @@ export class MediaV1AdminController {
   //   summary: "cancel inquiry response image upload",
   //   description: "문의 응답 이미지 업로드를 취소합니다. 클라이언트에 저장되어 있던 문의 응답 이미지 쿠키를 제거합니다.",
   // })
-  @UseInterceptors(JsonRemoveHeadersInterceptor, DeleteInquiryResponseMediaInterceptor)
+  @UseInterceptors(RemoveHeadersInterceptor, DeleteInquiryResponseMediaInterceptor)
   @Delete("/inquiry/response/image")
   public async cancelInquiryResponseImageUpload(
     @MediaHeadersParser(inquiryMediaHeaderKey.response.imageUrlHeader)
     inquiryResponseImageHeaders: MediaHeaderDto[],
-  ): Promise<JsonRemoveHeadersInterface> {
+  ): Promise<RemoveHeadersResponseInterface> {
     const headerKey = await this.mediaService.deleteInquiryResponseImagesWithId(inquiryResponseImageHeaders);
 
     return {
@@ -230,12 +230,12 @@ export class MediaV1AdminController {
   //   summary: "cancel inquiry response video upload",
   //   description: "문의 응답 비디오 업로드를 취소합니다. 클라이언트에 저장되어 있던 문의 응답 비디오 쿠키를 제거합니다.",
   // })
-  @UseInterceptors(JsonRemoveHeadersInterceptor, DeleteInquiryResponseMediaInterceptor)
+  @UseInterceptors(RemoveHeadersInterceptor, DeleteInquiryResponseMediaInterceptor)
   @Delete("/inquiry/response/video")
   public async cancelInquiryResponseVideoUpload(
     @MediaHeadersParser(inquiryMediaHeaderKey.response.videoUrlHeader)
     inquiryResponseVideoHeaders: MediaHeaderDto[],
-  ): Promise<JsonRemoveHeadersInterface> {
+  ): Promise<RemoveHeadersResponseInterface> {
     const headerKey = await this.mediaService.deleteInquiryResponseVideosWithId(inquiryResponseVideoHeaders);
 
     return {

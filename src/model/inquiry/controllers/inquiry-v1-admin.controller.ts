@@ -3,17 +3,17 @@ import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { MediaHeadersParser } from "src/common/decorators/media-headers-parser.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { JsonRemoveHeadersInterface } from "src/common/interceptors/interface/json-remove-headers.interface";
-import { JsonRemoveHeadersInterceptor } from "src/common/interceptors/general/json-remove-headers.interceptor";
+import { RemoveHeadersResponseInterface } from "src/common/interceptors/interface/remove-headers-response.interface";
+import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove-headers.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { InquiryTransactionExecutor } from "../logic/transaction/inquiry-transaction.executor";
 import { InquiryRequestIdValidatePipe } from "../pipe/exist/inquiry-request-id-validate.pipe";
 import { InquiryRequesterIdValidatePipe } from "../pipe/exist/inquiry-requester-id-validate.pipe";
-import { JsonGeneralInterface } from "../../../common/interceptors/interface/json-general-interface";
+import { GeneralResponseInterface } from "../../../common/interceptors/interface/general-response.interface";
 import { InquiryResponseIdValidatePipe } from "../pipe/exist/inquiry-response-id-validate.pipe";
 import { InquiryAdminEventInterceptor } from "../interceptor/inquiry-admin-event.interceptor";
-import { JsonGeneralInterceptor } from "../../../common/interceptors/general/json-general.interceptor";
+import { GeneralInterceptor } from "../../../common/interceptors/general/general.interceptor";
 import { InquiryResponseBody } from "../dto/inquiry-response/request/inquiry-response-body.dto";
 import { CreateInquiryResponseDto } from "../dto/inquiry-response/request/create-inquiry-response.dto";
 import { InquiryResponseSearcher } from "../logic/inquiry-response.searcher";
@@ -37,12 +37,12 @@ export class InquiryV1AdminController {
   ) {}
 
   // @ApiOperation({})
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/inquiry-response/all")
   public async findAllInquiryResponses(
     @Query() query: FindAllInquiryResponsesDto,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<InquiryResponseBasicRawDto[]>> {
+  ): Promise<GeneralResponseInterface<InquiryResponseBasicRawDto[]>> {
     query.userId = userId;
     const result = await this.inquiryResponseSearcher.findAllRaws(query);
 
@@ -54,11 +54,11 @@ export class InquiryV1AdminController {
   }
 
   // @ApiOperation({})
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/inquiry-response/:inquiryResponseId")
   public async findInquiryResponse(
     @Param("inquiryResponseId", InquiryResponseIdValidatePipe) inquiryResponseId: string,
-  ): Promise<JsonGeneralInterface<InquiryResponseDetailRawDto>> {
+  ): Promise<GeneralResponseInterface<InquiryResponseDetailRawDto>> {
     const result = await this.inquiryResponseSearcher.findDetailRaw(inquiryResponseId);
 
     return {
@@ -69,11 +69,11 @@ export class InquiryV1AdminController {
   }
 
   // @ApiOperation({})
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/inquiry-request/product")
   public async findInquiryRequestFromProduct(
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<InquiryRequestFromAdminProductRawDto[]>> {
+  ): Promise<GeneralResponseInterface<InquiryRequestFromAdminProductRawDto[]>> {
     const result = await this.inquiryRequestSearcher.findAllRawsFromProduct(userId);
 
     return {
@@ -87,7 +87,7 @@ export class InquiryV1AdminController {
   //   summary: "create inquiry response",
   //   description: "문의 응답을 생성합니다. 문의 응답에는 이미지 혹은 비디오가 포함될 수 있습니다.",
   // })
-  @UseInterceptors(JsonRemoveHeadersInterceptor, InquiryAdminEventInterceptor)
+  @UseInterceptors(RemoveHeadersInterceptor, InquiryAdminEventInterceptor)
   @Post("/inquiry-request/:inquiryRequestId/client-user/:inquiryRequesterId")
   public async createInquiryResponse(
     @Param("inquiryRequestId", InquiryRequestIdValidatePipe)
@@ -100,7 +100,7 @@ export class InquiryV1AdminController {
     videoHeaders: MediaHeaderDto[],
     @GetJWT() { userId }: JwtAccessTokenPayload,
     @Body() body: InquiryResponseBody,
-  ): Promise<JsonRemoveHeadersInterface> {
+  ): Promise<RemoveHeadersResponseInterface> {
     const dto: CreateInquiryResponseDto = {
       body,
       inquiryRequestId,

@@ -1,10 +1,10 @@
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from "@nestjs/common";
-import { JsonGeneralInterceptor } from "../../../../common/interceptors/general/json-general.interceptor";
+import { GeneralInterceptor } from "../../../../common/interceptors/general/general.interceptor";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
-import { JsonGeneralInterface } from "../../../../common/interceptors/interface/json-general-interface";
+import { GeneralResponseInterface } from "../../../../common/interceptors/interface/general-response.interface";
 import { AccountService } from "../../services/account.service";
 import { AccountNumberValidatePipe } from "../../pipe/none-exist/account-number-validate.pipe";
 import { IsClientGuard } from "../../../../common/guards/authenticate/is-client.guard";
@@ -28,12 +28,12 @@ export class AccountV1Controller {
     private readonly service: AccountService,
   ) {}
 
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/all")
   public async findAccounts(
     @Query() query: FindAllAccountsDto,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<AccountBasicRawDto[]>> {
+  ): Promise<GeneralResponseInterface<AccountBasicRawDto[]>> {
     query.userId = userId;
     const result = await this.searcher.findAllRaws(query);
 
@@ -48,12 +48,12 @@ export class AccountV1Controller {
   //   summary: "create account",
   //   description: "계좌를 생성합니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Post("/")
   public async createAccount(
     @Body(AccountNumberValidatePipe) body: AccountBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<void>> {
+  ): Promise<GeneralResponseInterface<void>> {
     await this.transaction.createAccount(body, userId);
 
     return {
@@ -66,12 +66,12 @@ export class AccountV1Controller {
   //   summary: "delete account",
   //   description: "계좌를 제거합니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Delete("/:accountId")
   public async deleteAccount(
     @Param("accountId", AccountIdValidatePipe) accountId: string,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<void>> {
+  ): Promise<GeneralResponseInterface<void>> {
     await this.transaction.deleteAccount(accountId, userId);
 
     return {
@@ -84,12 +84,12 @@ export class AccountV1Controller {
   //   summary: "withdraw",
   //   description: "계좌에 일정 금액을 출금합니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Patch("/:accountId/withdraw")
   public async withdraw(
     @Param("accountId", AccountIdValidatePipe) accountId: string,
     @Body() { balance }: { balance: number },
-  ): Promise<JsonGeneralInterface<WithdrawResultDto>> {
+  ): Promise<GeneralResponseInterface<WithdrawResultDto>> {
     const dto: MoneyTransactionDto = { accountId, balance };
     const result = await this.service.withdraw(dto);
 
@@ -104,12 +104,12 @@ export class AccountV1Controller {
   //   summary: "deposit",
   //   description: "계좌에 일정 금액을 입금합니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Patch("/:accountId/deposit")
   public async deposit(
     @Param("accountId", AccountIdValidatePipe) accountId: string,
     @Body() { balance }: { balance: number },
-  ): Promise<JsonGeneralInterface<DepositResultDto>> {
+  ): Promise<GeneralResponseInterface<DepositResultDto>> {
     const dto: MoneyTransactionDto = { accountId, balance };
     const result = await this.service.deposit(dto);
 
@@ -124,12 +124,12 @@ export class AccountV1Controller {
   //   summary: "set main account",
   //   description: "주로 사용할 계좌를 설정합니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Patch("/:accountId/main-account")
   public async setMainAccount(
     @Param("accountId", AccountIdValidatePipe) accountId: string,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<void>> {
+  ): Promise<GeneralResponseInterface<void>> {
     await this.transaction.setMainAccount(accountId, userId);
 
     return {

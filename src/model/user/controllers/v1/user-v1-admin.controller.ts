@@ -1,8 +1,8 @@
 import { Controller, UseGuards, UseInterceptors, Get, Param, Delete, Query } from "@nestjs/common";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
+import { GeneralResponseInterface } from "src/common/interceptors/interface/general-response.interface";
+import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
 import { ApiTags } from "@nestjs/swagger";
 import { UserSearcher } from "../../logic/user.searcher";
 import { UserService } from "../../services/user.service";
@@ -23,9 +23,9 @@ export class UserV1AdminController {
   constructor(private readonly userSearcher: UserSearcher, private readonly userService: UserService) {}
 
   // @FindAllUsersSwagger()
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/all")
-  public async findAllUsers(@Query() query: FindAllUsersDto): Promise<JsonGeneralInterface<UserBasicRawDto[]>> {
+  public async findAllUsers(@Query() query: FindAllUsersDto): Promise<GeneralResponseInterface<UserBasicRawDto[]>> {
     const result = await this.userSearcher.findAllRaws(query);
 
     return {
@@ -36,11 +36,11 @@ export class UserV1AdminController {
   }
 
   // @FindDetailClientUserSwagger()
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/:userId")
   public async findDetailClientUser(
     @Param("userId", ClientUserIdValidatePipe) userId: string,
-  ): Promise<JsonGeneralInterface<ClientUserRawDto>> {
+  ): Promise<GeneralResponseInterface<ClientUserRawDto>> {
     const result = await this.userSearcher.findClientUserRaw(userId);
 
     return {
@@ -51,9 +51,9 @@ export class UserV1AdminController {
   }
 
   // @KickUserSwagger()
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Delete("/:userId")
-  public async kickUser(@Param("userId", UserIdValidatePipe) userId: string): Promise<JsonGeneralInterface<void>> {
+  public async kickUser(@Param("userId", UserIdValidatePipe) userId: string): Promise<GeneralResponseInterface<void>> {
     await this.userService.deleteUser(userId);
 
     return {

@@ -1,7 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
 import { map, Observable } from "rxjs";
 import { Request, Response } from "express";
-import { LoginInterface } from "../interface/login.interface";
+import { LoginResponseInterface } from "../interface/login-response.interface";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { Implemented } from "../../decorators/implemented.decoration";
 
@@ -17,7 +17,7 @@ export class LoginInterceptor implements NestInterceptor {
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data: LoginInterface) => {
+      map((data: LoginResponseInterface) => {
         const { statusCode, message, accessToken } = data;
         this.timeLoggerLibrary.sendResponse(req);
 

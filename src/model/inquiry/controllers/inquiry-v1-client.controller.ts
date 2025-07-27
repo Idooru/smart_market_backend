@@ -3,14 +3,14 @@ import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { MediaHeadersParser } from "src/common/decorators/media-headers-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { JsonRemoveHeadersInterface } from "src/common/interceptors/interface/json-remove-headers.interface";
-import { JsonRemoveHeadersInterceptor } from "src/common/interceptors/general/json-remove-headers.interceptor";
+import { RemoveHeadersResponseInterface } from "src/common/interceptors/interface/remove-headers-response.interface";
+import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove-headers.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { InquiryTransactionExecutor } from "../logic/transaction/inquiry-transaction.executor";
 import { ProductIdValidatePipe } from "../../product/pipe/exist/product-id-validate.pipe";
-import { JsonGeneralInterceptor } from "../../../common/interceptors/general/json-general.interceptor";
-import { JsonGeneralInterface } from "../../../common/interceptors/interface/json-general-interface";
+import { GeneralInterceptor } from "../../../common/interceptors/general/general.interceptor";
+import { GeneralResponseInterface } from "../../../common/interceptors/interface/general-response.interface";
 import { InquiryRequestIdValidatePipe } from "../pipe/exist/inquiry-request-id-validate.pipe";
 import { InquiryClientEventInterceptor } from "../interceptor/inquiry-client-event.interceptor";
 import { InquiryRequestBody } from "../dto/inquiry-request/request/inquiry-request-body";
@@ -33,12 +33,12 @@ export class InquiryV1ClientController {
   ) {}
 
   // @ApiOperation({})
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/inquiry-request/all")
   public async findAllInquiryRequests(
     @Query() query: FindAllInquiryRequestsDto,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<InquiryRequestBasicRawDto[]>> {
+  ): Promise<GeneralResponseInterface<InquiryRequestBasicRawDto[]>> {
     query.userId = userId;
     const result = await this.inquiryRequestSearcher.findAllRaws(query);
 
@@ -50,11 +50,11 @@ export class InquiryV1ClientController {
   }
 
   // @ApiOperation({})
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/inquiry-request/:inquiryRequestId")
   public async findInquiryRequest(
     @Param("inquiryRequestId", InquiryRequestIdValidatePipe) inquiryRequestId: string,
-  ): Promise<JsonGeneralInterface<InquiryRequestDetailRawDto>> {
+  ): Promise<GeneralResponseInterface<InquiryRequestDetailRawDto>> {
     const result = await this.inquiryRequestSearcher.findDetailRaw(inquiryRequestId);
 
     return {
@@ -68,7 +68,7 @@ export class InquiryV1ClientController {
   //   summary: "create inquiry reqeust",
   //   description: "문의 요청을 생성합니다. 문의 요청에는 이미지 혹은 비디오가 포함될 수 있습니다.",
   // })
-  @UseInterceptors(JsonRemoveHeadersInterceptor, InquiryClientEventInterceptor)
+  @UseInterceptors(RemoveHeadersInterceptor, InquiryClientEventInterceptor)
   @Post("/product/:productId")
   public async createInquiryRequest(
     @Param("productId", ProductIdValidatePipe) productId: string,
@@ -78,7 +78,7 @@ export class InquiryV1ClientController {
     videoHeaders: MediaHeaderDto[],
     @Body() body: InquiryRequestBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonRemoveHeadersInterface> {
+  ): Promise<RemoveHeadersResponseInterface> {
     const dto: CreateInquiryRequestDto = {
       body,
       productId,

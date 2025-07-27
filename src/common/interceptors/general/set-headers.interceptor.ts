@@ -2,11 +2,11 @@ import { ArgumentsHost, CallHandler, Injectable, NestInterceptor } from "@nestjs
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { Request, Response } from "express";
-import { JsonSetHeadersInterface } from "../interface/json-set-headers.interface";
+import { SetHeadersResponseInterface } from "../interface/set-headers-response.interface";
 import { Implemented } from "../../decorators/implemented.decoration";
 
 @Injectable()
-export class JsonSetHeadersInterceptor<T> implements NestInterceptor {
+export class SetHeadersInterceptor<T> implements NestInterceptor {
   constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
 
   @Implemented()
@@ -17,7 +17,7 @@ export class JsonSetHeadersInterceptor<T> implements NestInterceptor {
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data: JsonSetHeadersInterface<T>) => {
+      map((data: SetHeadersResponseInterface<T>) => {
         const { statusCode, message, headerKey, headerValues } = data;
         this.timeLoggerLibrary.sendResponse(req);
 

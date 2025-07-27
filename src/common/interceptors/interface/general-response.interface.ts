@@ -1,7 +1,7 @@
 import { HttpStatus } from "@nestjs/common";
 
-export class LogoutInterface {
+export class GeneralResponseInterface<T> {
   statusCode: HttpStatus;
   message: string;
-  headerKey: ["access_token", "refresh_token"];
+  result?: T;
 }

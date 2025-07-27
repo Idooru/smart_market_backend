@@ -1,6 +1,6 @@
 import { Controller, Get, UseInterceptors, Param, Query } from "@nestjs/common";
-import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
-import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
+import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
+import { GeneralResponseInterface } from "src/common/interceptors/interface/general-response.interface";
 import { ApiTags } from "@nestjs/swagger";
 import { ProductSearcher } from "../../logic/product.searcher";
 import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe";
@@ -15,9 +15,9 @@ import { FindConditionalProductDto } from "../../dto/request/find-conditional-pr
 export class ProductV1Controller {
   constructor(private readonly productSearcher: ProductSearcher) {}
 
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/autocomplete/:name")
-  public async findProductAutocomplete(@Param("name") name: string): Promise<JsonGeneralInterface<string[]>> {
+  public async findProductAutocomplete(@Param("name") name: string): Promise<GeneralResponseInterface<string[]>> {
     const result = await this.productSearcher.findProductAutocomplete(name);
 
     return {
@@ -27,11 +27,11 @@ export class ProductV1Controller {
     };
   }
 
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/conditional")
   public async findConditionalProducts(
     @Query() query: FindConditionalProductDto,
-  ): Promise<JsonGeneralInterface<ProductBasicRawDto[]>> {
+  ): Promise<GeneralResponseInterface<ProductBasicRawDto[]>> {
     const result = await this.productSearcher.findConditionalRaws(query);
 
     return {
@@ -41,9 +41,11 @@ export class ProductV1Controller {
     };
   }
 
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/search")
-  public async searchProduct(@Query() query: SearchProductsDto): Promise<JsonGeneralInterface<ProductBasicRawDto[]>> {
+  public async searchProduct(
+    @Query() query: SearchProductsDto,
+  ): Promise<GeneralResponseInterface<ProductBasicRawDto[]>> {
     const result = await this.productSearcher.searchProduct(query);
 
     return {
@@ -54,11 +56,11 @@ export class ProductV1Controller {
   }
 
   @FindDetailProductSwagger()
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/:productId")
   public async findDetailProduct(
     @Param("productId", ProductIdValidatePipe) productId: string,
-  ): Promise<JsonGeneralInterface<ProductDetailRawDto>> {
+  ): Promise<GeneralResponseInterface<ProductDetailRawDto>> {
     const result = await this.productSearcher.findDetailRaw(productId);
 
     return {

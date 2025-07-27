@@ -2,11 +2,11 @@ import { Controller, Param, Body, UseGuards, Post, Put, Delete, Get, Query, Uplo
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { UseInterceptors } from "@nestjs/common";
-import { JsonRemoveHeadersInterceptor } from "src/common/interceptors/general/json-remove-headers.interceptor";
+import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove-headers.interceptor";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { JsonRemoveHeadersInterface } from "src/common/interceptors/interface/json-remove-headers.interface";
-import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
-import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
+import { RemoveHeadersResponseInterface } from "src/common/interceptors/interface/remove-headers-response.interface";
+import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
+import { GeneralResponseInterface } from "src/common/interceptors/interface/general-response.interface";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 import { ApiTags } from "@nestjs/swagger";
 import { ReviewTransactionExecutor } from "../../logic/transaction/review-transaction.executor";
@@ -35,12 +35,12 @@ export class ReviewV1ClientController {
     private readonly reviewSearcher: ReviewSearcher,
   ) {}
 
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/all")
   public async findAllReviews(
     @Query() query: FindAllReviewsDto,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<ReviewBasicRawDto[]>> {
+  ): Promise<GeneralResponseInterface<ReviewBasicRawDto[]>> {
     query.userId = userId;
     const result = await this.reviewSearcher.findAllRaws(query);
 
@@ -52,11 +52,11 @@ export class ReviewV1ClientController {
   }
 
   // @ApiOperation({})
-  @UseInterceptors(JsonGeneralInterceptor)
+  @UseInterceptors(GeneralInterceptor)
   @Get("/:reviewId")
   public async findDetailReview(
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
-  ): Promise<JsonGeneralInterface<ReviewDetailRawDto>> {
+  ): Promise<GeneralResponseInterface<ReviewDetailRawDto>> {
     const result = await this.reviewSearcher.findDetailRaw(reviewId);
 
     return {
@@ -67,7 +67,7 @@ export class ReviewV1ClientController {
   }
 
   @UseInterceptors(
-    JsonGeneralInterceptor,
+    GeneralInterceptor,
     FileFieldsInterceptor(
       [
         { name: "review_image", maxCount: MulterConfigService.imageMaxCount },
@@ -85,7 +85,7 @@ export class ReviewV1ClientController {
     @UploadedFiles() mediaFiles: unknown,
     @Body() body: ReviewBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<void>> {
+  ): Promise<GeneralResponseInterface<void>> {
     const dto: CreateReviewDto = {
       body,
       reviewerId: userId,
@@ -103,7 +103,7 @@ export class ReviewV1ClientController {
   }
 
   @UseInterceptors(
-    JsonGeneralInterceptor,
+    GeneralInterceptor,
     FileFieldsInterceptor(
       [
         { name: "review_image", maxCount: MulterConfigService.imageMaxCount },
@@ -123,7 +123,7 @@ export class ReviewV1ClientController {
     @UploadedFiles() mediaFiles: unknown,
     @Body() body: ReviewBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<void>> {
+  ): Promise<GeneralResponseInterface<void>> {
     const dto: ModifyReviewDto = {
       body,
       productId,
@@ -145,12 +145,12 @@ export class ReviewV1ClientController {
   //   summary: "delete review",
   //   description: "리뷰 아이디에 해당하는 모든 형태의 리뷰를 제거합니다.",
   // })
-  @UseInterceptors(JsonGeneralInterceptor, DeleteReviewMediaInterceptor)
+  @UseInterceptors(GeneralInterceptor, DeleteReviewMediaInterceptor)
   @Delete("/:reviewId")
   public async deleteReview(
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<void>> {
+  ): Promise<GeneralResponseInterface<void>> {
     const dto: DeleteReviewDto = {
       reviewId,
       userId: jwtPayload.userId,

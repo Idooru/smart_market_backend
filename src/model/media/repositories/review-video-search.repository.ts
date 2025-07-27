@@ -31,14 +31,14 @@ export class ReviewVideoSearchRepository extends SearchRepository<ReviewVideoEnt
     return queryBuilder.select("reviewVideo").from(ReviewVideoEntity, "reviewVideo");
   }
 
-  @Implemented
+  @Implemented()
   public findPureEntity(args: FindPureEntityArgs): Promise<ReviewVideoEntity[] | ReviewVideoEntity> {
     const { property, alias, getOne } = args;
     const query = this.selectReviewVideo().where(property, alias);
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public findOptionalEntity(args: FindOptionalEntityArgs): Promise<ReviewVideoEntity[] | ReviewVideoEntity> {
     const { property, alias, entities, getOne } = args;
     const query = this.selectReviewVideo().where(property, alias);
@@ -46,7 +46,7 @@ export class ReviewVideoSearchRepository extends SearchRepository<ReviewVideoEnt
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
     const raws = await Promise.all(
       dto.map((MediaHeader) =>

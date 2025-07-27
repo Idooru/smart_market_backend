@@ -30,72 +30,72 @@ export class MediaUpdateRepository {
     private readonly inquiryResponseVideoRepository: Repository<InquiryResponseVideoEntity>,
   ) {}
 
-  @General
+  @General()
   public async uploadProductImages(dto: UploadMediaDto): Promise<ProductImageEntity> {
     return this.productImageRepository.save(dto);
   }
 
-  @General
+  @General()
   public uploadReviewImage(dto: UploadMediaDto): Promise<ReviewImageEntity> {
     return this.reviewImageRepository.save(dto);
   }
 
-  @General
+  @General()
   public uploadReviewVideo(dto: UploadMediaDto): Promise<ReviewVideoEntity> {
     return this.reviewVideoRepository.save(dto);
   }
 
-  @General
+  @General()
   public uploadInquiryRequestImage(dto: UploadMediaDto): Promise<InquiryRequestImageEntity> {
     return this.inquiryRequestImageRepository.save(dto);
   }
 
-  @General
+  @General()
   public uploadInquiryRequestVideo(dto: UploadMediaDto): Promise<InquiryRequestVideoEntity> {
     return this.inquiryRequestVideoRepository.save(dto);
   }
 
-  @General
+  @General()
   public uploadInquiryResponseImages(dto: UploadMediaDto): Promise<InquiryResponseImageEntity> {
     return this.inquiryResponseImageRepository.save(dto);
   }
 
-  @General
+  @General()
   public uploadInquiryResponseVideos(dto: UploadMediaDto): Promise<InquiryResponseVideoEntity> {
     return this.inquiryResponseVideoRepository.save(dto);
   }
 
-  @General
+  @General()
   public async deleteProductImageWithId(id: string): Promise<void> {
     await this.productImageRepository.delete({ id });
   }
 
-  @General
+  @General()
   public async deleteReviewImageWithId(id: string): Promise<void> {
     await this.reviewImageRepository.delete({ id });
   }
 
-  @General
+  @General()
   public async deleteReviewVideoWithId(id: string): Promise<void> {
     await this.reviewVideoRepository.delete({ id });
   }
 
-  @General
+  @General()
   public async deleteInquiryRequestImageWithId(id: string): Promise<void> {
     await this.inquiryRequestImageRepository.delete({ id });
   }
 
-  @General
+  @General()
   public async deleteInquiryRequestVideoWithId(id: string): Promise<void> {
     await this.inquiryRequestVideoRepository.delete({ id });
   }
 
-  @General
+  @General()
   public async deleteInquiryResponseImageWithId(id: string): Promise<void> {
     await this.inquiryResponseImageRepository.delete({ id });
   }
 
-  @General
+  @General()
   public async deleteInquiryResponseVideoWithId(id: string): Promise<void> {
     await this.inquiryResponseVideoRepository.delete({ id });
   }

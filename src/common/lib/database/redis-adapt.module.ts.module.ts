@@ -8,7 +8,7 @@
 // class CacheConfigService implements CacheOptionsFactory {
 //   constructor(private readonly configService: ConfigService) {}
 //
-//   @Implemented
+//   @Implemented()
 //   public createCacheOptions(): CacheModuleOptions {
 //     return {
 //       store: redisStore,

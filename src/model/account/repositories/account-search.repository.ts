@@ -32,14 +32,14 @@ export class AccountSearchRepository extends SearchRepository<AccountEntity, Fin
     return queryBuilder.select("account").from(AccountEntity, "account");
   }
 
-  @Implemented
+  @Implemented()
   public findPureEntity(args: FindPureEntityArgs): Promise<AccountEntity | AccountEntity[]> {
     const { property, alias, getOne } = args;
     const query = this.selectAccount().where(property, alias);
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public findOptionalEntity(args: FindOptionalEntityArgs): Promise<AccountEntity | AccountEntity[]> {
     const { property, alias, entities, getOne } = args;
     const query = this.selectAccount().where(property, alias);
@@ -47,7 +47,7 @@ export class AccountSearchRepository extends SearchRepository<AccountEntity, Fin
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: FindAllAccountsDto): Promise<AccountBasicRawDto[]> {
     const { align, column, userId } = dto;
     const accounts = await this.selectAccount(this.select.account)

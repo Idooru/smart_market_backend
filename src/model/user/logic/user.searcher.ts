@@ -12,7 +12,7 @@ import { FindAllUsersDto } from "../dto/request/find-all-users.dto";
 export class UserSearcher implements Searcher<UserEntity, FindAllUsersDto, UserBasicRawDto> {
   constructor(private readonly userSearchRepository: UserSearchRepository) {}
 
-  @Implemented
+  @Implemented()
   public findEntity(args: FindEntityArgs): Promise<UserEntity | UserEntity[]> {
     const { property, alias, getOne, entities } = args;
     if (entities && entities.length) {
@@ -21,7 +21,7 @@ export class UserSearcher implements Searcher<UserEntity, FindAllUsersDto, UserB
     return this.userSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  @Implemented
+  @Implemented()
   public findAllRaws(dto: FindAllUsersDto): Promise<UserBasicRawDto[]> {
     return this.userSearchRepository.findAllRaws(dto);
   }

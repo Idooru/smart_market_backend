@@ -6,7 +6,7 @@ import { Implemented } from "../../../common/decorators/implemented.decoration";
 export class CartIdValidatePipe implements PipeTransform {
   constructor(private readonly cartValidator: CartValidator) {}
 
-  @Implemented
+  @Implemented()
   public async transform(id: string): Promise<string> {
     await this.cartValidator.isExistId(id);
 

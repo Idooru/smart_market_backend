@@ -10,7 +10,7 @@ export class InquiryResponseImageValidatePipe implements PipeTransform {
     private readonly mediaLoggerLibrary: MediaLoggerLibrary,
   ) {}
 
-  @Implemented
+  @Implemented()
   public transform(inquiryResponseImage: Express.Multer.File[]): Express.Multer.File[] {
     const mediaInfo = "문의 응답 이미지";
 

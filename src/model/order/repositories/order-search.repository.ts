@@ -36,14 +36,14 @@ export class OrderSearchRepository extends SearchRepository<OrderEntity, FindAll
     return queryBuilder.select("order").from(OrderEntity, "order");
   }
 
-  @Implemented
+  @Implemented()
   public findPureEntity(args: FindPureEntityArgs): Promise<OrderEntity | OrderEntity[]> {
     const { property, alias, getOne } = args;
     const query = this.selectOrder().where(property, alias);
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public findOptionalEntity(args: FindOptionalEntityArgs): Promise<OrderEntity | OrderEntity[]> {
     const { property, alias, entities, getOne } = args;
     const query = this.selectOrder().where(property, alias);
@@ -51,7 +51,7 @@ export class OrderSearchRepository extends SearchRepository<OrderEntity, FindAll
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: FindAllOrdersDto): Promise<OrderBasicRawDto[]> {
     const { align, column, option, transactionStatus, userId } = dto;
     const query = this.selectOrder(this.select.order)

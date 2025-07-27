@@ -21,7 +21,7 @@ type JsonResponse = {
 export class HttpExceptionFilter implements ExceptionFilter {
   private jsonResponse: JsonResponse;
 
-  @Implemented
+  @Implemented()
   public catch(exception: HttpException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
     const exceptionResponse = exception.getResponse() as ExceptionResponse;

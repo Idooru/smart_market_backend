@@ -22,7 +22,7 @@ export class OrderUpdateRepository {
     private readonly transaction: Transactional<OrderRepositoryPayload>,
   ) {}
 
-  @Transaction
+  @Transaction()
   public async deleteAllCartsOnTransaction(id: string): Promise<void> {
     await this.transaction
       .getRepository()
@@ -33,7 +33,7 @@ export class OrderUpdateRepository {
       .execute();
   }
 
-  @Transaction
+  @Transaction()
   public async decreaseProductStock(dto: DecreaseProductStockDto): Promise<void> {
     const { product, quantity } = dto;
     await this.transaction
@@ -45,7 +45,7 @@ export class OrderUpdateRepository {
       .execute();
   }
 
-  @Transaction
+  @Transaction()
   public createOrderRow(dto: CreateOrderRowDto): Promise<OrderEntity> {
     const { body, clientUser, hasSurtax } = dto;
     const { deliveryOption, deliveryAddress } = body;
@@ -60,7 +60,7 @@ export class OrderUpdateRepository {
     });
   }
 
-  @Transaction
+  @Transaction()
   public async createPayment(dto: CreatePaymentDto): Promise<void> {
     const { clientUser, productQuantity, order } = dto;
     const { product, quantity } = productQuantity;
@@ -75,7 +75,7 @@ export class OrderUpdateRepository {
     });
   }
 
-  @Transaction
+  @Transaction()
   public async withdrawClientBalance(dto: WithdrawClientBalanceDto): Promise<AccountEntity> {
     const { hasSurtax } = dto;
     if (hasSurtax) dto.balance += this.surtaxPrice;
@@ -98,7 +98,7 @@ export class OrderUpdateRepository {
     return this.transaction.getRepository().account.findOneBy({ id: dto.accountId });
   }
 
-  @Transaction
+  @Transaction()
   public async depositAdminBalance(dto: DepositAdminBalanceRowDto): Promise<void> {
     const { userId, balance, totalPrice, hasSurtax } = dto;
     const depositBalance = hasSurtax ? balance + totalPrice + this.surtaxPrice : balance + totalPrice;

@@ -6,7 +6,7 @@ import { Implemented } from "src/common/decorators/implemented.decoration";
 export class AccountIdValidatePipe implements PipeTransform {
   constructor(private readonly accountValidator: AccountValidator) {}
 
-  @Implemented
+  @Implemented()
   public async transform(accountId: string): Promise<string> {
     await this.accountValidator.isExistId(accountId);
     return accountId;

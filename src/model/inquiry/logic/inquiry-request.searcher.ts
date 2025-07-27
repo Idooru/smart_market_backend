@@ -14,7 +14,7 @@ export class InquiryRequestSearcher
 {
   constructor(private readonly inquiryRequestSearchRepository: InquiryRequestSearchRepository) {}
 
-  @Implemented
+  @Implemented()
   public findEntity(args: FindEntityArgs): Promise<InquiryRequestEntity | InquiryRequestEntity[]> {
     const { property, alias, getOne, entities } = args;
     if (entities && entities.length) {
@@ -23,7 +23,7 @@ export class InquiryRequestSearcher
     return this.inquiryRequestSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  @Implemented
+  @Implemented()
   public findAllRaws(dto: FindAllInquiryRequestsDto): Promise<InquiryRequestBasicRawDto[]> {
     return this.inquiryRequestSearchRepository.findAllRaws(dto);
   }

@@ -21,7 +21,7 @@ export class ProductUpdateRepository {
     private readonly hangulLibrary: HangulLibrary,
   ) {}
 
-  @Transaction
+  @Transaction()
   public createProduct({ body, admin }: CreateProductDto): Promise<ProductEntity> {
     const newProduct = {
       ...body,
@@ -32,12 +32,12 @@ export class ProductUpdateRepository {
     return this.transaction.getRepository().product.save(newProduct);
   }
 
-  @Transaction
+  @Transaction()
   public async createStarRate(product: ProductEntity): Promise<void> {
     await this.transaction.getRepository().starRate.save({ id: product.id });
   }
 
-  @Transaction
+  @Transaction()
   public async insertProductIdOnProductImage({ productImageId, productId }: InsertProductImageDto): Promise<void> {
     await this.transaction.getRepository().productImage.query(
       `UPDATE products_images 
@@ -47,12 +47,12 @@ export class ProductUpdateRepository {
     );
   }
 
-  @Transaction
+  @Transaction()
   public async deleteProductImageWithId(productId: string): Promise<void> {
     await this.transaction.getRepository().productImage.delete({ id: productId });
   }
 
-  @Transaction
+  @Transaction()
   public async modifyProduct({ productId, body }: ModifyProductDto): Promise<void> {
     const newProduct = {
       ...body,
@@ -62,7 +62,7 @@ export class ProductUpdateRepository {
     await this.transaction.getRepository().product.update(productId, newProduct);
   }
 
-  @General
+  @General()
   public async modifyProductName(productId: string, name: string): Promise<void> {
     const newProductName = {
       name,
@@ -72,32 +72,32 @@ export class ProductUpdateRepository {
     await this.productRepository.update(productId, newProductName);
   }
 
-  @General
+  @General()
   public async modifyProductPrice(id: string, price: number): Promise<void> {
     await this.productRepository.update(id, { price });
   }
 
-  @General
+  @General()
   public async modifyProductOrigin(id: string, origin: string): Promise<void> {
     await this.productRepository.update(id, { origin });
   }
 
-  @General
+  @General()
   public async modifyProductCategory(id: string, category: ProductCategory): Promise<void> {
     await this.productRepository.update(id, { category });
   }
 
-  @General
+  @General()
   public async modifyProductDescription(id: string, description: string): Promise<void> {
     await this.productRepository.update(id, { description });
   }
 
-  @General
+  @General()
   public async modifyProductStock(id: string, stock: number): Promise<void> {
     await this.productRepository.update(id, { stock });
   }
 
-  @General
+  @General()
   public async removeProduct(id: string): Promise<void> {
     await this.productRepository.delete({ id });
   }

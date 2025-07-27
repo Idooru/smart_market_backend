@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 export class ReviewUpdateRepository {
   constructor(private readonly transaction: Transactional<ReviewRepositoryPayload>) {}
 
-  @Transaction
+  @Transaction()
   public async createReview(dto: CreateReviewRowDto): Promise<ReviewEntity> {
     const { body, reviewerId, productId } = dto;
     const reviewId = uuidv4();
@@ -34,7 +34,7 @@ export class ReviewUpdateRepository {
     return insertedReview[0]; // 삽입된 엔티티 반환
   }
 
-  @Transaction
+  @Transaction()
   public async insertReviewIdOnReviewImage({ reviewImageId, reviewId }: InsertReviewImageDto): Promise<void> {
     await this.transaction.getRepository().reviewImage.query(
       `UPDATE reviews_images 
@@ -44,7 +44,7 @@ export class ReviewUpdateRepository {
     );
   }
 
-  @Transaction
+  @Transaction()
   public async insertReviewIdOnReviewVideo({ reviewVideoId, reviewId }: InsertReviewVideoDto): Promise<void> {
     await this.transaction.getRepository().reviewVideo.query(
       `UPDATE reviews_videos 
@@ -54,7 +54,7 @@ export class ReviewUpdateRepository {
     );
   }
 
-  @Transaction
+  @Transaction()
   public async increaseStarRate(starRateScore: StarRateScore, starRate: StarRateEntity): Promise<void> {
     switch (starRateScore) {
       case 1:
@@ -85,7 +85,7 @@ export class ReviewUpdateRepository {
     }
   }
 
-  @Transaction
+  @Transaction()
   public async modifyReview(dto: ModifyReviewRowDto): Promise<void> {
     const { review, body } = dto;
 
@@ -95,22 +95,22 @@ export class ReviewUpdateRepository {
     });
   }
 
-  @Transaction
+  @Transaction()
   public async deleteReviewImageWithId(id: string): Promise<void> {
     await this.transaction.getRepository().reviewImage.delete({ id });
   }
 
-  @Transaction
+  @Transaction()
   public async deleteReviewVideoWithId(id: string): Promise<void> {
     await this.transaction.getRepository().reviewVideo.delete({ id });
   }
 
-  @Transaction
+  @Transaction()
   public async deleteReviewWithId(id: string): Promise<void> {
     await this.transaction.getRepository().review.delete({ id });
   }
 
-  @Transaction
+  @Transaction()
   public async decreaseStarRate(starRate: StarRateEntity, beforeScore: number): Promise<void> {
     switch (beforeScore) {
       case 1:
@@ -141,7 +141,7 @@ export class ReviewUpdateRepository {
     }
   }
 
-  @Transaction
+  @Transaction()
   public async renewAverage(starRate: StarRateEntity): Promise<void> {
     const { id } = starRate;
     await this.transaction.getRepository().starRate.update(id, starRate);

@@ -35,14 +35,14 @@ export class InquiryRequestVideoSearchRepository extends SearchRepository<
     return queryBuilder.select("inquiryRequestVideo").from(InquiryRequestVideoEntity, "inquiryRequestVideo");
   }
 
-  @Implemented
+  @Implemented()
   public findPureEntity(args: FindPureEntityArgs): Promise<InquiryRequestVideoEntity[] | InquiryRequestVideoEntity> {
     const { property, alias, getOne } = args;
     const query = this.selectInquiryRequestVideo().where(property, alias);
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public findOptionalEntity(
     args: FindOptionalEntityArgs,
   ): Promise<InquiryRequestVideoEntity[] | InquiryRequestVideoEntity> {
@@ -52,7 +52,7 @@ export class InquiryRequestVideoSearchRepository extends SearchRepository<
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
     const raws = await Promise.all(
       dto.map((MediaHeader) =>

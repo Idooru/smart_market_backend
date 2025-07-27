@@ -13,7 +13,7 @@ import { FindConditionalProductDto } from "../dto/request/find-conditional-produ
 export class ProductSearcher implements Searcher<ProductEntity, FindAllProductsDto, ProductBasicRawDto> {
   constructor(private readonly productSearchRepository: ProductSearchRepository) {}
 
-  @Implemented
+  @Implemented()
   public findEntity(args: FindEntityArgs): Promise<ProductEntity | ProductEntity[]> {
     const { property, alias, getOne, entities } = args;
     if (entities && entities.length) {
@@ -22,7 +22,7 @@ export class ProductSearcher implements Searcher<ProductEntity, FindAllProductsD
     return this.productSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  @Implemented
+  @Implemented()
   public findAllRaws(dto: FindAllProductsDto): Promise<ProductBasicRawDto[]> {
     return this.productSearchRepository.findAllRaws(dto);
   }

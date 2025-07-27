@@ -16,7 +16,7 @@ export class MulterConfigService implements MulterOptionsFactory {
   private readonly logger = loggerFactory("MulterConfiguration");
   private readonly inquiry = ["request", "response"];
 
-  @Implemented
+  @Implemented()
   public async createMulterOptions(): Promise<MulterOptions> {
     await this.createFolder();
     return {

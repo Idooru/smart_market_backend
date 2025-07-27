@@ -5,7 +5,7 @@ import { Implemented } from "../decorators/implemented.decoration";
 
 @Catch(LibraryException)
 export class LibraryExceptionFilter implements ExceptionFilter {
-  @Implemented
+  @Implemented()
   public catch(exception: LibraryException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
     const { error } = exception.getResponse() as LibraryException;

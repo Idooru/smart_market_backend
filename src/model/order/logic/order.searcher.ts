@@ -10,7 +10,7 @@ import { OrderBasicRawDto } from "../dto/response/order-basic-raw.dto";
 export class OrderSearcher implements Searcher<OrderEntity, FindAllOrdersDto, OrderBasicRawDto> {
   constructor(private readonly orderSearchRepository: OrderSearchRepository) {}
 
-  @Implemented
+  @Implemented()
   public findEntity(args: FindEntityArgs): Promise<OrderEntity | OrderEntity[]> {
     const { property, alias, getOne, entities } = args;
     if (entities && entities.length) {
@@ -19,7 +19,7 @@ export class OrderSearcher implements Searcher<OrderEntity, FindAllOrdersDto, Or
     return this.orderSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  @Implemented
+  @Implemented()
   public findAllRaws(dto: FindAllOrdersDto): Promise<OrderBasicRawDto[]> {
     return this.orderSearchRepository.findAllRaws(dto);
   }

@@ -53,12 +53,12 @@ export class OrderService {
     this.entityFinder = new EntityFinder(this.productIdFilter, this.accountSearcher, this.productSearcher);
   }
 
-  @Transaction
+  @Transaction()
   public async deleteAllCarts(id: string) {
     await this.orderUpdateRepository.deleteAllCartsOnTransaction(id);
   }
 
-  @Transaction
+  @Transaction()
   public async decreaseProductStocks(productQuantities: Array<ProductQuantity>): Promise<void> {
     const decreasing = productQuantities.map((productQuantity: ProductQuantity) =>
       this.orderUpdateRepository.decreaseProductStock(productQuantity),
@@ -67,12 +67,12 @@ export class OrderService {
     await Promise.all(decreasing);
   }
 
-  @Transaction
+  @Transaction()
   public createOrder(dto: CreateOrderRowDto): Promise<OrderEntity> {
     return this.orderUpdateRepository.createOrderRow(dto);
   }
 
-  @Transaction
+  @Transaction()
   public async createPayments(dto: CreatePaymentsDto): Promise<void> {
     const { productQuantities, clientUser, order } = dto;
     const creating = productQuantities.map((productQuantity) => {
@@ -87,12 +87,12 @@ export class OrderService {
     await Promise.all(creating);
   }
 
-  @Transaction
+  @Transaction()
   public async withdrawClientBalance(dto: WithdrawClientBalanceDto): Promise<void> {
     await this.orderUpdateRepository.withdrawClientBalance(dto);
   }
 
-  @Transaction
+  @Transaction()
   public async depositAdminBalance(dto: DepositAdminBalanceDto): Promise<void> {
     const { productQuantities, hasSurtax } = dto;
 

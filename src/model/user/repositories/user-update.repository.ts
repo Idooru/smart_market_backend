@@ -24,77 +24,77 @@ export class UserUpdateRepository {
     private readonly userAuthRepository: Repository<UserAuthEntity>,
   ) {}
 
-  @Transaction
+  @Transaction()
   public createUserEntity(role: UserRole): Promise<UserEntity> {
     return this.transaction.getRepository().user.save({ role });
   }
 
-  @Transaction
+  @Transaction()
   public async createClientUser(user: UserEntity): Promise<void> {
     await this.transaction.getRepository().clientUser.save({ User: user });
   }
 
-  @Transaction
+  @Transaction()
   public async createAdminUser(user: UserEntity): Promise<void> {
     await this.transaction.getRepository().adminUser.save({ User: user });
   }
 
-  @Transaction
+  @Transaction()
   public async createUserProfile(dto: CreateUserProfileDto): Promise<void> {
     await this.transaction.getRepository().userProfile.save(dto);
   }
 
-  @Transaction
+  @Transaction()
   public async createUserAuth(dto: CreateUserAuthDto): Promise<void> {
     await this.transaction.getRepository().userAuth.save(dto);
   }
 
-  @Transaction
+  @Transaction()
   public async modifyUserProfile(dto: ModifyUserProfileDto, id: string): Promise<void> {
     await this.transaction.getRepository().userProfile.update(id, dto);
   }
 
-  @Transaction
+  @Transaction()
   public async modifyUserAuth(dto: ModifyUserAuthDto, id: string): Promise<void> {
     await this.transaction.getRepository().userAuth.update(id, dto);
   }
 
-  @General
+  @General()
   public async modifyUserEmail(email: string, id: string): Promise<void> {
     await this.userAuthRepository.update(id, { email });
   }
 
-  @General
+  @General()
   public async modifyUserNickname(nickName: string, id: string): Promise<void> {
     await this.userAuthRepository.update(id, { nickName });
   }
 
-  @General
+  @General()
   public async modifyUserPhoneNumber(phoneNumber: string, id: string): Promise<void> {
     await this.userProfileRepository.update(id, { phoneNumber });
   }
 
-  @General
+  @General()
   public async modifyUserPassword(password: string, id: string): Promise<void> {
     await this.userAuthRepository.update(id, { password });
   }
 
-  @General
+  @General()
   public async modifyUserAddress(address: string, id: string): Promise<void> {
     await this.userProfileRepository.update(id, { address });
   }
 
-  @General
+  @General()
   public async deleteUser(id: string): Promise<void> {
     await this.userRepository.delete({ id });
   }
 
-  @General
+  @General()
   public async setRefreshToken(id: string, refreshToken: string): Promise<void> {
     await this.userAuthRepository.update(id, { refreshToken });
   }
 
-  @General
+  @General()
   public async removeRefreshToken(id: string): Promise<void> {
     await this.userAuthRepository.update(id, { refreshToken: null });
   }

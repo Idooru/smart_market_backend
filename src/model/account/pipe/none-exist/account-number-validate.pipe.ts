@@ -7,7 +7,7 @@ import { Implemented } from "../../../../common/decorators/implemented.decoratio
 export class AccountNumberValidatePipe implements PipeTransform {
   constructor(private readonly accountValidator: AccountValidator) {}
 
-  @Implemented
+  @Implemented()
   public async transform(dto: AccountBody): Promise<AccountBody> {
     const { accountNumber } = dto;
 

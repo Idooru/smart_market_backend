@@ -39,17 +39,17 @@ export class ProductService {
     this.entityFinder = new EntityFinder(this.productIdFilter, this.productSearcher);
   }
 
-  @Transaction
+  @Transaction()
   public createProduct(dto: CreateProductDto): Promise<ProductEntity> {
     return this.productUpdateRepository.createProduct(dto);
   }
 
-  @Transaction
+  @Transaction()
   public async createStarRate(product: ProductEntity): Promise<void> {
     await this.productUpdateRepository.createStarRate(product);
   }
 
-  @Transaction
+  @Transaction()
   public async insertProductImages({ productId, productImages }: InsertProductImagesDto): Promise<void> {
     const inserting = productImages.map((productImage) => {
       const insertProductImageDto = { productId, productImageId: productImage.id };
@@ -59,12 +59,12 @@ export class ProductService {
     await Promise.all(inserting);
   }
 
-  @Transaction
+  @Transaction()
   public async modifyProduct(dto: ModifyProductDto): Promise<void> {
     await this.productUpdateRepository.modifyProduct(dto);
   }
 
-  @Transaction
+  @Transaction()
   public async changeProductImages(dto: ChangeProductImageDto): Promise<void> {
     const { productId, beforeProductImages, newProductImages } = dto;
 
@@ -86,37 +86,37 @@ export class ProductService {
     await Promise.all([inserting, deleting]);
   }
 
-  @General
+  @General()
   public async modifyProductName(id: string, name: string): Promise<void> {
     await this.productUpdateRepository.modifyProductName(id, name);
   }
 
-  @General
+  @General()
   public async modifyProductPrice(id: string, price: number): Promise<void> {
     await this.productUpdateRepository.modifyProductPrice(id, price);
   }
 
-  @General
+  @General()
   public async modifyProductOrigin(id: string, origin: string): Promise<void> {
     await this.productUpdateRepository.modifyProductOrigin(id, origin);
   }
 
-  @General
+  @General()
   public async modifyProductCategory(id: string, category: ProductCategory): Promise<void> {
     await this.productUpdateRepository.modifyProductCategory(id, category);
   }
 
-  @General
+  @General()
   public async modifyProductDescription(id: string, description: string): Promise<void> {
     await this.productUpdateRepository.modifyProductDescription(id, description);
   }
 
-  @General
+  @General()
   public async modifyProductStock(id: string, stock: number): Promise<void> {
     await this.productUpdateRepository.modifyProductStock(id, stock);
   }
 
-  @General
+  @General()
   public async removeProduct(id: string): Promise<void> {
     const product = await this.entityFinder.findProduct(id);
 

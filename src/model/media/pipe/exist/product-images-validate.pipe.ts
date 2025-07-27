@@ -10,10 +10,8 @@ export class ProductImagesValidatePipe implements PipeTransform {
     private readonly mediaLoggerLibrary: MediaLoggerLibrary,
   ) {}
 
-  @Implemented
-  public transform(
-    productImages: Express.Multer.File[],
-  ): Express.Multer.File[] {
+  @Implemented()
+  public transform(productImages: Express.Multer.File[]): Express.Multer.File[] {
     const mediaInfo = "상품 이미지";
 
     this.mediaValidator.validate(mediaInfo, productImages);

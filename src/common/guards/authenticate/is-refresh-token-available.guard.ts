@@ -33,7 +33,7 @@ export class IsRefreshTokenAvailableGuard implements CanActivate {
     this.entityFinder = new EntityFinder(this.userIdFilter, this.userSearcher);
   }
 
-  @Implemented
+  @Implemented()
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
     const accessToken = req.headers["access-token"] as string;

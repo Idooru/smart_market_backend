@@ -12,7 +12,7 @@ export class InquiryRequestImageSearcher
 {
   constructor(private readonly inquiryRequestImageSearchRepository: InquiryRequestImageSearchRepository) {}
 
-  @Implemented
+  @Implemented()
   public findEntity(args: FindEntityArgs): Promise<InquiryRequestImageEntity | InquiryRequestImageEntity[]> {
     const { property, alias, getOne, entities } = args;
     if (entities && entities.length) {
@@ -21,7 +21,7 @@ export class InquiryRequestImageSearcher
     return this.inquiryRequestImageSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
     return this.inquiryRequestImageSearchRepository.findAllRaws(dto);
   }

@@ -4,7 +4,7 @@ import { loggerFactory } from "../functions/logger.factory";
 import { Implemented } from "../decorators/implemented.decoration";
 
 export class ResponseLoggerMiddleware implements NestMiddleware {
-  @Implemented
+  @Implemented()
   public use(req: Request, res: Response, next: NextFunction): void {
     res.on("finish", () => {
       const { ip, originalUrl, method } = req;

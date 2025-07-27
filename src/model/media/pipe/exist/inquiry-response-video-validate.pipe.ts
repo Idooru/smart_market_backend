@@ -10,10 +10,8 @@ export class InquiryResponseVideoValidatePipe implements PipeTransform {
     private readonly mediaLoggerLibrary: MediaLoggerLibrary,
   ) {}
 
-  @Implemented
-  public transform(
-    inquiryResponseImage: Express.Multer.File[],
-  ): Express.Multer.File[] {
+  @Implemented()
+  public transform(inquiryResponseImage: Express.Multer.File[]): Express.Multer.File[] {
     const mediaInfo = "문의 응답 비디오";
 
     this.mediaValidator.validate(mediaInfo, inquiryResponseImage);

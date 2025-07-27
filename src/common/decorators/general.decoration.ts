@@ -1,1 +1,3 @@
-export const General = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {};
+import { Reflector } from "@nestjs/core";
+
+export const General = Reflector.createDecorator();

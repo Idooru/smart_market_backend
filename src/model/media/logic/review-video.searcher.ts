@@ -10,7 +10,7 @@ import { ReviewVideoSearchRepository } from "../repositories/review-video-search
 export class ReviewVideoSearcher implements Searcher<ReviewVideoEntity, MediaHeaderDto, MediaBasicRawDto> {
   constructor(private readonly inquiryResponseVideoSearchRepository: ReviewVideoSearchRepository) {}
 
-  @Implemented
+  @Implemented()
   public findEntity(args: FindEntityArgs): Promise<ReviewVideoEntity | ReviewVideoEntity[]> {
     const { property, alias, getOne, entities } = args;
     if (entities && entities.length) {
@@ -19,7 +19,7 @@ export class ReviewVideoSearcher implements Searcher<ReviewVideoEntity, MediaHea
     return this.inquiryResponseVideoSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
     return this.inquiryResponseVideoSearchRepository.findAllRaws(dto);
   }

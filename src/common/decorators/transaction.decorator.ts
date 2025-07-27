@@ -1,1 +1,3 @@
-export const Transaction = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {};
+import { Reflector } from "@nestjs/core";
+
+export const Transaction = Reflector.createDecorator();

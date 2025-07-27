@@ -10,7 +10,7 @@ type PhoneNumber = {
 export class UserBodyPhoneNumberValidatePipe implements PipeTransform {
   constructor(private readonly userValidator: UserValidator) {}
 
-  @Implemented
+  @Implemented()
   public async transform({ phoneNumber }: { phoneNumber: string }): Promise<PhoneNumber> {
     await this.userValidator.isNoneExistPhoneNumber(phoneNumber);
 

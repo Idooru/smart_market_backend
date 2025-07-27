@@ -14,12 +14,12 @@ import { InsertInquiryResponseVideoDto } from "../dto/inquiry-response/request/i
 export class InquiryService {
   constructor(private readonly inquiryOperationRepository: InquiryUpdateRepository) {}
 
-  @Transaction
+  @Transaction()
   public createInquiryRequest(dto: CreateInquiryRequestRowDto): Promise<InquiryRequestEntity> {
     return this.inquiryOperationRepository.createInquiryRequestRow(dto);
   }
 
-  @Transaction
+  @Transaction()
   public async insertInquiryRequestImages(dto: InsertInquiryRequestImageDto): Promise<void> {
     const { inquiryRequestImages, inquiryRequest } = dto;
 
@@ -30,7 +30,7 @@ export class InquiryService {
     await Promise.all(inserting);
   }
 
-  @Transaction
+  @Transaction()
   public async insertInquiryRequestVideos(dto: InsertInquiryRequestVideoDto): Promise<void> {
     const { inquiryRequestVideos, inquiryRequest } = dto;
 
@@ -41,17 +41,17 @@ export class InquiryService {
     await Promise.all(inserting);
   }
 
-  @Transaction
+  @Transaction()
   public createInquiryResponse(dto: CreateInquiryResponseRowDto): Promise<InquiryResponseEntity> {
     return this.inquiryOperationRepository.createInquiryResponseRow(dto);
   }
 
-  @Transaction
+  @Transaction()
   public async modifyInquiryRequestAnswerState(id: string): Promise<void> {
     await this.inquiryOperationRepository.modifyInquiryRequestAnswerState(id);
   }
 
-  @Transaction
+  @Transaction()
   public async insertInquiryResponseImages(dto: InsertInquiryResponseImageDto): Promise<void> {
     const { inquiryResponseImages, inquiryResponse } = dto;
 
@@ -65,7 +65,7 @@ export class InquiryService {
     await Promise.all(inserting);
   }
 
-  @Transaction
+  @Transaction()
   public async insertInquiryResponseVideos(dto: InsertInquiryResponseVideoDto): Promise<void> {
     const { inquiryResponseVideos, inquiryResponse } = dto;
 

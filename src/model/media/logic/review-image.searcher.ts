@@ -10,7 +10,7 @@ import { ReviewImageSearchRepository } from "../repositories/review-image-search
 export class ReviewImageSearcher implements Searcher<ReviewImageEntity, string[], MediaBasicRawDto> {
   constructor(private readonly inquiryResponseImageSearchRepository: ReviewImageSearchRepository) {}
 
-  @Implemented
+  @Implemented()
   public findEntity(args: FindEntityArgs): Promise<ReviewImageEntity | ReviewImageEntity[]> {
     const { property, alias, getOne, entities } = args;
     if (entities && entities.length) {
@@ -19,7 +19,7 @@ export class ReviewImageSearcher implements Searcher<ReviewImageEntity, string[]
     return this.inquiryResponseImageSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: string[]): Promise<MediaBasicRawDto[]> {
     return this.inquiryResponseImageSearchRepository.findAllRaws(dto);
   }

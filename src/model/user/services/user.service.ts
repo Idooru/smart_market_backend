@@ -39,7 +39,7 @@ export class UserService {
     this.entityFinder = new EntityFinder(this.userSearcher);
   }
 
-  @Transaction
+  @Transaction()
   public async createUserEntity(role: UserRole): Promise<UserEntity> {
     const user = await this.userUpdateRepository.createUserEntity(role);
 
@@ -52,7 +52,7 @@ export class UserService {
     return user;
   }
 
-  @Transaction
+  @Transaction()
   public async createUserBase({ id }: UserEntity, dto: RegisterUserDto): Promise<void> {
     const { realName, nickName, birth, gender, email, phoneNumber, password, address } = dto;
     const hashed = await this.userSecurity.hashPassword(password, true);
@@ -77,7 +77,7 @@ export class UserService {
     this.userEventMapSetter.setRegisterEventParam(sendMailToClientAboutRegisterDto);
   }
 
-  @Transaction
+  @Transaction()
   public async modifyUser(dto: ModifyUserDto): Promise<void> {
     const { id, body } = dto;
     const { phoneNumber, email, nickName, address } = body;
@@ -91,34 +91,34 @@ export class UserService {
     ]);
   }
 
-  @General
+  @General()
   public async modifyUserEmail(email: string, id: string): Promise<void> {
     await this.userUpdateRepository.modifyUserEmail(email, id);
   }
 
-  @General
+  @General()
   public async modifyUserNickname(nickName: string, id: string): Promise<void> {
     await this.userUpdateRepository.modifyUserNickname(nickName, id);
   }
 
-  @General
+  @General()
   public async modifyUserPhoneNumber(phoneNumber: string, id: string): Promise<void> {
     await this.userUpdateRepository.modifyUserPhoneNumber(phoneNumber, id);
   }
 
-  @General
+  @General()
   public async modifyUserPassword(password: string, id: string): Promise<void> {
     const hashed = await this.userSecurity.hashPassword(password, false);
 
     await this.userUpdateRepository.modifyUserPassword(hashed, id);
   }
 
-  @General
+  @General()
   public async modifyUserAddress(address: string, id: string): Promise<void> {
     await this.userUpdateRepository.modifyUserAddress(address, id);
   }
 
-  @General
+  @General()
   public async resetPassword(dto: BasicAuthDto): Promise<void> {
     const { email, password } = dto;
     const [hashed, user] = await Promise.all([
@@ -135,7 +135,7 @@ export class UserService {
     await this.userUpdateRepository.modifyUserPassword(hashed, user.id);
   }
 
-  @General
+  @General()
   public async deleteUser(id: string): Promise<void> {
     await this.userUpdateRepository.deleteUser(id);
   }

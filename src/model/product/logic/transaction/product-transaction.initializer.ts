@@ -15,7 +15,7 @@ export class ProductTransactionInitializer extends Transactional<ProductReposito
     super();
   }
 
-  @Implemented
+  @Implemented()
   public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -30,7 +30,7 @@ export class ProductTransactionInitializer extends Transactional<ProductReposito
     return queryRunner;
   }
 
-  @Implemented
+  @Implemented()
   public getRepository(): ProductRepositoryPayload {
     return this.payload;
   }

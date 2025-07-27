@@ -18,7 +18,7 @@ export class InquiryTransactionInitializer extends Transactional<InquiryReposito
     super();
   }
 
-  @Implemented
+  @Implemented()
   public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -36,7 +36,7 @@ export class InquiryTransactionInitializer extends Transactional<InquiryReposito
     return queryRunner;
   }
 
-  @Implemented
+  @Implemented()
   public getRepository(): InquiryRepositoryPayload {
     return this.payload;
   }

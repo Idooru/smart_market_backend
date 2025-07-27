@@ -89,7 +89,7 @@ export class CartService {
     // }
   }
 
-  @General
+  @General()
   public async createCart(dto: CreateCartDto): Promise<void> {
     const { productId, clientUserId, body } = dto;
     const carts = await this.entityFinder.findCarts(clientUserId);
@@ -114,7 +114,7 @@ export class CartService {
     await this.cartUpdateRepository.createCartRow(createDto);
   }
 
-  @General
+  @General()
   public async modifyCart(dto: ModifyCartDto): Promise<void> {
     const { productId, body } = dto;
     const product = await this.entityFinder.findProduct(productId);
@@ -125,12 +125,12 @@ export class CartService {
     await this.cartUpdateRepository.modifyCart(dto);
   }
 
-  @General
+  @General()
   public async deleteAllCarts(id: string): Promise<void> {
     await this.cartUpdateRepository.deleteAllCarts(id);
   }
 
-  @General
+  @General()
   public async deleteCart(id: string): Promise<void> {
     await this.cartUpdateRepository.deleteCart(id);
   }

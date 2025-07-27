@@ -9,7 +9,7 @@ import { JsonGeneralInterface } from "../interface/json-general-interface";
 export class LogoutInterceptor implements NestInterceptor {
   constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
 
-  @Implemented
+  @Implemented()
   public intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();

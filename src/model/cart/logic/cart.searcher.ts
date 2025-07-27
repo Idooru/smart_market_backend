@@ -10,7 +10,7 @@ import { CartBasicRawDto } from "../dto/response/carts-basic-raw.dto";
 export class CartSearcher implements Searcher<CartEntity, FindAllCartsDto, CartBasicRawDto> {
   constructor(private readonly cartSearchRepository: CartSearchRepository) {}
 
-  @Implemented
+  @Implemented()
   public findEntity(args: FindEntityArgs): Promise<CartEntity | CartEntity[]> {
     const { property, alias, getOne, entities } = args;
     if (entities && entities.length) {
@@ -19,7 +19,7 @@ export class CartSearcher implements Searcher<CartEntity, FindAllCartsDto, CartB
     return this.cartSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: FindAllCartsDto): Promise<CartBasicRawDto[]> {
     return this.cartSearchRepository.findAllRaws(dto);
   }

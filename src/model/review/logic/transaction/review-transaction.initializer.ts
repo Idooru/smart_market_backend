@@ -16,7 +16,7 @@ export class ReviewTransactionInitializer extends Transactional<ReviewRepository
     super();
   }
 
-  @Implemented
+  @Implemented()
   public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSourece.createQueryRunner();
     await queryRunner.connect();
@@ -32,7 +32,7 @@ export class ReviewTransactionInitializer extends Transactional<ReviewRepository
     return queryRunner;
   }
 
-  @Implemented
+  @Implemented()
   public getRepository(): ReviewRepositoryPayload {
     return this.payload;
   }

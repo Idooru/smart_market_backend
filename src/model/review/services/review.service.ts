@@ -48,12 +48,12 @@ export class ReviewService {
     this.entityFinder = new EntityFinder(this.reviewIdFilter, this.reviewSearcher);
   }
 
-  @Transaction
+  @Transaction()
   public createReview(dto: CreateReviewRowDto): Promise<ReviewEntity> {
     return this.reviewUpdateRepository.createReview(dto);
   }
 
-  @Transaction
+  @Transaction()
   public async insertReviewImages({ reviewImages, reviewId }: InsertReviewImagesDto): Promise<void> {
     const inserting = reviewImages.map((reviewImage) => {
       const insertReviewImageDto = { reviewId, reviewImageId: reviewImage.id };
@@ -63,7 +63,7 @@ export class ReviewService {
     await Promise.all(inserting);
   }
 
-  @Transaction
+  @Transaction()
   public async insertReviewVideos({ reviewVideos, reviewId }: InsertReviewVideosDto): Promise<void> {
     const inserting = reviewVideos.map((reviewVideo) => {
       const insertReviewVideoDto = { reviewId, reviewVideoId: reviewVideo.id };
@@ -73,7 +73,7 @@ export class ReviewService {
     await Promise.all(inserting);
   }
 
-  @Transaction
+  @Transaction()
   public async increaseStarRate({ starRateScore, starRate }: StarRatingDto): Promise<void> {
     await this.reviewUpdateRepository.increaseStarRate(starRateScore, starRate);
 
@@ -81,12 +81,12 @@ export class ReviewService {
     await this.reviewUpdateRepository.renewAverage(updatedStarRate);
   }
 
-  @Transaction
+  @Transaction()
   public async modifyReview(dto: ModifyReviewRowDto): Promise<void> {
     await this.reviewUpdateRepository.modifyReview(dto);
   }
 
-  @Transaction
+  @Transaction()
   public async changeReviewImages(dto: ChangeReviewImageDto): Promise<void> {
     const { beforeReviewImages, newReviewImages, reviewId } = dto;
 
@@ -106,7 +106,7 @@ export class ReviewService {
     }
   }
 
-  @Transaction
+  @Transaction()
   public async changeReviewVideos(dto: ChangeReviewVideoDto): Promise<void> {
     const { beforeReviewVideos, newReviewVideos, reviewId } = dto;
 
@@ -126,7 +126,7 @@ export class ReviewService {
     }
   }
 
-  @Transaction
+  @Transaction()
   public async modifyStarRate({ starRateScore, starRate, review }: ModifyStarRateDto): Promise<void> {
     const beforeScore = review.starRateScore;
 
@@ -141,7 +141,7 @@ export class ReviewService {
     await this.reviewUpdateRepository.renewAverage(updatedStarRate);
   }
 
-  @Transaction
+  @Transaction()
   public async deleteReviewWithId(id: string): Promise<void> {
     const review = await this.entityFinder.findReview(id);
 
@@ -155,7 +155,7 @@ export class ReviewService {
     await this.reviewUpdateRepository.deleteReviewWithId(id);
   }
 
-  @Transaction
+  @Transaction()
   public async decreaseStarRate(review: ReviewEntity, starRate: StarRateEntity): Promise<void> {
     const beforeScore = review.starRateScore;
 

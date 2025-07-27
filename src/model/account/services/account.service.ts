@@ -30,7 +30,7 @@ export class AccountService {
     this.entityFinder = new EntityFinder(this.accountSearcher);
   }
 
-  @General
+  @General()
   public async deposit(dto: MoneyTransactionDto): Promise<DepositResultDto> {
     const [account, result] = await Promise.all([
       this.entityFinder.findAccount(dto.accountId),
@@ -44,7 +44,7 @@ export class AccountService {
     };
   }
 
-  @General
+  @General()
   public async withdraw(dto: MoneyTransactionDto): Promise<WithdrawResultDto> {
     const [account, result] = await Promise.all([
       this.entityFinder.findAccount(dto.accountId),

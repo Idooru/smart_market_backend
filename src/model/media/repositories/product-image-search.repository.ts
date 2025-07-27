@@ -36,14 +36,14 @@ export class ProductImageSearchRepository extends SearchRepository<
     return queryBuilder.select("productImage").from(ProductImageEntity, "productImage");
   }
 
-  @Implemented
+  @Implemented()
   public findPureEntity(args: FindPureEntityArgs): Promise<ProductImageEntity | ProductImageEntity[]> {
     const { property, alias, getOne } = args;
     const query = this.selectProductImage().where(property, alias);
     return getOne ? query.getOne() : query.getMany();
   }
 
-  @Implemented
+  @Implemented()
   public findOptionalEntity(args: FindOptionalEntityArgs): Promise<ProductImageEntity | ProductImageEntity[]> {
     const { property, alias, entities, getOne } = args;
     let query = this.selectProductImage().where(property, alias);
@@ -64,7 +64,7 @@ export class ProductImageSearchRepository extends SearchRepository<
     return getOne ? query.getOne() : query.getMany();
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
     const raws = await Promise.all(
       dto.map((MediaHeader) =>

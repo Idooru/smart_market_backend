@@ -18,7 +18,7 @@ export class AccountUpdateRepository {
     private readonly accountRepository: Repository<AccountEntity>,
   ) {}
 
-  @Transaction
+  @Transaction()
   public async disableAllAccount(userId: string): Promise<void> {
     await this.transaction
       .getRepository()
@@ -29,7 +29,7 @@ export class AccountUpdateRepository {
       .execute();
   }
 
-  @Transaction
+  @Transaction()
   public async setMainAccount({ accountId }: { accountId: string }): Promise<void> {
     await this.transaction
       .getRepository()
@@ -40,7 +40,7 @@ export class AccountUpdateRepository {
       .execute();
   }
 
-  @Transaction
+  @Transaction()
   public async createAccount(dto: CreateAccountDto): Promise<AccountEntity> {
     const { user, body } = dto;
     return await this.transaction.getRepository().account.save({
@@ -49,12 +49,12 @@ export class AccountUpdateRepository {
     });
   }
 
-  @Transaction
+  @Transaction()
   public async deleteAccount(accountId: string): Promise<void> {
     await this.transaction.getRepository().account.delete(accountId);
   }
 
-  @General
+  @General()
   public async deposit(dto: MoneyTransactionDto): Promise<AccountEntity> {
     const { accountId, balance } = dto;
     await this.accountRepository
@@ -67,7 +67,7 @@ export class AccountUpdateRepository {
     return this.accountRepository.findOneBy({ id: accountId });
   }
 
-  @General
+  @General()
   public async withdraw(dto: MoneyTransactionDto): Promise<AccountEntity> {
     const { accountId, balance } = dto;
     await this.accountRepository

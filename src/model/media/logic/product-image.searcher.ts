@@ -10,7 +10,7 @@ import { MediaHeaderDto } from "../dto/request/media-header.dto";
 export class ProductImageSearcher implements Searcher<ProductImageEntity, MediaHeaderDto, MediaBasicRawDto> {
   constructor(private readonly productImageSearchRepository: ProductImageSearchRepository) {}
 
-  @Implemented
+  @Implemented()
   public findEntity(args: FindEntityArgs): Promise<ProductImageEntity | ProductImageEntity[]> {
     const { property, alias, getOne, entities } = args;
     if (entities && entities.length) {
@@ -19,7 +19,7 @@ export class ProductImageSearcher implements Searcher<ProductImageEntity, MediaH
     return this.productImageSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
     return this.productImageSearchRepository.findAllRaws(dto);
   }

@@ -6,7 +6,7 @@ import { JwtAccessTokenPayload } from "../../../model/auth/jwt/jwt-access-token-
 
 @Injectable()
 export class IsClientGuard implements CanActivate {
-  @Implemented
+  @Implemented()
   public canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest() as Request;
     const user = req.user as JwtAccessTokenPayload;

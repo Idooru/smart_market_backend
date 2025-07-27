@@ -16,7 +16,7 @@ type DTO = {
 export class OperateProductValidationPipe<T extends DTO> implements PipeTransform {
   constructor(private readonly validator: ProductValidator) {}
 
-  @Implemented
+  @Implemented()
   public async transform(dto: T): Promise<T> {
     await this.validator.isNoneExistName(dto.name);
     return dto;

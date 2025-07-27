@@ -13,7 +13,7 @@ export class InquiryResponseSearcher
 {
   constructor(private readonly inquiryResponseSearchRepository: InquiryResponseSearchRepository) {}
 
-  @Implemented
+  @Implemented()
   public findEntity(args: FindEntityArgs): Promise<InquiryResponseEntity | InquiryResponseEntity[]> {
     const { property, alias, getOne, entities } = args;
     if (entities && entities.length) {
@@ -22,7 +22,7 @@ export class InquiryResponseSearcher
     return this.inquiryResponseSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  @Implemented
+  @Implemented()
   public findAllRaws(dto: FindAllInquiryResponsesDto): Promise<InquiryResponseBasicRawDto[]> {
     return this.inquiryResponseSearchRepository.findAllRaws(dto);
   }

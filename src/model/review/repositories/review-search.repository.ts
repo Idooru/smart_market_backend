@@ -38,14 +38,14 @@ export class ReviewSearchRepository extends SearchRepository<ReviewEntity, FindA
     return queryBuilder.select("review").from(ReviewEntity, "review");
   }
 
-  @Implemented
+  @Implemented()
   public async findPureEntity(args: FindPureEntityArgs): Promise<ReviewEntity | ReviewEntity[]> {
     const { property, alias, getOne } = args;
     const query = this.selectReview().where(property, alias);
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public async findOptionalEntity(args: FindOptionalEntityArgs): Promise<ReviewEntity | ReviewEntity[]> {
     const { property, alias, entities, getOne } = args;
     const query = this.selectReview().where(property, alias);
@@ -53,7 +53,7 @@ export class ReviewSearchRepository extends SearchRepository<ReviewEntity, FindA
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: FindAllReviewsDto): Promise<ReviewBasicRawDto[]> {
     const { align, column, userId } = dto;
     const reviews = await this.selectReview(this.select.reviews)

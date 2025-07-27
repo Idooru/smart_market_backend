@@ -35,14 +35,14 @@ export class InquiryResponseSearchRepository extends SearchRepository<
     return queryBuilder.select("inquiryResponse").from(InquiryResponseEntity, "inquiryResponse");
   }
 
-  @Implemented
+  @Implemented()
   public findPureEntity(args: FindPureEntityArgs): Promise<InquiryResponseEntity | InquiryResponseEntity[]> {
     const { property, alias, getOne } = args;
     const query = this.selectInquiryResponse().where(property, alias);
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public findOptionalEntity(args: FindOptionalEntityArgs): Promise<InquiryResponseEntity | InquiryResponseEntity[]> {
     const { property, alias, entities, getOne } = args;
     const query = this.selectInquiryResponse().where(property, alias);
@@ -50,7 +50,7 @@ export class InquiryResponseSearchRepository extends SearchRepository<
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: FindAllInquiryResponsesDto): Promise<InquiryResponseBasicRawDto[]> {
     const { align, column, userId } = dto;
     const query = this.selectInquiryResponse(this.select.inquiryResponses)

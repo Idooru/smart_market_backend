@@ -8,7 +8,7 @@ import { ValidateTokenLibrary } from "src/model/auth/providers/validate-token.li
 export class IsLoginGuard implements CanActivate {
   constructor(private readonly validateTokenLibrary: ValidateTokenLibrary) {}
 
-  @Implemented
+  @Implemented()
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
     const accessToken = req.headers["access-token"] as string;

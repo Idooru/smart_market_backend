@@ -23,7 +23,7 @@ export class MediaService {
     private readonly updateRepository: MediaUpdateRepository,
   ) {}
 
-  @General
+  @General()
   public async uploadProductImages(files: Express.Multer.File[]): Promise<string[]> {
     const path = "product/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
@@ -33,7 +33,7 @@ export class MediaService {
     // return this.mediaUtils.getMediaHeaders(ids, files, path, this.productMedia.imageUrlHeader);
   }
 
-  @General
+  @General()
   public async uploadReviewImages(files: Express.Multer.File[]): Promise<ReviewImageEntity[]> {
     const path = "review/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
@@ -43,7 +43,7 @@ export class MediaService {
     // return this.mediaUtils.getMediaHeaders(ids, files, path, this.reviewMedia.imageUrlHeader);
   }
 
-  @General
+  @General()
   public async uploadReviewVideos(files: Express.Multer.File[]): Promise<ReviewVideoEntity[]> {
     const path = "review/videos";
     const stuffs = this.mediaUtils.createStuffs(files, path);
@@ -53,7 +53,7 @@ export class MediaService {
     // return this.mediaUtils.getMediaHeaders(ids, files, path, this.reviewMedia.videoUrlHeader);
   }
 
-  @General
+  @General()
   public async uploadInquiryRequestImages(files: Express.Multer.File[]): Promise<string[]> {
     const path = "inquiry/request/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
@@ -64,7 +64,7 @@ export class MediaService {
     // // return this.mediaUtils.getMediaHeaders(ids, files, path, this.inquiryMedia.request.imageUrlHeader);
   }
 
-  @General
+  @General()
   public async uploadInquiryRequestVideos(files: Express.Multer.File[]): Promise<string[]> {
     const path = "inquiry/request/videos";
     const stuffs = this.mediaUtils.createStuffs(files, path);
@@ -75,7 +75,7 @@ export class MediaService {
     // return this.mediaUtils.getMediaHeaders(ids, files, path, this.inquiryMedia.request.videoUrlHeader);
   }
 
-  @General
+  @General()
   public async uploadInquiryResponseImages(files: Express.Multer.File[]): Promise<string[]> {
     const path = "inquiry/response/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
@@ -86,7 +86,7 @@ export class MediaService {
     // return this.mediaUtils.getMediaHeaders(ids, files, path, this.inquiryMedia.response.imageUrlHeader);
   }
 
-  @General
+  @General()
   public async uploadInquiryResponseVideos(files: Express.Multer.File[]): Promise<string[]> {
     const path = "inquiry/response/videos";
     const stuffs = this.mediaUtils.createStuffs(files, path);
@@ -97,7 +97,7 @@ export class MediaService {
     // return this.mediaUtils.getMediaHeaders(ids, files, path, this.inquiryMedia.response.videoUrlHeader);
   }
 
-  @General
+  @General()
   public async deleteProductImagesWithId(headers: MediaHeaderDto[]): Promise<string[]> {
     const deleting = headers.map((productImageHeader) =>
       this.updateRepository.deleteProductImageWithId(productImageHeader.id),
@@ -114,7 +114,7 @@ export class MediaService {
     return headers.map((productImageHeader) => productImageHeader.whatHeader);
   }
 
-  @General
+  @General()
   public async deleteReviewImagesWithId(headers: MediaHeaderDto[]): Promise<string[]> {
     const deleting = headers.map((reviewImageHeader) =>
       this.updateRepository.deleteReviewImageWithId(reviewImageHeader.id),
@@ -131,7 +131,7 @@ export class MediaService {
     return headers.map((reviewImageHeader) => reviewImageHeader.whatHeader);
   }
 
-  @General
+  @General()
   public async deleteReviewVideosWithId(headers: MediaHeaderDto[]): Promise<string[]> {
     const deleting = headers.map((reviewVideoHeader) =>
       this.updateRepository.deleteReviewVideoWithId(reviewVideoHeader.id),
@@ -148,7 +148,7 @@ export class MediaService {
     return headers.map((reviewVideoHeader) => reviewVideoHeader.whatHeader);
   }
 
-  @General
+  @General()
   public async deleteInquiryRequestImagesWithId(headers: MediaHeaderDto[]): Promise<string[]> {
     const deleting = headers.map((inquiryRequestImageHeader) =>
       this.updateRepository.deleteInquiryRequestImageWithId(inquiryRequestImageHeader.id),
@@ -166,7 +166,7 @@ export class MediaService {
     return headers.map((inquiryRequestImageHeader) => inquiryRequestImageHeader.whatHeader);
   }
 
-  @General
+  @General()
   public async deleteInquiryRequestVideosWithId(headers: MediaHeaderDto[]): Promise<string[]> {
     const deleting = headers.map((inquiryRequestVideoHeader) =>
       this.updateRepository.deleteInquiryRequestVideoWithId(inquiryRequestVideoHeader.id),
@@ -184,7 +184,7 @@ export class MediaService {
     return headers.map((inquiryRequestVideoHeader) => inquiryRequestVideoHeader.whatHeader);
   }
 
-  @General
+  @General()
   public async deleteInquiryResponseImagesWithId(headers: MediaHeaderDto[]): Promise<string[]> {
     const deleting = headers.map((inquiryResponseImageHeader) =>
       this.updateRepository.deleteInquiryResponseImageWithId(inquiryResponseImageHeader.id),
@@ -202,7 +202,7 @@ export class MediaService {
     return headers.map((inquiryResponseImageHeader) => inquiryResponseImageHeader.whatHeader);
   }
 
-  @General
+  @General()
   public async deleteInquiryResponseVideosWithId(headers: MediaHeaderDto[]): Promise<string[]> {
     const deleting = headers.map((inquiryResponseVideoHeader) =>
       this.updateRepository.deleteInquiryResponseVideoWithId(inquiryResponseVideoHeader.id),

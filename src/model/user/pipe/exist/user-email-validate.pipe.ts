@@ -6,7 +6,7 @@ import { UserValidator } from "../../logic/user.validator";
 export class UserEmailValidatePipe<T extends { email: string }> implements PipeTransform {
   constructor(private readonly validator: UserValidator) {}
 
-  @Implemented
+  @Implemented()
   public async transform(dto: T): Promise<T> {
     const { email } = dto;
     await this.validator.isExistEmail(email);

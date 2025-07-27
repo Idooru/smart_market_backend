@@ -6,7 +6,7 @@ import { Implemented } from "../../../../common/decorators/implemented.decoratio
 export class InquiryResponseIdValidatePipe implements PipeTransform {
   constructor(private readonly validator: InquiryValidator) {}
 
-  @Implemented
+  @Implemented()
   public async transform(id: string): Promise<string> {
     await this.validator.isExistResponseId(id);
 

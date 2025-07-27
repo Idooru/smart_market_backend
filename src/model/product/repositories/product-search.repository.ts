@@ -70,14 +70,14 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
     query.where("REPLACE(product.name, ' ', '') like :name", { name: `%${keyword}%` });
   }
 
-  @Implemented
+  @Implemented()
   public findPureEntity(args: FindPureEntityArgs): Promise<ProductEntity | ProductEntity[]> {
     const { property, alias, getOne } = args;
     const query = this.selectProduct().where(property, alias);
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public findOptionalEntity(args: FindOptionalEntityArgs): Promise<ProductEntity | ProductEntity[]> {
     const { property, alias, entities, getOne } = args;
     const query = this.selectProduct().where(property, alias);
@@ -85,7 +85,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: FindAllProductsDto): Promise<ProductBasicRawDto[]> {
     const { align, column, name, category } = dto;
     const productColumns = ["createdAt", "name", "price"];

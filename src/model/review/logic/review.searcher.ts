@@ -12,7 +12,7 @@ import { FindAllReviewsDto } from "../dto/request/find-all-reviews.dto";
 export class ReviewSearcher implements Searcher<ReviewEntity, FindAllReviewsDto, ReviewBasicRawDto> {
   constructor(private readonly reviewSearchRepository: ReviewSearchRepository) {}
 
-  @Implemented
+  @Implemented()
   public async findEntity(args: FindEntityArgs): Promise<ReviewEntity | ReviewEntity[]> {
     const { property, alias, getOne, entities } = args;
     if (entities && entities.length) {
@@ -21,7 +21,7 @@ export class ReviewSearcher implements Searcher<ReviewEntity, FindAllReviewsDto,
     return this.reviewSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  @Implemented
+  @Implemented()
   public findAllRaws(dto: FindAllReviewsDto): Promise<ReviewBasicRawDto[]> {
     return this.reviewSearchRepository.findAllRaws(dto);
   }

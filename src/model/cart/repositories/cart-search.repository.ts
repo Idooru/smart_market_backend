@@ -34,14 +34,14 @@ export class CartSearchRepository extends SearchRepository<CartEntity, FindAllCa
     return queryBuilder.select("cart").from(CartEntity, "cart");
   }
 
-  @Implemented
+  @Implemented()
   public findPureEntity(args: FindPureEntityArgs): Promise<CartEntity | CartEntity[]> {
     const { property, alias, getOne } = args;
     const query = this.selectCart().where(property, alias);
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public findOptionalEntity(args: FindOptionalEntityArgs): Promise<CartEntity | CartEntity[]> {
     const { property, alias, entities, getOne } = args;
     const query = this.selectCart().where(property, alias);
@@ -49,7 +49,7 @@ export class CartSearchRepository extends SearchRepository<CartEntity, FindAllCa
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: FindAllCartsDto): Promise<CartBasicRawDto[]> {
     const { align, column, userId } = dto;
     const carts = await this.selectCart(this.select.carts)

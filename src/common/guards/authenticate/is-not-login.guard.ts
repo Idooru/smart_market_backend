@@ -5,7 +5,7 @@ import { Implemented } from "../../decorators/implemented.decoration";
 
 @Injectable()
 export class IsNotLoginGuard implements CanActivate {
-  @Implemented
+  @Implemented()
   public canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest<Request>();
     const accessToken = req.headers["access-token"];

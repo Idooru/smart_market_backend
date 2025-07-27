@@ -11,7 +11,7 @@ type Dto = {
 export class FindEmailValidationPipe<T extends Dto> implements PipeTransform {
   constructor(private readonly userValidator: UserValidator) {}
 
-  @Implemented
+  @Implemented()
   public async transform(dto: T): Promise<T> {
     const { realName, phoneNumber } = dto;
 

@@ -17,7 +17,7 @@ export class OrderTransactionInitializer extends Transactional<OrderRepositoryPa
     super();
   }
 
-  @Implemented
+  @Implemented()
   public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -34,7 +34,7 @@ export class OrderTransactionInitializer extends Transactional<OrderRepositoryPa
     return queryRunner;
   }
 
-  @Implemented
+  @Implemented()
   public getRepository(): OrderRepositoryPayload {
     return this.payload;
   }

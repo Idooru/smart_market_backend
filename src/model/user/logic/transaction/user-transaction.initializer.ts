@@ -17,7 +17,7 @@ export class UserTransactionInitializer extends Transactional<UserRepositoryPayl
     super();
   }
 
-  @Implemented
+  @Implemented()
   public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -34,7 +34,7 @@ export class UserTransactionInitializer extends Transactional<UserRepositoryPayl
     return queryRunner;
   }
 
-  @Implemented
+  @Implemented()
   public getRepository(): UserRepositoryPayload {
     return this.payload;
   }

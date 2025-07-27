@@ -12,7 +12,7 @@ export class InquiryRequestVideoSearcher
 {
   constructor(private readonly inquiryRequestVideoSearchRepository: InquiryRequestVideoSearchRepository) {}
 
-  @Implemented
+  @Implemented()
   public findEntity(args: FindEntityArgs): Promise<InquiryRequestVideoEntity | InquiryRequestVideoEntity[]> {
     const { property, alias, getOne, entities } = args;
     if (entities && entities.length) {
@@ -21,7 +21,7 @@ export class InquiryRequestVideoSearcher
     return this.inquiryRequestVideoSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: MediaHeaderDto[]): Promise<MediaBasicRawDto[]> {
     return this.inquiryRequestVideoSearchRepository.findAllRaws(dto);
   }

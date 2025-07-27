@@ -38,14 +38,14 @@ export class UserSearchRepository extends SearchRepository<UserEntity, FindAllUs
     return queryBuilder.select("user").from(UserEntity, "user");
   }
 
-  @Implemented
+  @Implemented()
   public findPureEntity(args: FindPureEntityArgs): Promise<UserEntity | UserEntity[]> {
     const { property, alias, getOne } = args;
     const query = this.selectUser().where(property, alias);
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public findOptionalEntity(args: FindOptionalEntityArgs): Promise<UserEntity | UserEntity[]> {
     const { property, alias, entities, getOne } = args;
     const query = this.selectUser().where(property, alias);
@@ -53,7 +53,7 @@ export class UserSearchRepository extends SearchRepository<UserEntity, FindAllUs
     return super.getEntity(getOne, query);
   }
 
-  @Implemented
+  @Implemented()
   public async findAllRaws(dto: FindAllUsersDto): Promise<UserBasicRawDto[]> {
     const { align, column } = dto;
     const userColumns = ["createdAt", "role"];

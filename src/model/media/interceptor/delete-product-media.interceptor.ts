@@ -14,7 +14,7 @@ export class DeleteProductMediaInterceptor implements NestInterceptor {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  @Implemented
+  @Implemented()
   public intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
     const res = context.switchToHttp().getResponse<Response>();
 

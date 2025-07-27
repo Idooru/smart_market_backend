@@ -5,7 +5,7 @@ import { Implemented } from "../decorators/implemented.decoration";
 
 @Catch(ValidationException)
 export class ValidationExceptionFilter implements ExceptionFilter {
-  @Implemented
+  @Implemented()
   public catch(exception: ValidationException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
     const result = exception.getResponse() as { errors: string[] };

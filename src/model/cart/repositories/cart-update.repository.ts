@@ -13,7 +13,7 @@ export class CartUpdateRepository {
     private readonly cartRepository: Repository<CartEntity>,
   ) {}
 
-  @General
+  @General()
   public async createCartRow(dto: CreateCartRowDto): Promise<void> {
     const { product, clientUser, body } = dto;
     await this.cartRepository.save({
@@ -23,18 +23,18 @@ export class CartUpdateRepository {
     });
   }
 
-  @General
+  @General()
   public async modifyCart(modifyCartDto: ModifyCartDto): Promise<void> {
     const { cartId, body } = modifyCartDto;
     await this.cartRepository.update(cartId, body);
   }
 
-  @General
+  @General()
   public async deleteAllCarts(id: string): Promise<void> {
     await this.cartRepository.createQueryBuilder().delete().where("clientId = :id", { id }).execute();
   }
 
-  @General
+  @General()
   public async deleteCart(id: string): Promise<void> {
     await this.cartRepository.delete({ id });
   }

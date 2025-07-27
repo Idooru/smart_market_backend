@@ -15,7 +15,7 @@ import { CreateInquiryResponseRowDto } from "../dto/inquiry-response/request/cre
 export class InquiryUpdateRepository {
   constructor(private readonly transaction: Transactional<InquiryRepositoryPayload>) {}
 
-  @Transaction
+  @Transaction()
   public createInquiryRequestRow(dto: CreateInquiryRequestRowDto): Promise<InquiryRequestEntity> {
     const { body, product, clientUser } = dto;
 
@@ -26,7 +26,7 @@ export class InquiryUpdateRepository {
     });
   }
 
-  @Transaction
+  @Transaction()
   public async insertInquiryRequestIdOnInquiryRequestImage(
     inquiryRequestImage: InquiryRequestImageEntity,
     inquiryRequest: InquiryRequestEntity,
@@ -35,7 +35,7 @@ export class InquiryUpdateRepository {
     await this.transaction.getRepository().inquiryRequestImage.save(inquiryRequestImage);
   }
 
-  @Transaction
+  @Transaction()
   public async insertInquiryRequestIdOnInquiryRequestVideo(
     inquiryRequestVideo: InquiryRequestVideoEntity,
     inquiryRequest: InquiryRequestEntity,
@@ -44,7 +44,7 @@ export class InquiryUpdateRepository {
     await this.transaction.getRepository().inquiryRequestVideo.save(inquiryRequestVideo);
   }
 
-  @Transaction
+  @Transaction()
   public createInquiryResponseRow(dto: CreateInquiryResponseRowDto): Promise<InquiryResponseEntity> {
     const { body, inquiryRequest, adminUser } = dto;
 
@@ -55,14 +55,14 @@ export class InquiryUpdateRepository {
     });
   }
 
-  @Transaction
+  @Transaction()
   public async modifyInquiryRequestAnswerState(id: string): Promise<void> {
     await this.transaction.getRepository().inquiryRequest.update(id, {
       isAnswered: true,
     });
   }
 
-  @Transaction
+  @Transaction()
   public async insertInquiryResponseIdOnInquiryResponseImage(
     inquiryResponseImage: InquiryResponseImageEntity,
     inquiryResponse: InquiryResponseEntity,
@@ -71,7 +71,7 @@ export class InquiryUpdateRepository {
     await this.transaction.getRepository().inquiryResponseImage.save(inquiryResponseImage);
   }
 
-  @Transaction
+  @Transaction()
   public async insertInquiryResponseIdOnInquiryResponseVideo(
     inquiryResponseVideo: InquiryResponseVideoEntity,
     inquiryResponse: InquiryResponseEntity,

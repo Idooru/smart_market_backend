@@ -24,7 +24,7 @@ export class JwtExceptionFilter implements ExceptionFilter {
     "jwt expired:refresh_token": ExpiredRefreshToken,
   };
 
-  @Implemented
+  @Implemented()
   public catch(exception: JwtException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
     const { error } = exception.getResponse() as JwtException;

@@ -10,7 +10,7 @@ type NickName = {
 export class UserNicknameValidatePipe implements PipeTransform {
   constructor(private readonly userValidator: UserValidator) {}
 
-  @Implemented
+  @Implemented()
   public async transform({ nickName }: NickName): Promise<NickName> {
     await this.userValidator.isNoneExistNickname(nickName);
 

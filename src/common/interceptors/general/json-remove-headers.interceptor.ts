@@ -9,7 +9,7 @@ import { Implemented } from "../../decorators/implemented.decoration";
 export class JsonRemoveHeadersInterceptor implements NestInterceptor {
   constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
 
-  @Implemented
+  @Implemented()
   public intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();

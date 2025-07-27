@@ -1,1 +1,3 @@
-export const Implemented = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {};
+import { Reflector } from "@nestjs/core";
+
+export const Implemented = Reflector.createDecorator();

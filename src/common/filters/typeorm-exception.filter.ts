@@ -5,7 +5,7 @@ import { Implemented } from "../decorators/implemented.decoration";
 
 @Catch(TypeOrmException)
 export class TypeOrmExceptionFilter implements ExceptionFilter {
-  @Implemented
+  @Implemented()
   public catch(exception: TypeOrmException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
     const { error } = exception.getResponse() as TypeOrmException;

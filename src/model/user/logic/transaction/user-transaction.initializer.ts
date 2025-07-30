@@ -1,4 +1,3 @@
-import { DataSource, QueryRunner } from "typeorm";
 import { UserRepositoryPayload } from "./user-repository.payload";
 import { UserEntity } from "../../entities/user.entity";
 import { AdminUserEntity } from "../../entities/admin-user.entity";
@@ -8,20 +7,19 @@ import { UserAuthEntity } from "../../entities/user-auth.entity";
 import { Injectable } from "@nestjs/common";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { Implemented } from "../../../../common/decorators/implemented.decoration";
+import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
 
 @Injectable()
 export class UserTransactionInitializer extends Transactional<UserRepositoryPayload> {
   private payload: UserRepositoryPayload;
 
-  constructor(private readonly dataSource: DataSource) {
+  constructor(private readonly handler: TransactionHandler) {
     super();
   }
 
   @Implemented()
-  public async init(): Promise<QueryRunner> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+  public initRepository(): void {
+    const queryRunner = this.handler.getQueryRunner();
 
     this.payload = {
       user: queryRunner.manager.getRepository(UserEntity),
@@ -30,8 +28,6 @@ export class UserTransactionInitializer extends Transactional<UserRepositoryPayl
       userProfile: queryRunner.manager.getRepository(UserProfileEntity),
       userAuth: queryRunner.manager.getRepository(UserAuthEntity),
     };
-
-    return queryRunner;
   }
 
   @Implemented()

@@ -2,9 +2,7 @@ import { Controller, Param, Body, UseGuards, Post, Put, Delete, Get, Query, Uplo
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { UseInterceptors } from "@nestjs/common";
-import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove-headers.interceptor";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { RemoveHeadersResponseInterface } from "src/common/interceptors/interface/remove-headers-response.interface";
 import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
 import { GeneralResponseInterface } from "src/common/interceptors/interface/general-response.interface";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
@@ -21,9 +19,9 @@ import { CreateReviewDto } from "../../dto/request/create-review.dto";
 import { ModifyReviewDto } from "../../dto/request/modify-review.dto";
 import { DeleteReviewDto } from "../../dto/request/delete-review.dto";
 import { FindAllReviewsDto } from "../../dto/request/find-all-reviews.dto";
-import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { MulterConfigService } from "../../../../common/lib/media/multer-adapt.module";
+import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
 
 @ApiTags("v1 고객 Review API")
 @UseGuards(IsClientGuard)
@@ -67,7 +65,7 @@ export class ReviewV1ClientController {
   }
 
   @UseInterceptors(
-    GeneralInterceptor,
+    TransactionInterceptor,
     FileFieldsInterceptor(
       [
         { name: "review_image", maxCount: MulterConfigService.imageMaxCount },
@@ -94,7 +92,7 @@ export class ReviewV1ClientController {
       reviewVideoFiles: mediaFiles["review_video"] ?? [],
     };
 
-    await this.transaction.createReview(dto);
+    await this.transaction.executeCreateReview(dto);
 
     return {
       statusCode: 201,
@@ -103,7 +101,7 @@ export class ReviewV1ClientController {
   }
 
   @UseInterceptors(
-    GeneralInterceptor,
+    TransactionInterceptor,
     FileFieldsInterceptor(
       [
         { name: "review_image", maxCount: MulterConfigService.imageMaxCount },
@@ -133,7 +131,7 @@ export class ReviewV1ClientController {
       reviewVideoFiles: mediaFiles["review_video"] ?? [],
     };
 
-    await this.transaction.modifyReview(dto);
+    await this.transaction.executeModifyReview(dto);
 
     return {
       statusCode: 200,
@@ -145,7 +143,7 @@ export class ReviewV1ClientController {
   //   summary: "delete review",
   //   description: "리뷰 아이디에 해당하는 모든 형태의 리뷰를 제거합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor, DeleteReviewMediaInterceptor)
+  @UseInterceptors(TransactionInterceptor, DeleteReviewMediaInterceptor)
   @Delete("/:reviewId")
   public async deleteReview(
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
@@ -156,7 +154,7 @@ export class ReviewV1ClientController {
       userId: jwtPayload.userId,
     };
 
-    await this.transaction.deleteReview(dto);
+    await this.transaction.executeDeleteReview(dto);
 
     return {
       statusCode: 200,

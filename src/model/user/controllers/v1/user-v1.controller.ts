@@ -1,16 +1,4 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Patch,
-  Post,
-  Put,
-  Query,
-  UseGuards,
-  UseInterceptors,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Patch, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
@@ -48,13 +36,8 @@ import { ModifyUserAddressDto } from "../../dto/request/modify-user-address.dto"
 import { FindEmailDto } from "../../dto/request/find-email.dto";
 import { UserProfileRawDto } from "../../dto/response/user-profile-raw.dto";
 import { GetBasicAuth } from "../../../../common/decorators/get-basic-auth.decorator";
-import { UserValidator } from "../../logic/user.validator";
-
-type UserValidateBody = {
-  email: string;
-  nickName: string;
-  phoneNumber: string;
-};
+import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
+import { CommandResultInterface } from "../../../../common/interceptors/interface/command-result.interface";
 
 @ApiTags("v1 공용 User API")
 @Controller({ path: "/user", version: "1" })
@@ -64,15 +47,13 @@ export class UserV1Controller {
     private readonly searcher: UserSearcher,
     private readonly userSecurity: UserSecurity,
     private readonly service: UserService,
-    private readonly userValidator: UserValidator,
   ) {}
 
-  // @RegisterSwagger()
-  @UseInterceptors(GeneralInterceptor, UserRegisterEventInterceptor)
+  @UseInterceptors(TransactionInterceptor, UserRegisterEventInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
-  public async register(@Body() registerUserDto: RegisterUserDto): Promise<GeneralResponseInterface<void>> {
-    await this.transaction.register(registerUserDto);
+  public async register(@Body() registerUserDto: RegisterUserDto): Promise<CommandResultInterface> {
+    await this.transaction.executeRegister(registerUserDto);
 
     return {
       statusCode: 201,
@@ -148,19 +129,19 @@ export class UserV1Controller {
   }
 
   // @ModifyUserSwagger()
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(TransactionInterceptor)
   @UseGuards(IsLoginGuard)
   @Put("/me")
   public async modifyUser(
     @Body() modifyUserBody: ModifyUserBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<void>> {
+  ): Promise<CommandResultInterface> {
     const modifyUserDto = {
       id: userId,
       body: modifyUserBody,
     };
 
-    await this.transaction.modifyUser(modifyUserDto);
+    await this.transaction.executeModifyUser(modifyUserDto);
 
     return {
       statusCode: 201,

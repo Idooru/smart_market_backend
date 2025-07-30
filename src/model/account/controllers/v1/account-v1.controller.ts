@@ -1,4 +1,4 @@
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { GeneralInterceptor } from "../../../../common/interceptors/general/general.interceptor";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
@@ -7,7 +7,6 @@ import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { GeneralResponseInterface } from "../../../../common/interceptors/interface/general-response.interface";
 import { AccountService } from "../../services/account.service";
 import { AccountNumberValidatePipe } from "../../pipe/none-exist/account-number-validate.pipe";
-import { IsClientGuard } from "../../../../common/guards/authenticate/is-client.guard";
 import { AccountTransactionExecutor } from "../../logic/transaction/account-transaction.executor";
 import { AccountIdValidatePipe } from "../../pipe/exist/account-id-validate.pipe";
 import { AccountSearcher } from "../../logic/account.searcher";
@@ -17,6 +16,7 @@ import { MoneyTransactionDto } from "../../dtos/request/money-transaction.dto";
 import { DepositResultDto } from "../../dtos/response/deposit-result.dto";
 import { FindAllAccountsDto } from "../../dtos/request/find-all-accounts.dto";
 import { AccountBasicRawDto } from "../../dtos/response/account-basic-raw.dto";
+import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
 
 @ApiTags("v1 User Account API")
 @UseGuards(IsLoginGuard)
@@ -48,13 +48,13 @@ export class AccountV1Controller {
   //   summary: "create account",
   //   description: "계좌를 생성합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(TransactionInterceptor)
   @Post("/")
   public async createAccount(
     @Body(AccountNumberValidatePipe) body: AccountBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
   ): Promise<GeneralResponseInterface<void>> {
-    await this.transaction.createAccount(body, userId);
+    await this.transaction.executeCreateAccount(body, userId);
 
     return {
       statusCode: 201,
@@ -66,13 +66,13 @@ export class AccountV1Controller {
   //   summary: "delete account",
   //   description: "계좌를 제거합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(TransactionInterceptor)
   @Delete("/:accountId")
   public async deleteAccount(
     @Param("accountId", AccountIdValidatePipe) accountId: string,
     @GetJWT() { userId }: JwtAccessTokenPayload,
   ): Promise<GeneralResponseInterface<void>> {
-    await this.transaction.deleteAccount(accountId, userId);
+    await this.transaction.executeDeleteAccount(accountId, userId);
 
     return {
       statusCode: 200,
@@ -124,13 +124,13 @@ export class AccountV1Controller {
   //   summary: "set main account",
   //   description: "주로 사용할 계좌를 설정합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(TransactionInterceptor)
   @Patch("/:accountId/main-account")
   public async setMainAccount(
     @Param("accountId", AccountIdValidatePipe) accountId: string,
     @GetJWT() { userId }: JwtAccessTokenPayload,
   ): Promise<GeneralResponseInterface<void>> {
-    await this.transaction.setMainAccount(accountId, userId);
+    await this.transaction.executeSetMainAccount(accountId, userId);
 
     return {
       statusCode: 200,

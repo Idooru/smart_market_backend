@@ -7,12 +7,12 @@ import { ModifyUserDto } from "../../dto/request/modify-user.dto";
 export class UserTransactionContext {
   constructor(private readonly userService: UserService) {}
 
-  public async registerContext(dto: RegisterUserDto): Promise<void> {
+  public async register(dto: RegisterUserDto): Promise<void> {
     const user = await this.userService.createUserEntity(dto.role);
     await this.userService.createUserBase(user, dto);
   }
 
-  public async modifyUserContext(dto: ModifyUserDto): Promise<void> {
+  public async modifyUser(dto: ModifyUserDto): Promise<void> {
     await this.userService.modifyUser(dto);
   }
 }

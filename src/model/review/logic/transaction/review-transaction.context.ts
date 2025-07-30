@@ -21,7 +21,7 @@ export class ReviewTransactionContext {
     private readonly mediaUtils: MediaUtils,
   ) {}
 
-  public async createReviewContext(dto: SearchCreateReviewDto): Promise<void> {
+  public async createReview(dto: SearchCreateReviewDto): Promise<void> {
     const { productId, body, reviewImageFiles, reviewVideoFiles, starRate, reviewerId } = dto;
 
     const createReviewDto: CreateReviewRowDto = {
@@ -55,7 +55,7 @@ export class ReviewTransactionContext {
     ]);
   }
 
-  public async modifyReviewContext(dto: SearchModifyReviewDto): Promise<void> {
+  public async modifyReview(dto: SearchModifyReviewDto): Promise<void> {
     const { body, review, beforeReviewImages, reviewImageFiles, beforeReviewVideos, reviewVideoFiles, starRate } = dto;
 
     const modifyReviewDto: ModifyReviewRowDto = {
@@ -96,7 +96,7 @@ export class ReviewTransactionContext {
     ]);
   }
 
-  public async deleteReviewContext(dto: SearchDeleteReviewDto): Promise<void> {
+  public async deleteReview(dto: SearchDeleteReviewDto): Promise<void> {
     const { review, starRate } = dto;
 
     await Promise.all([

@@ -24,6 +24,7 @@ import { InquiryResponseDetailRawDto } from "../dto/inquiry-response/response/in
 import { FindAllInquiryResponsesDto } from "../dto/inquiry-response/request/find-all-inquiry-responses.dto";
 import { MediaHeaderDto } from "../../media/dto/request/media-header.dto";
 import { inquiryMediaHeaderKey } from "../../../common/config/header-key-configs/media-header-keys/inquiry-media-header.key";
+import { TransactionInterceptor } from "../../../common/interceptors/general/transaction.interceptor";
 
 @ApiTags("v1 관리자 Inquiry API")
 @UseGuards(IsAdminGuard)
@@ -87,7 +88,7 @@ export class InquiryV1AdminController {
   //   summary: "create inquiry response",
   //   description: "문의 응답을 생성합니다. 문의 응답에는 이미지 혹은 비디오가 포함될 수 있습니다.",
   // })
-  @UseInterceptors(RemoveHeadersInterceptor, InquiryAdminEventInterceptor)
+  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor, InquiryAdminEventInterceptor)
   @Post("/inquiry-request/:inquiryRequestId/client-user/:inquiryRequesterId")
   public async createInquiryResponse(
     @Param("inquiryRequestId", InquiryRequestIdValidatePipe)
@@ -110,7 +111,7 @@ export class InquiryV1AdminController {
       videoHeaders,
     };
 
-    await this.transaction.createInquiryResponse(dto);
+    await this.transaction.executeCreateInquiryResponse(dto);
 
     return {
       statusCode: 201,

@@ -112,14 +112,14 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┃ ┃ ┗ 📜refresh-token.interceptor.ts
 ┃ ┃ ┗ 📂interface
 ┃ ┃ ┃ ┣ 📜json-clear-cookie.interface.ts
-┃ ┃ ┃ ┣ 📜remove-headers-response.interface.ts
-┃ ┃ ┃ ┣ 📜general-response.interface.ts
+┃ ┃ ┃ ┣ 📜remove-headers-command-result.interface.ts
+┃ ┃ ┃ ┣ 📜general-command-result.interface.ts
 ┃ ┃ ┃ ┣ 📜json-send-cookie-param.interface.ts
 ┃ ┃ ┃ ┣ 📜json-send-headers-param.interface.ts
-┃ ┃ ┃ ┣ 📜set-headers-response.interface.ts
-┃ ┃ ┃ ┣ 📜login-response.interface.ts
-┃ ┃ ┃ ┣ 📜logout-response.interface.ts
-┃ ┃ ┃ ┣ 📜refresh-token-response.interface.ts
+┃ ┃ ┃ ┣ 📜set-headers-command-result.interface.ts
+┃ ┃ ┃ ┣ 📜login-command-result.interface.ts
+┃ ┃ ┃ ┣ 📜logout-command-result.interface.ts
+┃ ┃ ┃ ┣ 📜refresh-token-command-result.interface.ts
 ┃ ┃ ┃ ┗ 📜verify-data.dto.ts
 ┃ ┣ 📂interfaces
 ┃ ┃ ┣ 📂initializer

@@ -17,7 +17,7 @@ export class InquiryTransactionContext {
     private readonly inquiryEventMapSetter: InquiryEventMapSetter,
   ) {}
 
-  public async createInquiryRequestContext(dto: SearchCreateInquiryRequestDto): Promise<void> {
+  public async createInquiryRequest(dto: SearchCreateInquiryRequestDto): Promise<void> {
     const { inquiryRequestImages, inquiryRequestVideos, body, product, clientUser } = dto;
 
     const createInquiryRequestRowDto: CreateInquiryRequestRowDto = {
@@ -50,7 +50,7 @@ export class InquiryTransactionContext {
     ]);
   }
 
-  public async createInquiryResponseContext(dto: SearchCreateInquiryResponseDto): Promise<void> {
+  public async createInquiryResponse(dto: SearchCreateInquiryResponseDto): Promise<void> {
     const { inquiryRequest, body, inquiryResponseImages, inquiryResponseVideos, inquiryRequester, inquiryRespondent } =
       dto;
 

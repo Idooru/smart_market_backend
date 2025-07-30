@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Query, UseGuards, UseInterceptors } from "@nestjs/common";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { GeneralInterceptor } from "../../../../common/interceptors/general/general.interceptor";
 import { GeneralResponseInterface } from "../../../../common/interceptors/interface/general-response.interface";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
@@ -12,6 +12,7 @@ import { OrderBody } from "../../dto/request/order-body.dto";
 import { CreateOrderDto } from "../../dto/request/create-order.dto";
 import { FindAllOrdersDto } from "../../dto/request/find-all-orders.dto";
 import { OrderBasicRawDto } from "../../dto/response/order-basic-raw.dto";
+import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
 
 @ApiTags("v1 고객 Order API")
 @UseGuards(IsClientGuard)
@@ -38,14 +39,14 @@ export class OrderV1ClientController {
   }
 
   // @ApiOperation({})
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(TransactionInterceptor)
   @Post("/")
   public async createOrder(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @Body() body: OrderBody,
   ): Promise<GeneralResponseInterface<void>> {
     const dto: CreateOrderDto = { clientId: jwtPayload.userId, body };
-    await this.transaction.createOrder(dto);
+    await this.transaction.executeCreateOrder(dto);
 
     return {
       statusCode: 201,

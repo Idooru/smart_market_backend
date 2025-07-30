@@ -14,7 +14,6 @@ import { ReviewImageSearcher } from "../../../media/logic/review-image.searcher"
 import { ReviewImageEntity } from "../../../media/entities/review-image.entity";
 import { ReviewVideoSearcher } from "../../../media/logic/review-video.searcher";
 import { ReviewVideoEntity } from "../../../media/entities/review-video.entity";
-import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
 import { BaseEntity } from "typeorm";
 import { ReviewSearcher } from "../review.searcher";
 

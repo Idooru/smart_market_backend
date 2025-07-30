@@ -6,7 +6,7 @@ import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { RemoveHeadersResponseInterface } from "src/common/interceptors/interface/remove-headers-response.interface";
 import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove-headers.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { InquiryTransactionExecutor } from "../logic/transaction/inquiry-transaction.executor";
 import { ProductIdValidatePipe } from "../../product/pipe/exist/product-id-validate.pipe";
 import { GeneralInterceptor } from "../../../common/interceptors/general/general.interceptor";
@@ -21,6 +21,7 @@ import { InquiryRequestDetailRawDto } from "../dto/inquiry-request/response/inqu
 import { FindAllInquiryRequestsDto } from "../dto/inquiry-request/request/find-all-inquiry-requests.dto";
 import { MediaHeaderDto } from "../../media/dto/request/media-header.dto";
 import { inquiryMediaHeaderKey } from "../../../common/config/header-key-configs/media-header-keys/inquiry-media-header.key";
+import { TransactionInterceptor } from "../../../common/interceptors/general/transaction.interceptor";
 
 @ApiTags("v1 고객 Inquiry API")
 @UseGuards(IsClientGuard)
@@ -68,7 +69,7 @@ export class InquiryV1ClientController {
   //   summary: "create inquiry reqeust",
   //   description: "문의 요청을 생성합니다. 문의 요청에는 이미지 혹은 비디오가 포함될 수 있습니다.",
   // })
-  @UseInterceptors(RemoveHeadersInterceptor, InquiryClientEventInterceptor)
+  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor, InquiryClientEventInterceptor)
   @Post("/product/:productId")
   public async createInquiryRequest(
     @Param("productId", ProductIdValidatePipe) productId: string,
@@ -87,7 +88,7 @@ export class InquiryV1ClientController {
       videoHeaders,
     };
 
-    await this.transaction.createInquiryRequest(dto);
+    await this.transaction.executeCreateInquiryRequest(dto);
 
     return {
       statusCode: 201,

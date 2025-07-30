@@ -21,9 +21,9 @@ import { ProductValidateRepository } from "./repositories/product-validate.repos
 import { ProductIdValidatePipe } from "./pipe/exist/product-id-validate.pipe";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
 import { ProductTransactionSearcher } from "./logic/transaction/product-transaction.searcher";
-import { ProductTransactionContext } from "./logic/transaction/product-transaction.context";
 import { AuthModule } from "../auth/auth.module";
 import { productMediaHeaderKey } from "../../common/config/header-key-configs/media-header-keys/product-media-header.key";
+import { ProductTransactionContext } from "./logic/transaction/product-transaction.context";
 
 const productIdFilter = { provide: "product-id-filter", useValue: "product.id = :id" };
 
@@ -47,8 +47,8 @@ const productIdFilter = { provide: "product-id-filter", useValue: "product.id = 
     ProductValidator,
     ProductTransactionInitializer,
     ProductTransactionExecutor,
-    ProductTransactionSearcher,
     ProductTransactionContext,
+    ProductTransactionSearcher,
     ProductService,
     ProductUpdateRepository,
     ProductSearchRepository,

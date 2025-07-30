@@ -10,7 +10,7 @@ import { ModifyProductPriceDto } from "../../dto/request/modify-product-price.dt
 import { ModifyProductOriginDto } from "../../dto/request/modify-product-origin.dto";
 import { ModifyProductDesctiptionDto } from "../../dto/request/modify-product-description.dto";
 import { ModifyProductStockDto } from "../../dto/request/modify-product-stock.dto";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { ModifyProductCategoryDto } from "../../dto/request/modify-product-category.dto";
 import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove-headers.interceptor";
 import { MediaHeadersParser } from "src/common/decorators/media-headers-parser.decorator";
@@ -24,9 +24,9 @@ import { ProductBody } from "../../dto/request/product-body.dto";
 import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe";
 import { OperateProductValidationPipe } from "../../pipe/none-exist/operate-product-validation.pipe";
 import { DeleteProductMediaInterceptor } from "../../../media/interceptor/delete-product-media.interceptor";
-import { CreateProductSwagger } from "../../docs/product-v1-admin-controller/create-product.swagger";
 import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
 import { productMediaHeaderKey } from "../../../../common/config/header-key-configs/media-header-keys/product-media-header.key";
+import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
 
 @ApiTags("v1 관리자 Product API")
 @UseGuards(IsAdminGuard)
@@ -35,8 +35,7 @@ import { productMediaHeaderKey } from "../../../../common/config/header-key-conf
 export class ProductV1AdminController {
   constructor(private readonly transaction: ProductTransactionExecutor, private readonly service: ProductService) {}
 
-  // @CreateProductSwagger()
-  @UseInterceptors(RemoveHeadersInterceptor)
+  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor)
   @Post("/")
   public async createProduct(
     @MediaHeadersParser(productMediaHeaderKey.imageUrlHeader)
@@ -50,7 +49,7 @@ export class ProductV1AdminController {
       productImageHeaders,
     };
 
-    await this.transaction.createProduct(dto);
+    await this.transaction.executeCreateProduct(dto);
 
     return {
       statusCode: 201,
@@ -64,7 +63,7 @@ export class ProductV1AdminController {
   //   description:
   //     "상품의 아이디에 해당하는 상품의 전체 column, 상품에 사용되는 이미지를 수정합니다. 수정하려는 상품의 가격, 수량을 양의 정수 이외의 숫자로 지정하거나 수정하려는 상품의 이름이 이미 데이터베이스에 존재 한다면 에러를 반환합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 업로드해야 합니다.",
   // })
-  @UseInterceptors(RemoveHeadersInterceptor, DeleteProductMediaInterceptor)
+  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor, DeleteProductMediaInterceptor)
   @Put("/:productId")
   public async modifyProduct(
     @MediaHeadersParser(productMediaHeaderKey.imageUrlHeader)
@@ -78,7 +77,7 @@ export class ProductV1AdminController {
       productImageHeaders,
     };
 
-    await this.transaction.modifyProduct(dto);
+    await this.transaction.executeModifyProduct(dto);
 
     return {
       statusCode: 201,
@@ -92,7 +91,7 @@ export class ProductV1AdminController {
   //   description:
   //     "상품의 아이디에 해당하는 상품에 사용되는 이미지를 수정합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 생성해야 합니다.",
   // })
-  @UseInterceptors(RemoveHeadersInterceptor, DeleteProductMediaInterceptor)
+  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor, DeleteProductMediaInterceptor)
   @Patch("/:productId/image")
   public async modifyProductImage(
     @MediaHeadersParser(productMediaHeaderKey.imageUrlHeader)
@@ -100,7 +99,7 @@ export class ProductV1AdminController {
     @Param("productId", ProductIdValidatePipe) productId: string,
   ): Promise<RemoveHeadersResponseInterface> {
     const dto: ModifyProductImageDto = { productId, productImageHeaders };
-    await this.transaction.modifyProductImage(dto);
+    await this.transaction.executeModifyProductImage(dto);
 
     return {
       statusCode: 201,

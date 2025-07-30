@@ -1,31 +1,31 @@
 import { Injectable } from "@nestjs/common";
-import { AccountUpdateRepository } from "../../repositories/account-update.repository";
 import { CreateAccountDto } from "../../dtos/request/create-account.dto";
 import { DeleteAccountDto } from "../../dtos/request/delete-account.dto";
+import { AccountService } from "../../services/account.service";
 
 @Injectable()
 export class AccountTransactionContext {
-  constructor(private readonly accountUpdateRepository: AccountUpdateRepository) {}
+  constructor(private readonly accountService: AccountService) {}
 
-  public async createAccountContext(dto: CreateAccountDto): Promise<void> {
-    const account = await this.accountUpdateRepository.createAccount(dto);
+  public async createAccount(dto: CreateAccountDto): Promise<void> {
+    const account = await this.accountService.createAccount(dto);
     if (dto.body.isMainAccount) {
-      await this.setMainAccountContext(account.id, dto.user.id);
+      await this.setMainAccount(account.id, dto.user.id);
     }
   }
 
-  public async deleteAccountContext(dto: DeleteAccountDto): Promise<void> {
+  public async deleteAccount(dto: DeleteAccountDto): Promise<void> {
     const { account, excludeAccounts, userId } = dto;
-    await this.accountUpdateRepository.deleteAccount(account.id);
+    await this.accountService.deleteAccount(account.id);
 
     if (account.isMainAccount) {
       const latestAccount = excludeAccounts.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()).at(-1);
-      await this.setMainAccountContext(latestAccount.id, userId);
+      await this.setMainAccount(latestAccount.id, userId);
     }
   }
 
-  public async setMainAccountContext(accountId: string, userId: string) {
-    await this.accountUpdateRepository.disableAllAccount(userId);
-    await this.accountUpdateRepository.setMainAccount({ accountId });
+  public async setMainAccount(accountId: string, userId: string) {
+    await this.accountService.disableAllAccount(userId);
+    await this.accountService.setMainAccount(accountId);
   }
 }

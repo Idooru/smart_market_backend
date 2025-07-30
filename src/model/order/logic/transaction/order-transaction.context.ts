@@ -10,7 +10,7 @@ import { DepositAdminBalanceDto } from "../../dto/request/deposit-admin-balance.
 export class OrderTransactionContext {
   constructor(private readonly orderService: OrderService) {}
 
-  public async createOrderContext(dto: SearchCreateOrderDto): Promise<void> {
+  public async createOrder(dto: SearchCreateOrderDto): Promise<void> {
     const { clientId, body, clientUser, account, totalPrice, productQuantities, hasSurtax } = dto;
 
     await Promise.all([

@@ -2,18 +2,19 @@ import { ArgumentsHost, CallHandler, Injectable, NestInterceptor } from "@nestjs
 import { map, Observable, of } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { Request, Response } from "express";
-import { GeneralResponseInterface } from "../interface/general-response.interface";
 import { Implemented } from "../../decorators/implemented.decoration";
 import { loggerFactory } from "../../functions/logger.factory";
+import { ApiResultInterface } from "../interface/api-result.interface";
+import { HttpResponseInterface } from "../interface/http-response.interface";
 
 interface CacheItem<T> {
-  data: GeneralResponseInterface<T>;
+  data: ApiResultInterface<T>;
   timestamp: number;
   ttl: number; // 밀리초 단위
 }
 
 @Injectable()
-export class GeneralInterceptor<T> implements NestInterceptor {
+export class FetchInterceptor<T> implements NestInterceptor {
   private responseCache = new Map<string, CacheItem<T>>();
   private readonly cacheLogger = loggerFactory("FetchCache");
   private readonly DEFAULT_TTL = 30 * 60 * 1000; // 30분
@@ -24,7 +25,7 @@ export class GeneralInterceptor<T> implements NestInterceptor {
     return Date.now() - item.timestamp > item.ttl;
   }
 
-  private getCachedResponse(key: string): GeneralResponseInterface<T> | null {
+  private getCachedResponse(key: string): ApiResultInterface<T> | null {
     const item = this.responseCache.get(key);
 
     if (!item) return null;
@@ -38,7 +39,7 @@ export class GeneralInterceptor<T> implements NestInterceptor {
     return item.data;
   }
 
-  private setCachedResponse(key: string, data: GeneralResponseInterface<T>, ttl?: number): void {
+  private setCachedResponse(key: string, data: ApiResultInterface<T>, ttl?: number): void {
     this.responseCache.set(key, {
       data,
       timestamp: Date.now(),
@@ -46,6 +47,13 @@ export class GeneralInterceptor<T> implements NestInterceptor {
     });
 
     this.cacheLogger.log(`Set response cache key: ${key}`);
+  }
+
+  private response(req: Request, res: Response, result: ApiResultInterface<T>): HttpResponseInterface<T> {
+    this.timeLoggerLibrary.sendResponse(req);
+
+    res.status(result.statusCode).setHeader("X-Powered-By", "");
+    return { success: true, ...result };
   }
 
   @Implemented()
@@ -56,24 +64,19 @@ export class GeneralInterceptor<T> implements NestInterceptor {
 
     this.timeLoggerLibrary.receiveRequest(req);
 
-    if (req.method === "GET") {
-      const cachedResponse = this.getCachedResponse(key);
+    const cachedResponse = this.getCachedResponse(key);
 
-      if (cachedResponse) {
-        this.timeLoggerLibrary.sendResponse(req);
-        res.status(cachedResponse.statusCode).setHeader("X-Powered-By", "");
-        return of({ success: true, ...cachedResponse });
-      }
+    if (cachedResponse) {
+      this.timeLoggerLibrary.sendResponse(req);
+      res.status(cachedResponse.statusCode).setHeader("X-Powered-By", "");
+      return of({ success: true, ...cachedResponse });
     }
 
     return next.handle().pipe(
-      map((response: GeneralResponseInterface<T>) => {
-        this.timeLoggerLibrary.sendResponse(req);
+      map((result: ApiResultInterface<T>) => {
+        this.setCachedResponse(key, result);
 
-        if (req.method === "GET") this.setCachedResponse(key, response);
-
-        res.status(response.statusCode).setHeader("X-Powered-By", "");
-        return { success: true, ...response };
+        return this.response(req, res, result);
       }),
     );
   }

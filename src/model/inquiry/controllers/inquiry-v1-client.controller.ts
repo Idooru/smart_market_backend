@@ -9,7 +9,7 @@ import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-paylo
 import { ApiTags } from "@nestjs/swagger";
 import { InquiryTransactionExecutor } from "../logic/transaction/inquiry-transaction.executor";
 import { ProductIdValidatePipe } from "../../product/pipe/exist/product-id-validate.pipe";
-import { GeneralInterceptor } from "../../../common/interceptors/general/general.interceptor";
+import { FetchInterceptor } from "../../../common/interceptors/general/fetch.interceptor";
 import { InquiryRequestIdValidatePipe } from "../pipe/exist/inquiry-request-id-validate.pipe";
 import { InquiryClientEventInterceptor } from "../interceptor/inquiry-client-event.interceptor";
 import { InquiryRequestBody } from "../dto/inquiry-request/request/inquiry-request-body";
@@ -34,7 +34,7 @@ export class InquiryV1ClientController {
   ) {}
 
   // @ApiOperation({})
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/inquiry-request/all")
   public async findAllInquiryRequests(
     @Query() query: FindAllInquiryRequestsDto,
@@ -51,7 +51,7 @@ export class InquiryV1ClientController {
   }
 
   // @ApiOperation({})
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/inquiry-request/:inquiryRequestId")
   public async findInquiryRequest(
     @Param("inquiryRequestId", InquiryRequestIdValidatePipe) inquiryRequestId: string,

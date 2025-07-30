@@ -3,7 +3,7 @@ import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { UseInterceptors } from "@nestjs/common";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
+import { FetchInterceptor } from "src/common/interceptors/general/fetch.interceptor";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 import { ApiTags } from "@nestjs/swagger";
 import { ReviewTransactionExecutor } from "../../logic/transaction/review-transaction.executor";
@@ -33,7 +33,7 @@ export class ReviewV1ClientController {
     private readonly reviewSearcher: ReviewSearcher,
   ) {}
 
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/all")
   public async findAllReviews(
     @Query() query: FindAllReviewsDto,
@@ -50,7 +50,7 @@ export class ReviewV1ClientController {
   }
 
   // @ApiOperation({})
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/:reviewId")
   public async findDetailReview(
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,

@@ -8,7 +8,7 @@ import { SetHeadersInterceptor } from "src/common/interceptors/general/set-heade
 import { MediaHeadersParser } from "src/common/decorators/media-headers-parser.decorator";
 import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove-headers.interceptor";
 import { RemoveHeadersResponseInterface } from "src/common/interceptors/interface/remove-headers-response.interface";
-import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
+import { FetchInterceptor } from "src/common/interceptors/general/fetch.interceptor";
 import { ApiTags } from "@nestjs/swagger";
 import { ProductImagesValidatePipe } from "../pipe/exist/product-images-validate.pipe";
 import { InquiryResponseImageValidatePipe } from "../pipe/exist/inquiry-response-image-validate.pipe";
@@ -51,7 +51,7 @@ export class MediaV1AdminController {
   //   summary: "find uploaded product image",
   //   description: "업로드된 상품 이미지를 가져옵니다. 상품 이미지를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/product/image")
   public async findAllUploadedProductImages(
     @MediaHeadersParser(productMediaHeaderKey.imageUrlHeader) productImageHeaders: MediaHeaderDto[],
@@ -70,7 +70,7 @@ export class MediaV1AdminController {
   //   description:
   //     "업로드된 문의 응답 이미지를 가져옵니다. 문의 응답 이미지를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/inquiry/response/image")
   public async findUploadedInquiryResponseImages(
     @MediaHeadersParser(inquiryMediaHeaderKey.response.imageUrlHeader) inquiryResponseImageHeaders: MediaHeaderDto[],
@@ -89,7 +89,7 @@ export class MediaV1AdminController {
   //   description:
   //     "업로드된 문의 응답 비디오를 가져옵니다. 문의 응답 비디오를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/inquiry/response/video")
   public async findUploadedInquiryResponseVideos(
     @MediaHeadersParser(inquiryMediaHeaderKey.response.videoUrlHeader)

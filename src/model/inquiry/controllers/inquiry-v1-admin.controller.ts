@@ -12,7 +12,7 @@ import { InquiryRequestIdValidatePipe } from "../pipe/exist/inquiry-request-id-v
 import { InquiryRequesterIdValidatePipe } from "../pipe/exist/inquiry-requester-id-validate.pipe";
 import { InquiryResponseIdValidatePipe } from "../pipe/exist/inquiry-response-id-validate.pipe";
 import { InquiryAdminEventInterceptor } from "../interceptor/inquiry-admin-event.interceptor";
-import { GeneralInterceptor } from "../../../common/interceptors/general/general.interceptor";
+import { FetchInterceptor } from "../../../common/interceptors/general/fetch.interceptor";
 import { InquiryResponseBody } from "../dto/inquiry-response/request/inquiry-response-body.dto";
 import { CreateInquiryResponseDto } from "../dto/inquiry-response/request/create-inquiry-response.dto";
 import { InquiryResponseSearcher } from "../logic/inquiry-response.searcher";
@@ -38,7 +38,7 @@ export class InquiryV1AdminController {
   ) {}
 
   // @ApiOperation({})
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/inquiry-response/all")
   public async findAllInquiryResponses(
     @Query() query: FindAllInquiryResponsesDto,
@@ -55,7 +55,7 @@ export class InquiryV1AdminController {
   }
 
   // @ApiOperation({})
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/inquiry-response/:inquiryResponseId")
   public async findInquiryResponse(
     @Param("inquiryResponseId", InquiryResponseIdValidatePipe) inquiryResponseId: string,
@@ -70,7 +70,7 @@ export class InquiryV1AdminController {
   }
 
   // @ApiOperation({})
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/inquiry-request/product")
   public async findInquiryRequestFromProduct(
     @GetJWT() { userId }: JwtAccessTokenPayload,

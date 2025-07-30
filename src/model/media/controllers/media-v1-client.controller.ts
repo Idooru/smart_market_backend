@@ -7,7 +7,7 @@ import { SetHeadersResponseInterface } from "src/common/interceptors/interface/s
 import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove-headers.interceptor";
 import { RemoveHeadersResponseInterface } from "src/common/interceptors/interface/remove-headers-response.interface";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
-import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
+import { FetchInterceptor } from "src/common/interceptors/general/fetch.interceptor";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { MediaService } from "../services/media.service";
 // import { ReviewImageValidatePipe } from "../pipe/exist/review-image-validate.pipe";
@@ -53,7 +53,7 @@ export class MediaV1ClientController {
   // //   summary: "find uploaded review image",
   // //   description: "업로드된 리뷰 이미지를 가져옵니다. 리뷰 이미지를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // // })
-  // @UseInterceptors(GeneralInterceptor)
+  // @UseInterceptors(FetchInterceptor)
   // @Get("/review/image")
   // public async findUploadedReviewImage(
   //   @MediaHeadersParser(reviewMediaHeaderKey.imageUrlHeader)
@@ -72,7 +72,7 @@ export class MediaV1ClientController {
   // //   summary: "find uploaded review video",
   // //   description: "업로드된 리뷰 비디오를 가져옵니다. 리뷰 비디오를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // // })
-  // @UseInterceptors(GeneralInterceptor)
+  // @UseInterceptors(FetchInterceptor)
   // @Get("/review/video")
   // public async findUploadedReviewVideo(
   //   @MediaHeadersParser(reviewMediaHeaderKey.videoUrlHeader)
@@ -92,7 +92,7 @@ export class MediaV1ClientController {
   // //   description:
   // //     "업로드된 문의 요청 이미지를 가져옵니다. 문의 요청 이미지를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // // })
-  // @UseInterceptors(GeneralInterceptor)
+  // @UseInterceptors(FetchInterceptor)
   // @Get("/inquiry/request/image")
   // public async findUploadedInquiryRequestImage(
   //   @MediaHeadersParser(inquiryMediaHeaderKey.request.imageUrlHeader)
@@ -112,7 +112,7 @@ export class MediaV1ClientController {
   // //   description:
   // //     "업로드된 문의 요청 비디오를 가져옵니다. 문의 요청 비디오를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
   // // })
-  // @UseInterceptors(GeneralInterceptor)
+  // @UseInterceptors(FetchInterceptor)
   // @Get("/inquiry/request/video")
   // public async findUploadedInquiryRequestVideo(
   //   @MediaHeadersParser(inquiryMediaHeaderKey.request.videoUrlHeader)

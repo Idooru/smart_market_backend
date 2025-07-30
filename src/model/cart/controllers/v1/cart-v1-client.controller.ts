@@ -6,7 +6,7 @@ import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
 import { CartService } from "../../services/cart.service";
-import { GeneralInterceptor } from "../../../../common/interceptors/general/general.interceptor";
+import { FetchInterceptor } from "../../../../common/interceptors/general/fetch.interceptor";
 import { CartSearcher } from "../../logic/cart.searcher";
 import { CartIdValidatePipe } from "../../pipe/cart-id-validate.pipe";
 import { CartsResponseDto } from "../../dto/response/carts-response.dto";
@@ -28,7 +28,7 @@ export class CartV1ClientController {
   //   summary: "find carts with id",
   //   description: "사용자의 장바구니를 모두 가져옵니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/all")
   public async findAllCarts(
     @Query() query: FindAllCartsDto,

@@ -1,5 +1,5 @@
 import { Controller, Get, UseInterceptors, Param, Query } from "@nestjs/common";
-import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
+import { FetchInterceptor } from "src/common/interceptors/general/fetch.interceptor";
 import { ApiTags } from "@nestjs/swagger";
 import { ProductSearcher } from "../../logic/product.searcher";
 import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe";
@@ -15,7 +15,7 @@ import { ApiResultInterface } from "../../../../common/interceptors/interface/ap
 export class ProductV1Controller {
   constructor(private readonly searcher: ProductSearcher) {}
 
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/autocomplete/:name")
   public async findProductAutocomplete(@Param("name") name: string): Promise<ApiResultInterface<string[]>> {
     const result = await this.searcher.findProductAutocomplete(name);
@@ -27,7 +27,7 @@ export class ProductV1Controller {
     };
   }
 
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/conditional")
   public async findConditionalProducts(
     @Query() query: FindConditionalProductDto,
@@ -41,7 +41,7 @@ export class ProductV1Controller {
     };
   }
 
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/search")
   public async searchProduct(@Query() query: SearchProductsDto): Promise<ApiResultInterface<ProductBasicRawDto[]>> {
     const result = await this.searcher.searchProduct(query);
@@ -54,7 +54,7 @@ export class ProductV1Controller {
   }
 
   @FindDetailProductSwagger()
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/:productId")
   public async findDetailProduct(
     @Param("productId", ProductIdValidatePipe) productId: string,

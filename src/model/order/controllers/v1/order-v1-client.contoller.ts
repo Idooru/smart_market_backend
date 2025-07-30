@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { GeneralInterceptor } from "../../../../common/interceptors/general/general.interceptor";
+import { FetchInterceptor } from "../../../../common/interceptors/general/fetch.interceptor";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { IsClientGuard } from "../../../../common/guards/authenticate/is-client.guard";
@@ -22,7 +22,7 @@ export class OrderV1ClientController {
   constructor(private readonly transaction: OrderTransactionExecutor, private readonly orderSearcher: OrderSearcher) {}
 
   // @ApiOperation({})
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/")
   public async findOrders(
     @Query() query: FindAllOrdersDto,

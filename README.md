@@ -104,7 +104,7 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┃ ┣ 📂general
 ┃ ┃ ┃ ┣ 📜json-clear-cookie.interceptor.ts
 ┃ ┃ ┃ ┣ 📜remove-headers.interceptor.ts
-┃ ┃ ┃ ┣ 📜general.interceptor.ts
+┃ ┃ ┃ ┣ 📜fetch.interceptor.ts
 ┃ ┃ ┃ ┣ 📜json-send-cookie.interceptor.ts
 ┃ ┃ ┃ ┣ 📜set-headers.interceptor.ts
 ┃ ┃ ┃ ┣ 📜login.interceptor.ts

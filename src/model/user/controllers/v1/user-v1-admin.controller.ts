@@ -1,7 +1,7 @@
 import { Controller, UseGuards, UseInterceptors, Get, Param, Delete, Query } from "@nestjs/common";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
+import { FetchInterceptor } from "src/common/interceptors/general/fetch.interceptor";
 import { ApiTags } from "@nestjs/swagger";
 import { UserSearcher } from "../../logic/user.searcher";
 import { UserService } from "../../services/user.service";
@@ -20,7 +20,7 @@ export class UserV1AdminController {
   constructor(private readonly searcher: UserSearcher, private readonly service: UserService) {}
 
   // @FindAllUsersSwagger()
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/all")
   public async findAllUsers(@Query() query: FindAllUsersDto): Promise<ApiResultInterface<UserBasicRawDto[]>> {
     const result = await this.searcher.findAllRaws(query);
@@ -33,7 +33,7 @@ export class UserV1AdminController {
   }
 
   // @FindDetailClientUserSwagger()
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/:userId")
   public async findDetailClientUser(
     @Param("userId", ClientUserIdValidatePipe) userId: string,
@@ -48,7 +48,7 @@ export class UserV1AdminController {
   }
 
   // @KickUserSwagger()
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Delete("/:userId")
   public async kickUser(@Param("userId", UserIdValidatePipe) userId: string): Promise<ApiResultInterface<void>> {
     await this.service.deleteUser(userId);

@@ -1,6 +1,6 @@
 // controller
 
-// @UseInterceptors(GeneralInterceptor)
+// @UseInterceptors(FetchInterceptor)
 //   @UseGuards(
 //     new VerifyDataGuard(
 //       userVerifyHeaderKey.is_not_exist.email_executed,

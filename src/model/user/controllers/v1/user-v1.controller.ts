@@ -5,7 +5,7 @@ import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { IsNotLoginGuard } from "../../../../common/guards/authenticate/is-not-login.guard";
 import { IsRefreshTokenAvailableGuard } from "src/common/guards/authenticate/is-refresh-token-available.guard";
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
-import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
+import { FetchInterceptor } from "src/common/interceptors/general/fetch.interceptor";
 import { LoginResponseInterface } from "src/common/interceptors/interface/login-response.interface";
 import { LogoutResponseInterface } from "src/common/interceptors/interface/logout-response.interface";
 import { ApiTags } from "@nestjs/swagger";
@@ -63,7 +63,7 @@ export class UserV1Controller {
   }
 
   // @ProfileSwagger()
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @UseGuards(IsLoginGuard)
   @Get("/profile")
   public async findProfile(
@@ -95,7 +95,7 @@ export class UserV1Controller {
     };
   }
 
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @UseGuards(IsLoginGuard)
   @Get("/is-valid-access-token")
   public async isValidAccessToken(): Promise<ApiResultInterface<void>> {
@@ -246,7 +246,7 @@ export class UserV1Controller {
   }
 
   // @FindForgottenEmailSwagger()
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Get("/forgotten-email")
   public async findForgottenEmail(

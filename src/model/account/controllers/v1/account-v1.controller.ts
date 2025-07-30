@@ -1,6 +1,6 @@
 import { ApiTags } from "@nestjs/swagger";
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from "@nestjs/common";
-import { GeneralInterceptor } from "../../../../common/interceptors/general/general.interceptor";
+import { FetchInterceptor } from "../../../../common/interceptors/general/fetch.interceptor";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
@@ -29,7 +29,7 @@ export class AccountV1Controller {
     private readonly service: AccountService,
   ) {}
 
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(FetchInterceptor)
   @Get("/all")
   public async findAccounts(
     @Query() query: FindAllAccountsDto,

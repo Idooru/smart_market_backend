@@ -30,7 +30,7 @@ export class AccountUpdateRepository {
   }
 
   @Transaction()
-  public async setMainAccount({ accountId }: { accountId: string }): Promise<void> {
+  public async setMainAccount(accountId: string): Promise<void> {
     await this.transaction
       .getRepository()
       .account.createQueryBuilder()

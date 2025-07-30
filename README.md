@@ -582,7 +582,7 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┃ ┃ ┃ ┗ 📜user-transaction.initializer.ts
 ┃ ┃ ┃ ┣ 📜user-event-map.setter.ts
 ┃ ┃ ┃ ┣ 📜user.searcher.ts
-┃ ┃ ┃ ┣ 📜user.security.ts
+┃ ┃ ┃ ┣ 📜auth.service.ts
 ┃ ┃ ┃ ┗ 📜user.validator.ts
 ┃ ┃ ┣ 📂pipe
 ┃ ┃ ┃ ┣ 📂exist

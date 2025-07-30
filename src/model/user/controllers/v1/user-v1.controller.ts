@@ -3,8 +3,6 @@ import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payloa
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { IsNotLoginGuard } from "../../../../common/guards/authenticate/is-not-login.guard";
-import { IsRefreshTokenAvailableGuard } from "src/common/guards/authenticate/is-refresh-token-available.guard";
-import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
 import { FetchInterceptor } from "src/common/interceptors/general/fetch.interceptor";
 import { LogoutResponseInterface } from "src/common/interceptors/interface/logout-response.interface";
 import { ApiTags } from "@nestjs/swagger";
@@ -15,11 +13,7 @@ import { UserEmailValidatePipe as UserEmailNoneExistValidatePipe } from "../../p
 import { UserBodyPhoneNumberValidatePipe } from "../../pipe/none-exist/user-phoneNumber-validate.pipe";
 import { UserNicknameValidatePipe } from "../../pipe/none-exist/user-nickName-validate.pipe";
 import { LogoutInterceptor } from "../../../../common/interceptors/general/logout.interceptor";
-import { FindEmailValidationPipe } from "../../pipe/exist/find-email-validation.pipe";
-import { UserSecurity } from "../../logic/user.security";
 import { UserRegisterEventInterceptor } from "../../interceptor/user-register-event.interceptor";
-import { LogoutGuard } from "../../../../common/guards/authenticate/logout.guard";
-import { RefreshTokenSwagger } from "../../docs/user-v1-controller/refresh-token.swagger";
 import { RegisterUserDto } from "../../dto/request/register-user.dto";
 import { BasicAuthDto } from "../../dto/request/basic-auth.dto";
 import { ModifyUserBody } from "../../dto/request/modify-user.dto";
@@ -28,13 +22,11 @@ import { ModifyUserNicknameDto } from "../../dto/request/modify-user-nickname.dt
 import { ModifyUserPhoneNumberDto } from "../../dto/request/modify-user-phonenumber.dto";
 import { ModifyUserPasswordDto } from "../../dto/request/modify-user-password.dto";
 import { ModifyUserAddressDto } from "../../dto/request/modify-user-address.dto";
-import { FindEmailDto } from "../../dto/request/find-email.dto";
 import { UserProfileRawDto } from "../../dto/response/user-profile-raw.dto";
 import { GetBasicAuth } from "../../../../common/decorators/get-basic-auth.decorator";
 import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
 import { CommandInterceptor } from "../../../../common/interceptors/general/command.interceptor";
 import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
-import { UpdateTokenInterceptor } from "../../../../common/interceptors/general/update-token.interceptor";
 
 @ApiTags("v1 공용 User API")
 @Controller({ path: "/user", version: "1" })
@@ -42,7 +34,6 @@ export class UserV1Controller {
   constructor(
     private readonly transaction: UserTransactionExecutor,
     private readonly searcher: UserSearcher,
-    private readonly userSecurity: UserSecurity,
     private readonly service: UserService,
   ) {}
 
@@ -71,57 +62,6 @@ export class UserV1Controller {
       statusCode: 200,
       message: "사용자 정보를 가져옵니다.",
       result,
-    };
-  }
-
-  // @LoginSwagger()
-  @UseInterceptors(UpdateTokenInterceptor)
-  @UseGuards(IsNotLoginGuard)
-  @Post("/login")
-  public async login(
-    @GetBasicAuth() dto: BasicAuthDto,
-    @Query("login-client") loginClient: string,
-  ): Promise<ApiResultInterface<string>> {
-    const accessToken = await this.userSecurity.login(dto, loginClient);
-
-    return {
-      statusCode: 201,
-      message: "로그인을 완료하였습니다. 헤더를 확인하세요.",
-      result: accessToken,
-    };
-  }
-
-  @UseInterceptors(FetchInterceptor)
-  @UseGuards(IsLoginGuard)
-  @Get("/is-valid-access-token")
-  public async isValidAccessToken(): Promise<ApiResultInterface<void>> {
-    return { statusCode: 200, message: "access token이 유효합니다." };
-  }
-
-  @RefreshTokenSwagger()
-  @UseInterceptors(UpdateTokenInterceptor)
-  @UseGuards(IsRefreshTokenAvailableGuard)
-  @Patch("/refresh-token")
-  public async refreshToken(@GetJWT() { userId }: JwtRefreshTokenPayload): Promise<ApiResultInterface<string>> {
-    const accessToken = await this.userSecurity.refreshToken(userId);
-
-    return {
-      statusCode: 200,
-      message: "토큰을 재발급 받았습니다. 헤더를 확인하세요.",
-      result: accessToken,
-    };
-  }
-
-  // @LogoutSwagger()
-  @UseInterceptors(LogoutInterceptor)
-  @UseGuards(LogoutGuard)
-  @Delete("/logout")
-  public async logout(@GetJWT() { userId }: JwtAccessTokenPayload): Promise<ApiResultInterface<void>> {
-    await this.userSecurity.logout(userId);
-
-    return {
-      statusCode: 200,
-      message: "로그아웃을 완료하였습니다.",
     };
   }
 
@@ -238,22 +178,6 @@ export class UserV1Controller {
       statusCode: 200,
       message: "사용자 정보를 삭제하였습니다.",
       headerKey: ["access_token", "refresh_token"],
-    };
-  }
-
-  // @FindForgottenEmailSwagger()
-  @UseInterceptors(FetchInterceptor)
-  @UseGuards(IsNotLoginGuard)
-  @Get("/forgotten-email")
-  public async findForgottenEmail(
-    @Query(FindEmailValidationPipe<FindEmailDto>) query: FindEmailDto,
-  ): Promise<ApiResultInterface<string>> {
-    const result = await this.userSecurity.findForgottenEmail(query);
-
-    return {
-      statusCode: 200,
-      message: "이메일 정보를 가져옵니다.",
-      result,
     };
   }
 

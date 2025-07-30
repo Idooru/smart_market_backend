@@ -15,7 +15,6 @@ import { UserEntity } from "./entities/user.entity";
 import { userSelect } from "src/common/config/repository-select-configs/user.select";
 import { UserTransactionExecutor } from "./logic/transaction/user-transaction.executor";
 import { UserSearcher } from "./logic/user.searcher";
-import { UserSecurity } from "./logic/user.security";
 import { UserUpdateRepository } from "./repositories/user-update.repository";
 import { UserSearchRepository } from "./repositories/user-search.repository";
 import { UserService } from "./services/user.service";
@@ -48,7 +47,6 @@ const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
     userIdFilter,
     UserSearcher,
     UserValidator,
-    UserSecurity,
     UserTransactionInitializer,
     UserTransactionExecutor,
     UserTransactionContext,

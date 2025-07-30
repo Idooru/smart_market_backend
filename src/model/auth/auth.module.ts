@@ -14,6 +14,8 @@ import { ValidateTokenLibrary } from "./providers/validate-token.library";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { IsRefreshTokenAvailableGuard } from "src/common/guards/authenticate/is-refresh-token-available.guard";
 import { JwtErrorHandlerLibrary } from "src/model/auth/providers/jwt-error-handler.library";
+import { AuthV1Controller } from "./controllers/v1/auth-v1.controller";
+import { AuthService } from "./services/auth.service";
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { JwtErrorHandlerLibrary } from "src/model/auth/providers/jwt-error-handl
     ValidateTokenLibrary,
     IsLoginGuard,
     IsRefreshTokenAvailableGuard,
+    AuthService,
     JwtErrorHandlerLibrary,
   ],
   exports: [
@@ -36,7 +39,9 @@ import { JwtErrorHandlerLibrary } from "src/model/auth/providers/jwt-error-handl
     ValidateTokenLibrary,
     IsLoginGuard,
     IsRefreshTokenAvailableGuard,
+    AuthService,
     JwtErrorHandlerLibrary,
   ],
+  controllers: [AuthV1Controller],
 })
 export class AuthModule {}

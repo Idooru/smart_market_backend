@@ -2,7 +2,6 @@ import { UserUpdateRepository } from "../repositories/user-update.repository";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { UserEntity } from "../entities/user.entity";
 import { UserSearcher } from "../logic/user.searcher";
-import { UserSecurity } from "../logic/user.security";
 import { UserEventMapSetter } from "../logic/user-event-map.setter";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "src/common/decorators/general.decoration";
@@ -12,6 +11,7 @@ import { ModifyUserAuthDto, ModifyUserDto, ModifyUserProfileDto } from "../dto/r
 import { UserAuthEntity } from "../entities/user-auth.entity";
 import { BasicAuthDto } from "../dto/request/basic-auth.dto";
 import { loggerFactory } from "src/common/functions/logger.factory";
+import { AuthService } from "../../auth/services/auth.service";
 
 class EntityFinder {
   constructor(private readonly userSearcher: UserSearcher) {}
@@ -33,7 +33,7 @@ export class UserService {
   constructor(
     protected readonly userSearcher: UserSearcher,
     private readonly userUpdateRepository: UserUpdateRepository,
-    private readonly userSecurity: UserSecurity,
+    private readonly authService: AuthService,
     private readonly userEventMapSetter: UserEventMapSetter,
   ) {
     this.entityFinder = new EntityFinder(this.userSearcher);
@@ -55,7 +55,7 @@ export class UserService {
   @Transaction()
   public async createUserBase({ id }: UserEntity, dto: RegisterUserDto): Promise<void> {
     const { realName, nickName, birth, gender, email, phoneNumber, password, address } = dto;
-    const hashed = await this.userSecurity.hashPassword(password, true);
+    const hashed = await this.authService.hashPassword(password, true);
 
     const userProfileColumn = {
       id,
@@ -108,7 +108,7 @@ export class UserService {
 
   @General()
   public async modifyUserPassword(password: string, id: string): Promise<void> {
-    const hashed = await this.userSecurity.hashPassword(password, false);
+    const hashed = await this.authService.hashPassword(password, false);
 
     await this.userUpdateRepository.modifyUserPassword(hashed, id);
   }
@@ -122,7 +122,7 @@ export class UserService {
   public async resetPassword(dto: BasicAuthDto): Promise<void> {
     const { email, password } = dto;
     const [hashed, user] = await Promise.all([
-      this.userSecurity.hashPassword(password, false),
+      this.authService.hashPassword(password, false),
       this.entityFinder.findUser(email),
     ]);
 

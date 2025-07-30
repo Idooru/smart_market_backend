@@ -6,6 +6,8 @@ import { AccountEntity } from "../entities/account.entity";
 import { MoneyTransactionDto } from "../dtos/request/money-transaction.dto";
 import { DepositResultDto } from "../dtos/response/deposit-result.dto";
 import { WithdrawResultDto } from "../dtos/response/withdraw-result.dto";
+import { Transaction } from "../../../common/decorators/transaction.decorator";
+import { CreateAccountDto } from "../dtos/request/create-account.dto";
 
 class EntityFinder {
   constructor(private readonly accountSearcher: AccountSearcher) {}
@@ -28,6 +30,26 @@ export class AccountService {
     private readonly updateRepository: AccountUpdateRepository,
   ) {
     this.entityFinder = new EntityFinder(this.accountSearcher);
+  }
+
+  @Transaction()
+  public async createAccount(dto: CreateAccountDto): Promise<AccountEntity> {
+    return this.updateRepository.createAccount(dto);
+  }
+
+  @Transaction()
+  public async deleteAccount(accountId: string): Promise<void> {
+    await this.updateRepository.deleteAccount(accountId);
+  }
+
+  @Transaction()
+  public async disableAllAccount(userId: string): Promise<void> {
+    await this.updateRepository.disableAllAccount(userId);
+  }
+
+  @Transaction()
+  public async setMainAccount(accountId: string): Promise<void> {
+    await this.updateRepository.setMainAccount(accountId);
   }
 
   @General()

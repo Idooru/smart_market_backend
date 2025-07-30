@@ -1,8 +1,5 @@
-import { HttpStatus } from "@nestjs/common";
+import { ApiResultInterface } from "./api-result.interface";
 
-export class HttpResponseInterface<T> {
+export class HttpResponseInterface<T> extends ApiResultInterface<T> {
   success: boolean;
-  statusCode: HttpStatus;
-  message: string;
-  result?: T;
 }

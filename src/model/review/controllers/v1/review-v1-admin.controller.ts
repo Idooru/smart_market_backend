@@ -1,12 +1,12 @@
 import { Controller, Get, Param, UseGuards, UseInterceptors } from "@nestjs/common";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { GeneralResponseInterface } from "src/common/interceptors/interface/general-response.interface";
 import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { ReviewSearcher } from "../../logic/review.searcher";
 import { ProductIdValidatePipe } from "../../../product/pipe/exist/product-id-validate.pipe";
 import { ReviewFromProductRawDto } from "../../dto/response/review-from-product-raw.dto";
+import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
 
 @ApiTags("v1 관리자 Review API")
 @UseGuards(IsAdminGuard)
@@ -24,7 +24,7 @@ export class ReviewV1AdminController {
   @Get("/product/:productId")
   public async findReviewByProductId(
     @Param("productId", ProductIdValidatePipe) id: string,
-  ): Promise<GeneralResponseInterface<ReviewFromProductRawDto[]>> {
+  ): Promise<ApiResultInterface<ReviewFromProductRawDto[]>> {
     const result = await this.reviewSearcher.findAllRawsWithProductId(id);
 
     return {

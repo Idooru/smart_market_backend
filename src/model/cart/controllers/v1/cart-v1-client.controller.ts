@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { IsClientGuard } from "../../../../common/guards/authenticate/is-client.guard";
 import { ProductIdValidatePipe } from "../../../product/pipe/exist/product-id-validate.pipe";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
@@ -7,7 +7,6 @@ import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payloa
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
 import { CartService } from "../../services/cart.service";
 import { GeneralInterceptor } from "../../../../common/interceptors/general/general.interceptor";
-import { GeneralResponseInterface } from "../../../../common/interceptors/interface/general-response.interface";
 import { CartSearcher } from "../../logic/cart.searcher";
 import { CartIdValidatePipe } from "../../pipe/cart-id-validate.pipe";
 import { CartsResponseDto } from "../../dto/response/carts-response.dto";
@@ -15,6 +14,8 @@ import { CartBody } from "../../dto/request/cart-body.dto";
 import { CreateCartDto } from "../../dto/request/create-cart.dto";
 import { ModifyCartDto } from "../../dto/request/modify-cart.dto";
 import { FindAllCartsDto } from "../../dto/request/find-all-carts.dto";
+import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
+import { CommandInterceptor } from "../../../../common/interceptors/general/command.interceptor";
 
 @ApiTags("v1 고객 Cart API")
 @UseGuards(IsClientGuard)
@@ -32,7 +33,7 @@ export class CartV1ClientController {
   public async findAllCarts(
     @Query() query: FindAllCartsDto,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<CartsResponseDto>> {
+  ): Promise<ApiResultInterface<CartsResponseDto>> {
     query.userId = userId;
     const carts = await this.searcher.findAllRaws(query);
     const totalPrice = carts.map((cart) => cart.totalPrice).reduce((acc, cur) => acc + cur, 0);
@@ -51,13 +52,13 @@ export class CartV1ClientController {
   //   summary: "create cart",
   //   description: "장바구니를 생성합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @Post("/product/:productId")
   public async createCart(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @GetJWT() { userId }: JwtAccessTokenPayload,
     @Body() body: CartBody,
-  ): Promise<GeneralResponseInterface<null>> {
+  ): Promise<ApiResultInterface<null>> {
     const dto: CreateCartDto = { productId, clientUserId: userId, body };
     await this.service.createCart(dto);
 
@@ -71,13 +72,13 @@ export class CartV1ClientController {
   //   summary: "modify cart with id",
   //   description: "아이디에 해당하는 장바구니를 수정합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @Put("/:cartId/product/:productId")
   public async modifyCart(
     @Param("cartId", CartIdValidatePipe) cartId: string,
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Body() body: CartBody,
-  ): Promise<GeneralResponseInterface<null>> {
+  ): Promise<ApiResultInterface<null>> {
     const dto: ModifyCartDto = { cartId, productId, body };
     await this.service.modifyCart(dto);
 
@@ -91,9 +92,9 @@ export class CartV1ClientController {
   //   summary: "delete all cart with user id",
   //   description: "사용자의 장바구니를 모두 비웁니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @Delete("/")
-  public async deleteAllCart(@GetJWT() jwtPayload: JwtAccessTokenPayload): Promise<GeneralResponseInterface<null>> {
+  public async deleteAllCart(@GetJWT() jwtPayload: JwtAccessTokenPayload): Promise<ApiResultInterface<null>> {
     await this.service.deleteAllCarts(jwtPayload.userId);
 
     return {
@@ -106,9 +107,9 @@ export class CartV1ClientController {
   //   summary: "delete cart with id",
   //   description: "아이디에 해당하는 장바구니를 제거합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @Delete("/:cartId")
-  public async deleteCart(@Param("cartId", CartIdValidatePipe) id: string): Promise<GeneralResponseInterface<null>> {
+  public async deleteCart(@Param("cartId", CartIdValidatePipe) id: string): Promise<ApiResultInterface<null>> {
     await this.service.deleteCart(id);
 
     return {

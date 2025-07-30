@@ -8,7 +8,6 @@ import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove
 import { RemoveHeadersResponseInterface } from "src/common/interceptors/interface/remove-headers-response.interface";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
-import { GeneralResponseInterface } from "src/common/interceptors/interface/general-response.interface";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { MediaService } from "../services/media.service";
 // import { ReviewImageValidatePipe } from "../pipe/exist/review-image-validate.pipe";

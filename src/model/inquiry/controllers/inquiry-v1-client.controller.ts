@@ -10,7 +10,6 @@ import { ApiTags } from "@nestjs/swagger";
 import { InquiryTransactionExecutor } from "../logic/transaction/inquiry-transaction.executor";
 import { ProductIdValidatePipe } from "../../product/pipe/exist/product-id-validate.pipe";
 import { GeneralInterceptor } from "../../../common/interceptors/general/general.interceptor";
-import { GeneralResponseInterface } from "../../../common/interceptors/interface/general-response.interface";
 import { InquiryRequestIdValidatePipe } from "../pipe/exist/inquiry-request-id-validate.pipe";
 import { InquiryClientEventInterceptor } from "../interceptor/inquiry-client-event.interceptor";
 import { InquiryRequestBody } from "../dto/inquiry-request/request/inquiry-request-body";
@@ -22,6 +21,7 @@ import { FindAllInquiryRequestsDto } from "../dto/inquiry-request/request/find-a
 import { MediaHeaderDto } from "../../media/dto/request/media-header.dto";
 import { inquiryMediaHeaderKey } from "../../../common/config/header-key-configs/media-header-keys/inquiry-media-header.key";
 import { TransactionInterceptor } from "../../../common/interceptors/general/transaction.interceptor";
+import { ApiResultInterface } from "../../../common/interceptors/interface/api-result.interface";
 
 @ApiTags("v1 고객 Inquiry API")
 @UseGuards(IsClientGuard)
@@ -39,7 +39,7 @@ export class InquiryV1ClientController {
   public async findAllInquiryRequests(
     @Query() query: FindAllInquiryRequestsDto,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<InquiryRequestBasicRawDto[]>> {
+  ): Promise<ApiResultInterface<InquiryRequestBasicRawDto[]>> {
     query.userId = userId;
     const result = await this.inquiryRequestSearcher.findAllRaws(query);
 
@@ -55,7 +55,7 @@ export class InquiryV1ClientController {
   @Get("/inquiry-request/:inquiryRequestId")
   public async findInquiryRequest(
     @Param("inquiryRequestId", InquiryRequestIdValidatePipe) inquiryRequestId: string,
-  ): Promise<GeneralResponseInterface<InquiryRequestDetailRawDto>> {
+  ): Promise<ApiResultInterface<InquiryRequestDetailRawDto>> {
     const result = await this.inquiryRequestSearcher.findDetailRaw(inquiryRequestId);
 
     return {

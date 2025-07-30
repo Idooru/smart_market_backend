@@ -2,8 +2,6 @@ import { Body, Controller, Delete, Param, Patch, Post, UseGuards, UseInterceptor
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { GeneralResponseInterface } from "src/common/interceptors/interface/general-response.interface";
-import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ModifyProductNameDto } from "../../dto/request/modify-product-name.dto";
 import { ModifyProductPriceDto } from "../../dto/request/modify-product-price.dto";
@@ -27,6 +25,8 @@ import { DeleteProductMediaInterceptor } from "../../../media/interceptor/delete
 import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
 import { productMediaHeaderKey } from "../../../../common/config/header-key-configs/media-header-keys/product-media-header.key";
 import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
+import { CommandInterceptor } from "../../../../common/interceptors/general/command.interceptor";
+import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
 
 @ApiTags("v1 관리자 Product API")
 @UseGuards(IsAdminGuard)
@@ -113,12 +113,12 @@ export class ProductV1AdminController {
   //   description:
   //     "상품의 아이디에 해당하는 상품의 이름 column을 수정합니다. 수정하려는 상품의 이름이 이미 데이터베이스에 존재 한다면 에러를 반환합니다. ",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @Patch("/:productId/name")
   public async modifyProductName(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Body(OperateProductValidationPipe) { name }: ModifyProductNameDto,
-  ): Promise<GeneralResponseInterface<null>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.service.modifyProductName(productId, name);
     return {
       statusCode: 201,
@@ -131,12 +131,12 @@ export class ProductV1AdminController {
   //   description:
   //     "상품의 아이디에 해당하는 상품의 가격 column을 수정합니다. 수정하려는 상품의 가격을 양의 정수 이외의 숫자로 지정하면 에러를 반환합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @Patch("/:productId/price")
   public async modifyProductPrice(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Body() { price }: ModifyProductPriceDto,
-  ): Promise<GeneralResponseInterface<null>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.service.modifyProductPrice(productId, price);
 
     return {
@@ -149,12 +149,12 @@ export class ProductV1AdminController {
   //   summary: "modify product origin",
   //   description: "상품의 아이디에 해당하는 상품의 원산지 column을 수정합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @Patch("/:productId/origin")
   public async modifyProductOrigin(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Body() { origin }: ModifyProductOriginDto,
-  ): Promise<GeneralResponseInterface<null>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.service.modifyProductOrigin(productId, origin);
 
     return {
@@ -167,12 +167,12 @@ export class ProductV1AdminController {
   //   summary: "modify product category",
   //   description: "상품 아이디에 해당하는 상품의 카테고리 column을 수정합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @Patch("/:productId/category")
   public async modifyProductCategory(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Body() { category }: ModifyProductCategoryDto,
-  ) {
+  ): Promise<ApiResultInterface<void>> {
     await this.service.modifyProductCategory(productId, category);
 
     return {
@@ -185,12 +185,12 @@ export class ProductV1AdminController {
   //   summary: "modify product description",
   //   description: "상품의 아이디에 해당하는 상품의 설명 column을 수정합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @Patch("/:productId/description")
   public async modifyProductDescription(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Body() { description }: ModifyProductDesctiptionDto,
-  ): Promise<GeneralResponseInterface<null>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.service.modifyProductDescription(productId, description);
 
     return {
@@ -204,12 +204,12 @@ export class ProductV1AdminController {
   //   description:
   //     "상품의 아이디에 해당하는 상품의 수량 column을 수정합니다. 수정하려는 상품의 수량을 양의 정수 이외의 숫자로 지정하면 에러를 반환합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @Patch("/:productId/stock")
   public async modifyProductStock(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Body() { stock }: ModifyProductStockDto,
-  ): Promise<GeneralResponseInterface<null>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.service.modifyProductStock(productId, stock);
 
     return {
@@ -222,11 +222,11 @@ export class ProductV1AdminController {
   //   summary: "remove product",
   //   description: "상품의 아이디에 해당하는 상품을 제거합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor, DeleteProductMediaInterceptor)
+  @UseInterceptors(CommandInterceptor, DeleteProductMediaInterceptor)
   @Delete("/:productId")
   public async removeProduct(
     @Param("productId", ProductIdValidatePipe) productId: string,
-  ): Promise<GeneralResponseInterface<null>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.service.removeProduct(productId);
 
     return {

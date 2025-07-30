@@ -1,6 +1,5 @@
 import { Controller, Get, UseInterceptors, Param, Query } from "@nestjs/common";
 import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
-import { GeneralResponseInterface } from "src/common/interceptors/interface/general-response.interface";
 import { ApiTags } from "@nestjs/swagger";
 import { ProductSearcher } from "../../logic/product.searcher";
 import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe";
@@ -9,16 +8,17 @@ import { ProductBasicRawDto } from "../../dto/response/product-basic-raw.dto";
 import { ProductDetailRawDto } from "../../dto/response/product-detail-raw.dto";
 import { SearchProductsDto } from "../../dto/request/search-product.dto";
 import { FindConditionalProductDto } from "../../dto/request/find-conditional-product.dto";
+import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
 
 @ApiTags("v1 공용 Product API")
 @Controller({ path: "/product", version: "1" })
 export class ProductV1Controller {
-  constructor(private readonly productSearcher: ProductSearcher) {}
+  constructor(private readonly searcher: ProductSearcher) {}
 
   @UseInterceptors(GeneralInterceptor)
   @Get("/autocomplete/:name")
-  public async findProductAutocomplete(@Param("name") name: string): Promise<GeneralResponseInterface<string[]>> {
-    const result = await this.productSearcher.findProductAutocomplete(name);
+  public async findProductAutocomplete(@Param("name") name: string): Promise<ApiResultInterface<string[]>> {
+    const result = await this.searcher.findProductAutocomplete(name);
 
     return {
       statusCode: 200,
@@ -31,8 +31,8 @@ export class ProductV1Controller {
   @Get("/conditional")
   public async findConditionalProducts(
     @Query() query: FindConditionalProductDto,
-  ): Promise<GeneralResponseInterface<ProductBasicRawDto[]>> {
-    const result = await this.productSearcher.findConditionalRaws(query);
+  ): Promise<ApiResultInterface<ProductBasicRawDto[]>> {
+    const result = await this.searcher.findConditionalRaws(query);
 
     return {
       statusCode: 200,
@@ -43,10 +43,8 @@ export class ProductV1Controller {
 
   @UseInterceptors(GeneralInterceptor)
   @Get("/search")
-  public async searchProduct(
-    @Query() query: SearchProductsDto,
-  ): Promise<GeneralResponseInterface<ProductBasicRawDto[]>> {
-    const result = await this.productSearcher.searchProduct(query);
+  public async searchProduct(@Query() query: SearchProductsDto): Promise<ApiResultInterface<ProductBasicRawDto[]>> {
+    const result = await this.searcher.searchProduct(query);
 
     return {
       statusCode: 200,
@@ -60,8 +58,8 @@ export class ProductV1Controller {
   @Get("/:productId")
   public async findDetailProduct(
     @Param("productId", ProductIdValidatePipe) productId: string,
-  ): Promise<GeneralResponseInterface<ProductDetailRawDto>> {
-    const result = await this.productSearcher.findDetailRaw(productId);
+  ): Promise<ApiResultInterface<ProductDetailRawDto>> {
+    const result = await this.searcher.findDetailRaw(productId);
 
     return {
       statusCode: 200,

@@ -9,8 +9,7 @@ import { MediaHeadersParser } from "src/common/decorators/media-headers-parser.d
 import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove-headers.interceptor";
 import { RemoveHeadersResponseInterface } from "src/common/interceptors/interface/remove-headers-response.interface";
 import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
-import { GeneralResponseInterface } from "src/common/interceptors/interface/general-response.interface";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { ProductImagesValidatePipe } from "../pipe/exist/product-images-validate.pipe";
 import { InquiryResponseImageValidatePipe } from "../pipe/exist/inquiry-response-image-validate.pipe";
 import { InquiryResponseVideoValidatePipe } from "../pipe/exist/inquiry-response-video-validate.pipe";
@@ -30,6 +29,7 @@ import {
   inquiryMediaHeaderKey,
   InquiryMediaHeaderKey,
 } from "../../../common/config/header-key-configs/media-header-keys/inquiry-media-header.key";
+import { ApiResultInterface } from "../../../common/interceptors/interface/api-result.interface";
 
 @ApiTags("v1 관리자 Media API")
 @UseGuards(IsAdminGuard)
@@ -55,7 +55,7 @@ export class MediaV1AdminController {
   @Get("/product/image")
   public async findAllUploadedProductImages(
     @MediaHeadersParser(productMediaHeaderKey.imageUrlHeader) productImageHeaders: MediaHeaderDto[],
-  ): Promise<GeneralResponseInterface<MediaBasicRawDto[]>> {
+  ): Promise<ApiResultInterface<MediaBasicRawDto[]>> {
     const result = await this.productImageSearcher.findAllRaws(productImageHeaders);
 
     return {
@@ -74,7 +74,7 @@ export class MediaV1AdminController {
   @Get("/inquiry/response/image")
   public async findUploadedInquiryResponseImages(
     @MediaHeadersParser(inquiryMediaHeaderKey.response.imageUrlHeader) inquiryResponseImageHeaders: MediaHeaderDto[],
-  ): Promise<GeneralResponseInterface<MediaBasicRawDto[]>> {
+  ): Promise<ApiResultInterface<MediaBasicRawDto[]>> {
     const result = await this.inquiryResponseImageSearcher.findAllRaws(inquiryResponseImageHeaders);
 
     return {
@@ -94,7 +94,7 @@ export class MediaV1AdminController {
   public async findUploadedInquiryResponseVideos(
     @MediaHeadersParser(inquiryMediaHeaderKey.response.videoUrlHeader)
     inquiryResponseVideoHeaders: MediaHeaderDto[],
-  ): Promise<GeneralResponseInterface<MediaBasicRawDto[]>> {
+  ): Promise<ApiResultInterface<MediaBasicRawDto[]>> {
     const result = await this.inquiryResponseVideoSearcher.findAllRaws(inquiryResponseVideoHeaders);
 
     return {

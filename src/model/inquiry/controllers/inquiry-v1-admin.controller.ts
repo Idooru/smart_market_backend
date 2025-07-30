@@ -6,11 +6,10 @@ import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { RemoveHeadersResponseInterface } from "src/common/interceptors/interface/remove-headers-response.interface";
 import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove-headers.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { InquiryTransactionExecutor } from "../logic/transaction/inquiry-transaction.executor";
 import { InquiryRequestIdValidatePipe } from "../pipe/exist/inquiry-request-id-validate.pipe";
 import { InquiryRequesterIdValidatePipe } from "../pipe/exist/inquiry-requester-id-validate.pipe";
-import { GeneralResponseInterface } from "../../../common/interceptors/interface/general-response.interface";
 import { InquiryResponseIdValidatePipe } from "../pipe/exist/inquiry-response-id-validate.pipe";
 import { InquiryAdminEventInterceptor } from "../interceptor/inquiry-admin-event.interceptor";
 import { GeneralInterceptor } from "../../../common/interceptors/general/general.interceptor";
@@ -25,6 +24,7 @@ import { FindAllInquiryResponsesDto } from "../dto/inquiry-response/request/find
 import { MediaHeaderDto } from "../../media/dto/request/media-header.dto";
 import { inquiryMediaHeaderKey } from "../../../common/config/header-key-configs/media-header-keys/inquiry-media-header.key";
 import { TransactionInterceptor } from "../../../common/interceptors/general/transaction.interceptor";
+import { ApiResultInterface } from "../../../common/interceptors/interface/api-result.interface";
 
 @ApiTags("v1 관리자 Inquiry API")
 @UseGuards(IsAdminGuard)
@@ -43,7 +43,7 @@ export class InquiryV1AdminController {
   public async findAllInquiryResponses(
     @Query() query: FindAllInquiryResponsesDto,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<InquiryResponseBasicRawDto[]>> {
+  ): Promise<ApiResultInterface<InquiryResponseBasicRawDto[]>> {
     query.userId = userId;
     const result = await this.inquiryResponseSearcher.findAllRaws(query);
 
@@ -59,7 +59,7 @@ export class InquiryV1AdminController {
   @Get("/inquiry-response/:inquiryResponseId")
   public async findInquiryResponse(
     @Param("inquiryResponseId", InquiryResponseIdValidatePipe) inquiryResponseId: string,
-  ): Promise<GeneralResponseInterface<InquiryResponseDetailRawDto>> {
+  ): Promise<ApiResultInterface<InquiryResponseDetailRawDto>> {
     const result = await this.inquiryResponseSearcher.findDetailRaw(inquiryResponseId);
 
     return {
@@ -74,7 +74,7 @@ export class InquiryV1AdminController {
   @Get("/inquiry-request/product")
   public async findInquiryRequestFromProduct(
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<InquiryRequestFromAdminProductRawDto[]>> {
+  ): Promise<ApiResultInterface<InquiryRequestFromAdminProductRawDto[]>> {
     const result = await this.inquiryRequestSearcher.findAllRawsFromProduct(userId);
 
     return {

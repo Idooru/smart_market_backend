@@ -3,13 +3,13 @@ import { catchError, map, Observable, tap } from "rxjs";
 import { Implemented } from "../../decorators/implemented.decoration";
 import { DataSource, TypeORMError } from "typeorm";
 import { TransactionHandler } from "../../lib/handler/transaction.handler";
-import { CommandResultInterface } from "../interface/command-result.interface";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { Request, Response } from "express";
 import { HttpResponseInterface } from "../interface/http-response.interface";
+import { ApiResultInterface } from "../interface/api-result.interface";
 
 @Injectable()
-export class TransactionInterceptor implements NestInterceptor {
+export class TransactionInterceptor<T> implements NestInterceptor {
   constructor(
     private readonly dataSource: DataSource,
     private readonly handler: TransactionHandler,
@@ -26,7 +26,7 @@ export class TransactionInterceptor implements NestInterceptor {
     await this.handler.release();
   }
 
-  private response(req: Request, res: Response, result: CommandResultInterface): HttpResponseInterface<void> {
+  private response(req: Request, res: Response, result: ApiResultInterface<T>): HttpResponseInterface<T> {
     this.timeLoggerLibrary.sendResponse(req);
 
     res.status(result.statusCode).setHeader("X-Powered-By", "");
@@ -49,7 +49,7 @@ export class TransactionInterceptor implements NestInterceptor {
     return next.handle().pipe(
       catchError((err) => this.catchError(err)),
       tap(() => this.commitTransaction()),
-      map((result: CommandResultInterface) => this.response(req, res, result)),
+      map((result: ApiResultInterface<T>) => this.response(req, res, result)),
     );
   }
 }

@@ -4,7 +4,6 @@ import { GeneralInterceptor } from "../../../../common/interceptors/general/gene
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
-import { GeneralResponseInterface } from "../../../../common/interceptors/interface/general-response.interface";
 import { AccountService } from "../../services/account.service";
 import { AccountNumberValidatePipe } from "../../pipe/none-exist/account-number-validate.pipe";
 import { AccountTransactionExecutor } from "../../logic/transaction/account-transaction.executor";
@@ -17,6 +16,8 @@ import { DepositResultDto } from "../../dtos/response/deposit-result.dto";
 import { FindAllAccountsDto } from "../../dtos/request/find-all-accounts.dto";
 import { AccountBasicRawDto } from "../../dtos/response/account-basic-raw.dto";
 import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
+import { CommandInterceptor } from "../../../../common/interceptors/general/command.interceptor";
+import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
 
 @ApiTags("v1 User Account API")
 @UseGuards(IsLoginGuard)
@@ -33,7 +34,7 @@ export class AccountV1Controller {
   public async findAccounts(
     @Query() query: FindAllAccountsDto,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<AccountBasicRawDto[]>> {
+  ): Promise<ApiResultInterface<AccountBasicRawDto[]>> {
     query.userId = userId;
     const result = await this.searcher.findAllRaws(query);
 
@@ -53,7 +54,7 @@ export class AccountV1Controller {
   public async createAccount(
     @Body(AccountNumberValidatePipe) body: AccountBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<void>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.transaction.executeCreateAccount(body, userId);
 
     return {
@@ -71,7 +72,7 @@ export class AccountV1Controller {
   public async deleteAccount(
     @Param("accountId", AccountIdValidatePipe) accountId: string,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<void>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.transaction.executeDeleteAccount(accountId, userId);
 
     return {
@@ -84,12 +85,12 @@ export class AccountV1Controller {
   //   summary: "withdraw",
   //   description: "계좌에 일정 금액을 출금합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @Patch("/:accountId/withdraw")
   public async withdraw(
     @Param("accountId", AccountIdValidatePipe) accountId: string,
     @Body() { balance }: { balance: number },
-  ): Promise<GeneralResponseInterface<WithdrawResultDto>> {
+  ): Promise<ApiResultInterface<WithdrawResultDto>> {
     const dto: MoneyTransactionDto = { accountId, balance };
     const result = await this.service.withdraw(dto);
 
@@ -104,12 +105,12 @@ export class AccountV1Controller {
   //   summary: "deposit",
   //   description: "계좌에 일정 금액을 입금합니다.",
   // })
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @Patch("/:accountId/deposit")
   public async deposit(
     @Param("accountId", AccountIdValidatePipe) accountId: string,
     @Body() { balance }: { balance: number },
-  ): Promise<GeneralResponseInterface<DepositResultDto>> {
+  ): Promise<ApiResultInterface<DepositResultDto>> {
     const dto: MoneyTransactionDto = { accountId, balance };
     const result = await this.service.deposit(dto);
 
@@ -129,7 +130,7 @@ export class AccountV1Controller {
   public async setMainAccount(
     @Param("accountId", AccountIdValidatePipe) accountId: string,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<void>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.transaction.executeSetMainAccount(accountId, userId);
 
     return {

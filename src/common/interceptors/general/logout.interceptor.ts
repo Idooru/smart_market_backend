@@ -3,7 +3,7 @@ import { map, Observable } from "rxjs";
 import { Request, Response } from "express";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { Implemented } from "../../decorators/implemented.decoration";
-import { GeneralResponseInterface } from "../interface/general-response.interface";
+import { ApiResultInterface } from "../interface/api-result.interface";
 
 @Injectable()
 export class LogoutInterceptor implements NestInterceptor {
@@ -17,7 +17,7 @@ export class LogoutInterceptor implements NestInterceptor {
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data: GeneralResponseInterface<null>) => {
+      map((data: ApiResultInterface<null>) => {
         const { statusCode, message } = data;
 
         this.timeLoggerLibrary.sendResponse(req);

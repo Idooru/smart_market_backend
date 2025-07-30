@@ -6,7 +6,6 @@ import { IsNotLoginGuard } from "../../../../common/guards/authenticate/is-not-l
 import { IsRefreshTokenAvailableGuard } from "src/common/guards/authenticate/is-refresh-token-available.guard";
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
 import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
-import { GeneralResponseInterface } from "src/common/interceptors/interface/general-response.interface";
 import { LoginResponseInterface } from "src/common/interceptors/interface/login-response.interface";
 import { LogoutResponseInterface } from "src/common/interceptors/interface/logout-response.interface";
 import { ApiTags } from "@nestjs/swagger";
@@ -37,7 +36,9 @@ import { FindEmailDto } from "../../dto/request/find-email.dto";
 import { UserProfileRawDto } from "../../dto/response/user-profile-raw.dto";
 import { GetBasicAuth } from "../../../../common/decorators/get-basic-auth.decorator";
 import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
-import { CommandResultInterface } from "../../../../common/interceptors/interface/command-result.interface";
+import { CommandInterceptor } from "../../../../common/interceptors/general/command.interceptor";
+import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
+import { Command } from "concurrently";
 
 @ApiTags("v1 공용 User API")
 @Controller({ path: "/user", version: "1" })
@@ -52,7 +53,7 @@ export class UserV1Controller {
   @UseInterceptors(TransactionInterceptor, UserRegisterEventInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
-  public async register(@Body() registerUserDto: RegisterUserDto): Promise<CommandResultInterface> {
+  public async register(@Body() registerUserDto: RegisterUserDto): Promise<ApiResultInterface<void>> {
     await this.transaction.executeRegister(registerUserDto);
 
     return {
@@ -67,7 +68,7 @@ export class UserV1Controller {
   @Get("/profile")
   public async findProfile(
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<UserProfileRawDto>> {
+  ): Promise<ApiResultInterface<UserProfileRawDto>> {
     const result = await this.searcher.findUserProfileRaw(userId);
 
     return {
@@ -97,7 +98,7 @@ export class UserV1Controller {
   @UseInterceptors(GeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Get("/is-valid-access-token")
-  public async isValidAccessToken(): Promise<GeneralResponseInterface<void>> {
+  public async isValidAccessToken(): Promise<ApiResultInterface<void>> {
     return { statusCode: 200, message: "access token이 유효합니다." };
   }
 
@@ -119,7 +120,7 @@ export class UserV1Controller {
   @UseInterceptors(LogoutInterceptor)
   @UseGuards(LogoutGuard)
   @Delete("/logout")
-  public async logout(@GetJWT() { userId }: JwtAccessTokenPayload): Promise<GeneralResponseInterface<null>> {
+  public async logout(@GetJWT() { userId }: JwtAccessTokenPayload): Promise<ApiResultInterface<void>> {
     await this.userSecurity.logout(userId);
 
     return {
@@ -135,7 +136,7 @@ export class UserV1Controller {
   public async modifyUser(
     @Body() modifyUserBody: ModifyUserBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<CommandResultInterface> {
+  ): Promise<ApiResultInterface<void>> {
     const modifyUserDto = {
       id: userId,
       body: modifyUserBody,
@@ -150,13 +151,13 @@ export class UserV1Controller {
   }
 
   // @ModifyUserEmailSwagger()
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/email")
   public async modifyUserEmail(
     @Body(UserEmailNoneExistValidatePipe) { email }: ModifyUserEmailDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<void>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.service.modifyUserEmail(email, jwtPayload.userId);
 
     return {
@@ -166,13 +167,13 @@ export class UserV1Controller {
   }
 
   // @ModifyUserNickNameSwagger()
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/nickName")
   public async modifyUserNickname(
     @Body(UserNicknameValidatePipe) { nickName }: ModifyUserNicknameDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<void>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.service.modifyUserNickname(nickName, jwtPayload.userId);
 
     return {
@@ -182,14 +183,14 @@ export class UserV1Controller {
   }
 
   // @ModifyUserPhoneNumberSwagger()
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/phone-number")
   public async modifyUserPhoneNumber(
     @Body(UserBodyPhoneNumberValidatePipe)
     { phoneNumber }: ModifyUserPhoneNumberDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<void>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.service.modifyUserPhoneNumber(phoneNumber, jwtPayload.userId);
 
     return {
@@ -199,13 +200,13 @@ export class UserV1Controller {
   }
 
   // @ModifyUserPasswordSwagger()
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/password")
   public async modifyUserPassword(
     @Body() { password }: ModifyUserPasswordDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<void>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.service.modifyUserPassword(password, jwtPayload.userId);
 
     return {
@@ -215,13 +216,13 @@ export class UserV1Controller {
   }
 
   // @ModifyUserAddressSwagger()
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/address")
   public async modifyUserAddress(
     @Body() { address }: ModifyUserAddressDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<void>> {
+  ): Promise<ApiResultInterface<void>> {
     await this.service.modifyUserAddress(address, jwtPayload.userId);
 
     return {
@@ -250,7 +251,7 @@ export class UserV1Controller {
   @Get("/forgotten-email")
   public async findForgottenEmail(
     @Query(FindEmailValidationPipe<FindEmailDto>) query: FindEmailDto,
-  ): Promise<GeneralResponseInterface<string>> {
+  ): Promise<ApiResultInterface<string>> {
     const result = await this.userSecurity.findForgottenEmail(query);
 
     return {
@@ -261,10 +262,10 @@ export class UserV1Controller {
   }
 
   // @ResetPasswordSwagger()
-  @UseInterceptors(GeneralInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Patch("/reset-password")
-  public async resetPassword(@GetBasicAuth() dto: BasicAuthDto): Promise<GeneralResponseInterface<void>> {
+  public async resetPassword(@GetBasicAuth() dto: BasicAuthDto): Promise<ApiResultInterface<void>> {
     await this.service.resetPassword(dto);
 
     return {

@@ -4,7 +4,6 @@ import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-paylo
 import { UseInterceptors } from "@nestjs/common";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { GeneralInterceptor } from "src/common/interceptors/general/general.interceptor";
-import { GeneralResponseInterface } from "src/common/interceptors/interface/general-response.interface";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 import { ApiTags } from "@nestjs/swagger";
 import { ReviewTransactionExecutor } from "../../logic/transaction/review-transaction.executor";
@@ -22,6 +21,7 @@ import { FindAllReviewsDto } from "../../dto/request/find-all-reviews.dto";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { MulterConfigService } from "../../../../common/lib/media/multer-adapt.module";
 import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
+import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
 
 @ApiTags("v1 고객 Review API")
 @UseGuards(IsClientGuard)
@@ -38,7 +38,7 @@ export class ReviewV1ClientController {
   public async findAllReviews(
     @Query() query: FindAllReviewsDto,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<ReviewBasicRawDto[]>> {
+  ): Promise<ApiResultInterface<ReviewBasicRawDto[]>> {
     query.userId = userId;
     const result = await this.reviewSearcher.findAllRaws(query);
 
@@ -54,7 +54,7 @@ export class ReviewV1ClientController {
   @Get("/:reviewId")
   public async findDetailReview(
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
-  ): Promise<GeneralResponseInterface<ReviewDetailRawDto>> {
+  ): Promise<ApiResultInterface<ReviewDetailRawDto>> {
     const result = await this.reviewSearcher.findDetailRaw(reviewId);
 
     return {
@@ -83,7 +83,7 @@ export class ReviewV1ClientController {
     @UploadedFiles() mediaFiles: unknown,
     @Body() body: ReviewBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<void>> {
+  ): Promise<ApiResultInterface<void>> {
     const dto: CreateReviewDto = {
       body,
       reviewerId: userId,
@@ -121,7 +121,7 @@ export class ReviewV1ClientController {
     @UploadedFiles() mediaFiles: unknown,
     @Body() body: ReviewBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<void>> {
+  ): Promise<ApiResultInterface<void>> {
     const dto: ModifyReviewDto = {
       body,
       productId,
@@ -148,7 +148,7 @@ export class ReviewV1ClientController {
   public async deleteReview(
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<GeneralResponseInterface<void>> {
+  ): Promise<ApiResultInterface<void>> {
     const dto: DeleteReviewDto = {
       reviewId,
       userId: jwtPayload.userId,

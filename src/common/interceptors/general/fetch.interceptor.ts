@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 import { Implemented } from "../../decorators/implemented.decoration";
 import { loggerFactory } from "../../functions/logger.factory";
 import { ApiResultInterface } from "../interface/api-result.interface";
-import { HttpResponseInterface } from "../interface/http-response.interface";
+import { ResponseHandler } from "../../lib/handler/response.handler";
 
 interface CacheItem<T> {
   data: ApiResultInterface<T>;
@@ -19,7 +19,7 @@ export class FetchInterceptor<T> implements NestInterceptor {
   private readonly cacheLogger = loggerFactory("FetchCache");
   private readonly DEFAULT_TTL = 30 * 60 * 1000; // 30분
 
-  constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
+  constructor(private readonly timeLogger: TimeLoggerLibrary, private readonly responseHandler: ResponseHandler<T>) {}
 
   private isExpired(item: CacheItem<T>): boolean {
     return Date.now() - item.timestamp > item.ttl;
@@ -49,34 +49,25 @@ export class FetchInterceptor<T> implements NestInterceptor {
     this.cacheLogger.log(`Set response cache key: ${key}`);
   }
 
-  private response(req: Request, res: Response, result: ApiResultInterface<T>): HttpResponseInterface<T> {
-    this.timeLoggerLibrary.sendResponse(req);
-
-    res.status(result.statusCode).setHeader("X-Powered-By", "");
-    return { success: true, ...result };
-  }
-
   @Implemented()
   public intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
     const key = `${req.method}-${req.originalUrl}`;
 
-    this.timeLoggerLibrary.receiveRequest(req);
+    this.timeLogger.receiveRequest(req);
 
     const cachedResponse = this.getCachedResponse(key);
 
     if (cachedResponse) {
-      this.timeLoggerLibrary.sendResponse(req);
-      res.status(cachedResponse.statusCode).setHeader("X-Powered-By", "");
-      return of({ success: true, ...cachedResponse });
+      return of(this.responseHandler.response(req, res, cachedResponse));
     }
 
     return next.handle().pipe(
-      map((result: ApiResultInterface<T>) => {
-        this.setCachedResponse(key, result);
+      map((payload: ApiResultInterface<T>) => {
+        this.setCachedResponse(key, payload);
 
-        return this.response(req, res, result);
+        return this.responseHandler.response(req, res, payload);
       }),
     );
   }

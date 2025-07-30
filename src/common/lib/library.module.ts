@@ -1,8 +1,7 @@
-import { forwardRef, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { DotenvAdaptModule } from "./env/dotenv-adapt.module";
 import { MediaLoggerLibrary } from "./logger/media-logger.library";
-import { SecurityLibrary } from "../../model/auth/providers/security.library";
 import { TimeLoggerLibrary } from "./logger/time-logger.library";
 import { EmailSenderLibrary } from "./email/email-sender.library";
 import { ValidateLibrary } from "./util/validate.library";
@@ -13,6 +12,7 @@ import { EventAdaptModule } from "./event/event-adapt.module";
 import { MulterAdaptModule } from "./media/multer-adapt.module";
 import { TransactionHandler } from "./handler/transaction.handler";
 import { HangulLibrary } from "./util/hangul.library";
+import { ResponseHandler } from "./handler/response.handler";
 
 @Module({
   imports: [TypeormAdaptModule, MailerAdaptModule, DotenvAdaptModule, EventAdaptModule, MulterAdaptModule],
@@ -23,6 +23,7 @@ import { HangulLibrary } from "./util/hangul.library";
     MediaLoggerLibrary,
     ValidateLibrary,
     TransactionHandler,
+    ResponseHandler,
     CatchCallbackFactoryLibrary,
     HangulLibrary,
   ],
@@ -32,6 +33,7 @@ import { HangulLibrary } from "./util/hangul.library";
     MediaLoggerLibrary,
     ValidateLibrary,
     TransactionHandler,
+    ResponseHandler,
     CatchCallbackFactoryLibrary,
     HangulLibrary,
   ],

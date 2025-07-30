@@ -7,19 +7,19 @@ import { Implemented } from "../../decorators/implemented.decoration";
 
 @Injectable()
 export class RemoveHeadersInterceptor implements NestInterceptor {
-  constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
+  constructor(private readonly timeLogger: TimeLoggerLibrary) {}
 
   @Implemented()
   public intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
 
-    this.timeLoggerLibrary.receiveRequest(req);
+    this.timeLogger.receiveRequest(req);
 
     return next.handle().pipe(
       map((data: RemoveHeadersResponseInterface) => {
         const { statusCode, message, headerKey } = data;
-        this.timeLoggerLibrary.sendResponse(req);
+        this.timeLogger.sendResponse(req);
 
         if (headerKey.length >= 2) {
           headerKey.forEach((idx: string) => res.removeHeader(idx));

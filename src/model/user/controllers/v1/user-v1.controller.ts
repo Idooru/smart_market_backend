@@ -6,7 +6,6 @@ import { IsNotLoginGuard } from "../../../../common/guards/authenticate/is-not-l
 import { IsRefreshTokenAvailableGuard } from "src/common/guards/authenticate/is-refresh-token-available.guard";
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
 import { FetchInterceptor } from "src/common/interceptors/general/fetch.interceptor";
-import { LoginResponseInterface } from "src/common/interceptors/interface/login-response.interface";
 import { LogoutResponseInterface } from "src/common/interceptors/interface/logout-response.interface";
 import { ApiTags } from "@nestjs/swagger";
 import { UserTransactionExecutor } from "../../logic/transaction/user-transaction.executor";
@@ -15,10 +14,7 @@ import { UserService } from "../../services/user.service";
 import { UserEmailValidatePipe as UserEmailNoneExistValidatePipe } from "../../pipe/none-exist/user-email-validate.pipe";
 import { UserBodyPhoneNumberValidatePipe } from "../../pipe/none-exist/user-phoneNumber-validate.pipe";
 import { UserNicknameValidatePipe } from "../../pipe/none-exist/user-nickName-validate.pipe";
-import { LoginInterceptor } from "../../../../common/interceptors/general/login.interceptor";
-import { RefreshTokenInterceptor } from "../../../../common/interceptors/general/refresh-token.interceptor";
 import { LogoutInterceptor } from "../../../../common/interceptors/general/logout.interceptor";
-import { RefreshTokenResponseInterface } from "../../../../common/interceptors/interface/refresh-token-response.interface";
 import { FindEmailValidationPipe } from "../../pipe/exist/find-email-validation.pipe";
 import { UserSecurity } from "../../logic/user.security";
 import { UserRegisterEventInterceptor } from "../../interceptor/user-register-event.interceptor";
@@ -38,7 +34,7 @@ import { GetBasicAuth } from "../../../../common/decorators/get-basic-auth.decor
 import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
 import { CommandInterceptor } from "../../../../common/interceptors/general/command.interceptor";
 import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
-import { Command } from "concurrently";
+import { UpdateTokenInterceptor } from "../../../../common/interceptors/general/update-token.interceptor";
 
 @ApiTags("v1 공용 User API")
 @Controller({ path: "/user", version: "1" })
@@ -79,19 +75,19 @@ export class UserV1Controller {
   }
 
   // @LoginSwagger()
-  @UseInterceptors(LoginInterceptor)
+  @UseInterceptors(UpdateTokenInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/login")
   public async login(
     @GetBasicAuth() dto: BasicAuthDto,
     @Query("login-client") loginClient: string,
-  ): Promise<LoginResponseInterface> {
+  ): Promise<ApiResultInterface<string>> {
     const accessToken = await this.userSecurity.login(dto, loginClient);
 
     return {
       statusCode: 201,
       message: "로그인을 완료하였습니다. 헤더를 확인하세요.",
-      accessToken,
+      result: accessToken,
     };
   }
 
@@ -103,16 +99,16 @@ export class UserV1Controller {
   }
 
   @RefreshTokenSwagger()
-  @UseInterceptors(RefreshTokenInterceptor)
+  @UseInterceptors(UpdateTokenInterceptor)
   @UseGuards(IsRefreshTokenAvailableGuard)
   @Patch("/refresh-token")
-  public async refreshToken(@GetJWT() { userId }: JwtRefreshTokenPayload): Promise<RefreshTokenResponseInterface> {
+  public async refreshToken(@GetJWT() { userId }: JwtRefreshTokenPayload): Promise<ApiResultInterface<string>> {
     const accessToken = await this.userSecurity.refreshToken(userId);
 
     return {
       statusCode: 200,
       message: "토큰을 재발급 받았습니다. 헤더를 확인하세요.",
-      accessToken,
+      result: accessToken,
     };
   }
 

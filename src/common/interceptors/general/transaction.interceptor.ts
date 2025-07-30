@@ -5,15 +5,16 @@ import { DataSource, TypeORMError } from "typeorm";
 import { TransactionHandler } from "../../lib/handler/transaction.handler";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { Request, Response } from "express";
-import { HttpResponseInterface } from "../interface/http-response.interface";
 import { ApiResultInterface } from "../interface/api-result.interface";
+import { ResponseHandler } from "../../lib/handler/response.handler";
 
 @Injectable()
 export class TransactionInterceptor<T> implements NestInterceptor {
   constructor(
     private readonly dataSource: DataSource,
     private readonly handler: TransactionHandler,
-    private readonly timeLoggerLibrary: TimeLoggerLibrary,
+    private readonly timeLogger: TimeLoggerLibrary,
+    private readonly responseHandler: ResponseHandler<T>,
   ) {}
 
   private async catchError(err: TypeORMError): Promise<void> {
@@ -26,19 +27,12 @@ export class TransactionInterceptor<T> implements NestInterceptor {
     await this.handler.release();
   }
 
-  private response(req: Request, res: Response, result: ApiResultInterface<T>): HttpResponseInterface<T> {
-    this.timeLoggerLibrary.sendResponse(req);
-
-    res.status(result.statusCode).setHeader("X-Powered-By", "");
-    return { success: true, ...result };
-  }
-
   @Implemented()
   public async intercept(context: ExecutionContext, next: CallHandler<any>): Promise<Observable<any>> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
 
-    this.timeLoggerLibrary.receiveRequest(req);
+    this.timeLogger.receiveRequest(req);
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -49,7 +43,7 @@ export class TransactionInterceptor<T> implements NestInterceptor {
     return next.handle().pipe(
       catchError((err) => this.catchError(err)),
       tap(() => this.commitTransaction()),
-      map((result: ApiResultInterface<T>) => this.response(req, res, result)),
+      map((payload: ApiResultInterface<T>) => this.responseHandler.response(req, res, payload)),
     );
   }
 }

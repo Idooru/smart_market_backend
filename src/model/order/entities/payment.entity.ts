@@ -22,7 +22,9 @@ export class PaymentEntity extends CommonEntity {
   @JoinColumn({ name: "clientId" })
   ClientUser: ClientUserEntity;
 
-  @ManyToOne(() => OrderEntity, (order) => order.Payment)
+  @ManyToOne(() => OrderEntity, (order) => order.Payment, {
+    onDelete: "CASCADE",
+  })
   Order: OrderEntity;
 
   @ManyToOne(() => ProductEntity, (product) => product.Payment, {

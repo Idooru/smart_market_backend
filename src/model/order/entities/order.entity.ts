@@ -31,7 +31,7 @@ export class OrderEntity extends CommonEntity {
   @Column({ type: "enum", enum: transactionStatus })
   public transactionStatus: TransactionStatus;
 
-  @OneToMany(() => PaymentEntity, (payment) => payment.Order)
+  @OneToMany(() => PaymentEntity, (payment) => payment.Order, { onDelete: "CASCADE" })
   public Payment: PaymentEntity[];
 
   @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.Order, { onDelete: "CASCADE" })

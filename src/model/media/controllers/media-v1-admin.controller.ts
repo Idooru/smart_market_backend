@@ -13,8 +13,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { ProductImagesValidatePipe } from "../pipe/exist/product-images-validate.pipe";
 import { InquiryResponseImageValidatePipe } from "../pipe/exist/inquiry-response-image-validate.pipe";
 import { InquiryResponseVideoValidatePipe } from "../pipe/exist/inquiry-response-video-validate.pipe";
-import { DeleteProductMediaInterceptor } from "../interceptor/delete-product-media.interceptor";
-import { DeleteInquiryResponseMediaInterceptor } from "../interceptor/delete-inquiry-response-media.interceptor";
+// import { DeleteProductMediaInterceptor } from "../interceptor/delete-product-media.interceptor";
+// import { DeleteInquiryResponseMediaInterceptor } from "../interceptor/delete-inquiry-response-media.interceptor";
 import { ProductImageSearcher } from "../logic/product-image.searcher";
 import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
 import { MediaHeaderDto } from "../dto/request/media-header.dto";
@@ -192,7 +192,7 @@ export class MediaV1AdminController {
   //   summary: "cancel product image upload",
   //   description: "상품 이미지 업로드를 취소합니다. 클라이언트에 저장되어 있던 상품 이미지 쿠키를 제거합니다.",
   // })
-  @UseInterceptors(RemoveHeadersInterceptor, DeleteProductMediaInterceptor)
+  @UseInterceptors(RemoveHeadersInterceptor)
   @Delete("/product/image")
   public async cancelProductImageUpload(
     @MediaHeadersParser(productMediaHeaderKey.imageUrlHeader)
@@ -211,7 +211,7 @@ export class MediaV1AdminController {
   //   summary: "cancel inquiry response image upload",
   //   description: "문의 응답 이미지 업로드를 취소합니다. 클라이언트에 저장되어 있던 문의 응답 이미지 쿠키를 제거합니다.",
   // })
-  @UseInterceptors(RemoveHeadersInterceptor, DeleteInquiryResponseMediaInterceptor)
+  @UseInterceptors(RemoveHeadersInterceptor)
   @Delete("/inquiry/response/image")
   public async cancelInquiryResponseImageUpload(
     @MediaHeadersParser(inquiryMediaHeaderKey.response.imageUrlHeader)
@@ -230,7 +230,7 @@ export class MediaV1AdminController {
   //   summary: "cancel inquiry response video upload",
   //   description: "문의 응답 비디오 업로드를 취소합니다. 클라이언트에 저장되어 있던 문의 응답 비디오 쿠키를 제거합니다.",
   // })
-  @UseInterceptors(RemoveHeadersInterceptor, DeleteInquiryResponseMediaInterceptor)
+  @UseInterceptors(RemoveHeadersInterceptor)
   @Delete("/inquiry/response/video")
   public async cancelInquiryResponseVideoUpload(
     @MediaHeadersParser(inquiryMediaHeaderKey.response.videoUrlHeader)

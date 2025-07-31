@@ -132,6 +132,11 @@ export class ReviewTransactionSearcher {
     const review = await this.entityFinder.findReview(reviewId, [ProductEntity]);
     const product = await this.entityFinder.findProduct(review.Product.id, [StarRateEntity]);
 
-    return { review, starRate: product.StarRate };
+    const [beforeReviewImages, beforeReviewVideos] = await Promise.all([
+      this.entityFinder.findBeforeReviewImages(review.id),
+      this.entityFinder.findBeforeReviewVideos(review.id),
+    ]);
+
+    return { review, starRate: product.StarRate, beforeReviewImages, beforeReviewVideos };
   }
 }

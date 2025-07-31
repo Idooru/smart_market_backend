@@ -97,7 +97,14 @@ export class ReviewTransactionContext {
   }
 
   public async deleteReview(dto: SearchDeleteReviewDto): Promise<void> {
-    const { review, starRate } = dto;
+    const { review, starRate, beforeReviewImages, beforeReviewVideos } = dto;
+
+    this.mediaUtils.deleteMediaFiles({
+      images: beforeReviewImages,
+      videos: beforeReviewVideos,
+      mediaEntity: "review",
+      callWhere: "remove media entity",
+    });
 
     await Promise.all([
       this.reviewService.deleteReviewWithId(review.id),

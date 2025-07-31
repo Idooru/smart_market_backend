@@ -1,13 +1,12 @@
-import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor, NestMiddleware } from "@nestjs/common";
-import { Response } from "express";
+import { Inject, Injectable, NestMiddleware } from "@nestjs/common";
+import { Request, Response } from "express";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { eventConfigs } from "../../../common/config/event-configs";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
-import { Observable, tap } from "rxjs";
 import { SendMailToClientAboutRegisterDto } from "../dto/response/send-mail-to-client-about-register.dto";
 
 @Injectable()
-export class UserRegisterEventInterceptor implements NestInterceptor {
+export class UserRegisterEventMiddleware implements NestMiddleware {
   constructor(
     @Inject("mail-event-map")
     private readonly mailEventMap: Map<string, any>,
@@ -15,16 +14,14 @@ export class UserRegisterEventInterceptor implements NestInterceptor {
   ) {}
 
   @Implemented()
-  public intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
-    const res = context.switchToHttp().getResponse<Response>();
-
-    const sendMailToClientAboutRegister = () => {
+  public use(req: Request, res: Response, next: (error?: Error | any) => void) {
+    res.on("finish", () => {
       const dto: SendMailToClientAboutRegisterDto = this.mailEventMap.get("register");
       this.mailEventMap.clear();
       if (!dto) return;
       this.eventEmitter.emit(eventConfigs.sendMailRegister, dto);
-    };
+    });
 
-    return next.handle().pipe(tap(() => res.on("finish", sendMailToClientAboutRegister)));
+    next();
   }
 }

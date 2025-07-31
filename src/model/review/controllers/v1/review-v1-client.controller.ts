@@ -10,7 +10,6 @@ import { ReviewTransactionExecutor } from "../../logic/transaction/review-transa
 import { ProductIdValidatePipe } from "../../../product/pipe/exist/product-id-validate.pipe";
 import { ReviewIdValidatePipe } from "../../pipe/exist/review-id-validate.pipe";
 import { ReviewSearcher } from "../../logic/review.searcher";
-import { DeleteReviewMediaInterceptor } from "../../../media/interceptor/delete-review-media.interceptor";
 import { ReviewBasicRawDto } from "../../dto/response/review-basic-raw.dto";
 import { ReviewDetailRawDto } from "../../dto/response/review-detail-raw.dto";
 import { ReviewBody } from "../../dto/request/review-body.dto";
@@ -113,7 +112,6 @@ export class ReviewV1ClientController {
       },
     ),
   )
-  @UseInterceptors(DeleteReviewMediaInterceptor)
   @Put("/:reviewId/product/:productId")
   public async modifyReview(
     @Param("productId", ProductIdValidatePipe) productId: string,
@@ -143,7 +141,7 @@ export class ReviewV1ClientController {
   //   summary: "delete review",
   //   description: "리뷰 아이디에 해당하는 모든 형태의 리뷰를 제거합니다.",
   // })
-  @UseInterceptors(TransactionInterceptor, DeleteReviewMediaInterceptor)
+  @UseInterceptors(TransactionInterceptor)
   @Delete("/:reviewId")
   public async deleteReview(
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,

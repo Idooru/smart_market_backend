@@ -4,7 +4,7 @@ import { MediaModule } from "../media/media.module";
 import { AuthModule } from "../auth/auth.module";
 import { UserProfileEntity } from "./entities/user-profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { forwardRef, Module } from "@nestjs/common";
+import { forwardRef, MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
 import { UserV1Controller } from "./controllers/v1/user-v1.controller";
@@ -27,6 +27,8 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
 import { UserTransactionContext } from "./logic/transaction/user-transaction.context";
 import { UserV1ValidateController } from "./controllers/v1/user-v1-validate.controller";
 import { UserValidateService } from "./services/user-validate.service";
+import { Implemented } from "../../common/decorators/implemented.decoration";
+import { UserRegisterEventMiddleware } from "./middleware/user-register-event.middleware";
 
 const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
 
@@ -59,4 +61,9 @@ const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
   ],
   exports: [userIdFilter, UserSearcher, UserValidator, UserService, UserUpdateRepository],
 })
-export class UserModule {}
+export class UserModule implements NestModule {
+  @Implemented()
+  public configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(UserRegisterEventMiddleware).forRoutes({ path: "*/register", method: RequestMethod.POST });
+  }
+}

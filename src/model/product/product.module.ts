@@ -1,4 +1,4 @@
-import { forwardRef, Module } from "@nestjs/common";
+import { forwardRef, MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
 import { MediaModule } from "../media/media.module";
 import { ProductV1Controller } from "./controllers/v1/product-v1.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -24,6 +24,8 @@ import { ProductTransactionSearcher } from "./logic/transaction/product-transact
 import { AuthModule } from "../auth/auth.module";
 import { productMediaHeaderKey } from "../../common/config/header-key-configs/media-header-keys/product-media-header.key";
 import { ProductTransactionContext } from "./logic/transaction/product-transaction.context";
+import { Implemented } from "../../common/decorators/implemented.decoration";
+import { DeleteProductMediaMiddleware } from "../media/middleware/delete-product-media.middleware";
 
 const productIdFilter = { provide: "product-id-filter", useValue: "product.id = :id" };
 
@@ -57,4 +59,15 @@ const productIdFilter = { provide: "product-id-filter", useValue: "product.id = 
   ],
   exports: [productIdFilter, ProductSearcher, ProductSearchRepository, ProductIdValidatePipe, ProductValidator],
 })
-export class ProductModule {}
+export class ProductModule implements NestModule {
+  @Implemented()
+  public configure(consumer: MiddlewareConsumer): void {
+    consumer
+      .apply(DeleteProductMediaMiddleware)
+      .forRoutes({ path: "*/admin/product/*", method: RequestMethod.PUT })
+      .apply(DeleteProductMediaMiddleware)
+      .forRoutes({ path: "*/admin/product/*", method: RequestMethod.PATCH })
+      .apply(DeleteProductMediaMiddleware)
+      .forRoutes({ path: "*/admin/product/*", method: RequestMethod.DELETE });
+  }
+}

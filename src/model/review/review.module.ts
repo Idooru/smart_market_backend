@@ -1,6 +1,6 @@
 import { ProductModule } from "../product/product.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { forwardRef, Module } from "@nestjs/common";
+import { forwardRef, MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
 import { ReviewEntity } from "./entities/review.entity";
 import { UserModule } from "../user/user.module";
 import { StarRateEntity } from "./entities/star-rate.entity";
@@ -24,6 +24,8 @@ import { ReviewTransactionContext } from "./logic/transaction/review-transaction
 import { ReviewTransactionSearcher } from "./logic/transaction/review-transaction.searcher";
 import { AuthModule } from "../auth/auth.module";
 import { reviewMediaHeaderKey } from "../../common/config/header-key-configs/media-header-keys/review-media-header.key";
+import { Implemented } from "../../common/decorators/implemented.decoration";
+import { DeleteReviewMediaMiddleware } from "../media/middleware/delete-review-media.middleware";
 
 const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id" };
 
@@ -57,4 +59,13 @@ const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id
   ],
   exports: [reviewIdFilter],
 })
-export class ReviewModule {}
+export class ReviewModule implements NestModule {
+  @Implemented()
+  public configure(consumer: MiddlewareConsumer): void {
+    consumer
+      .apply(DeleteReviewMediaMiddleware)
+      .forRoutes({ path: "*/client/review/*", method: RequestMethod.PUT })
+      .apply(DeleteReviewMediaMiddleware)
+      .forRoutes({ path: "*/client/review/*", method: RequestMethod.DELETE });
+  }
+}

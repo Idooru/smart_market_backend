@@ -338,10 +338,10 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┃ ┃ ┣ 📜review-image.entity.ts
 ┃ ┃ ┃ ┗ 📜review-video.entity.ts
 ┃ ┃ ┣ 📂interceptor
-┃ ┃ ┃ ┣ 📜delete-inquiry-request-media.interceptor.ts
-┃ ┃ ┃ ┣ 📜delete-inquiry-response-media.interceptor.ts
-┃ ┃ ┃ ┣ 📜delete-product-media.interceptor.ts
-┃ ┃ ┃ ┗ 📜delete-review-media.interceptor.ts
+┃ ┃ ┃ ┣ 📜delete-inquiry-request-media.middleware.ts
+┃ ┃ ┃ ┣ 📜delete-inquiry-response-media.middleware.ts
+┃ ┃ ┃ ┣ 📜delete-product-media.middleware.ts
+┃ ┃ ┃ ┗ 📜delete-review-media.middleware.ts
 ┃ ┃ ┣ 📂logic
 ┃ ┃ ┃ ┣ 📜inquiry-request-image.searcher.ts
 ┃ ┃ ┃ ┣ 📜inquiry-request-video.searcher.ts
@@ -573,7 +573,7 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┃ ┃ ┣ 📜user-profile.entity.ts
 ┃ ┃ ┃ ┗ 📜user.entity.ts
 ┃ ┃ ┣ 📂interceptor
-┃ ┃ ┃ ┗ 📜user-register-event.interceptor.ts
+┃ ┃ ┃ ┗ 📜user-register-event.middleware.ts
 ┃ ┃ ┣ 📂logic
 ┃ ┃ ┃ ┣ 📂transaction
 ┃ ┃ ┃ ┃ ┣ 📜user-repository.payload.ts

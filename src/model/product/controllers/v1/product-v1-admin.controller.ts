@@ -21,7 +21,6 @@ import { ModifyProductImageDto } from "../../dto/request/modify-product-image.dt
 import { ProductBody } from "../../dto/request/product-body.dto";
 import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe";
 import { OperateProductValidationPipe } from "../../pipe/none-exist/operate-product-validation.pipe";
-import { DeleteProductMediaInterceptor } from "../../../media/interceptor/delete-product-media.interceptor";
 import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
 import { productMediaHeaderKey } from "../../../../common/config/header-key-configs/media-header-keys/product-media-header.key";
 import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
@@ -63,7 +62,7 @@ export class ProductV1AdminController {
   //   description:
   //     "상품의 아이디에 해당하는 상품의 전체 column, 상품에 사용되는 이미지를 수정합니다. 수정하려는 상품의 가격, 수량을 양의 정수 이외의 숫자로 지정하거나 수정하려는 상품의 이름이 이미 데이터베이스에 존재 한다면 에러를 반환합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 업로드해야 합니다.",
   // })
-  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor, DeleteProductMediaInterceptor)
+  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor)
   @Put("/:productId")
   public async modifyProduct(
     @MediaHeadersParser(productMediaHeaderKey.imageUrlHeader)
@@ -91,7 +90,7 @@ export class ProductV1AdminController {
   //   description:
   //     "상품의 아이디에 해당하는 상품에 사용되는 이미지를 수정합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 생성해야 합니다.",
   // })
-  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor, DeleteProductMediaInterceptor)
+  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor)
   @Patch("/:productId/image")
   public async modifyProductImage(
     @MediaHeadersParser(productMediaHeaderKey.imageUrlHeader)
@@ -222,7 +221,7 @@ export class ProductV1AdminController {
   //   summary: "remove product",
   //   description: "상품의 아이디에 해당하는 상품을 제거합니다.",
   // })
-  @UseInterceptors(CommandInterceptor, DeleteProductMediaInterceptor)
+  @UseInterceptors(CommandInterceptor)
   @Delete("/:productId")
   public async removeProduct(
     @Param("productId", ProductIdValidatePipe) productId: string,

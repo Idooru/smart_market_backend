@@ -13,7 +13,6 @@ import { UserEmailValidatePipe as UserEmailNoneExistValidatePipe } from "../../p
 import { UserBodyPhoneNumberValidatePipe } from "../../pipe/none-exist/user-phoneNumber-validate.pipe";
 import { UserNicknameValidatePipe } from "../../pipe/none-exist/user-nickName-validate.pipe";
 import { LogoutInterceptor } from "../../../../common/interceptors/general/logout.interceptor";
-import { UserRegisterEventInterceptor } from "../../interceptor/user-register-event.interceptor";
 import { RegisterUserDto } from "../../dto/request/register-user.dto";
 import { BasicAuthDto } from "../../dto/request/basic-auth.dto";
 import { ModifyUserBody } from "../../dto/request/modify-user.dto";
@@ -37,7 +36,7 @@ export class UserV1Controller {
     private readonly service: UserService,
   ) {}
 
-  @UseInterceptors(TransactionInterceptor, UserRegisterEventInterceptor)
+  @UseInterceptors(TransactionInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
   public async register(@Body() registerUserDto: RegisterUserDto): Promise<ApiResultInterface<void>> {

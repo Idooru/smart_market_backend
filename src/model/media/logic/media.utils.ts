@@ -13,6 +13,11 @@ export class MediaUtils {
     private readonly mediaEventMapSetter: MediaEventMapSetter,
   ) {}
 
+  public parseMediaFiles(mediaFiles: unknown, key: string): Express.Multer.File[] {
+    if (!mediaFiles) return [];
+    return mediaFiles[key] ?? [];
+  }
+
   public setUrl(mediaFileName: string, path: string): string {
     return `${this.configService.get("APPLICATION_SCHEME")}://${this.configService.get(
       "APPLICATION_HOST",

@@ -21,6 +21,7 @@ import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { MulterConfigService } from "../../../../common/lib/media/multer-adapt.module";
 import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
 import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
+import { MediaUtils } from "../../../media/logic/media.utils";
 
 @ApiTags("v1 고객 Review API")
 @UseGuards(IsClientGuard)
@@ -30,6 +31,7 @@ export class ReviewV1ClientController {
   constructor(
     private readonly transaction: ReviewTransactionExecutor,
     private readonly reviewSearcher: ReviewSearcher,
+    private readonly mediaUtils: MediaUtils,
   ) {}
 
   @UseInterceptors(FetchInterceptor)
@@ -87,8 +89,8 @@ export class ReviewV1ClientController {
       body,
       reviewerId: userId,
       productId,
-      reviewImageFiles: mediaFiles["review_image"] ?? [],
-      reviewVideoFiles: mediaFiles["review_video"] ?? [],
+      reviewImageFiles: this.mediaUtils.parseMediaFiles(mediaFiles, "review_image"),
+      reviewVideoFiles: this.mediaUtils.parseMediaFiles(mediaFiles, "review_video"),
     };
 
     await this.transaction.executeCreateReview(dto);
@@ -125,8 +127,8 @@ export class ReviewV1ClientController {
       productId,
       reviewId,
       userId,
-      reviewImageFiles: mediaFiles["review_image"] ?? [],
-      reviewVideoFiles: mediaFiles["review_video"] ?? [],
+      reviewImageFiles: this.mediaUtils.parseMediaFiles(mediaFiles, "review_image"),
+      reviewVideoFiles: this.mediaUtils.parseMediaFiles(mediaFiles, "review_video"),
     };
 
     await this.transaction.executeModifyReview(dto);

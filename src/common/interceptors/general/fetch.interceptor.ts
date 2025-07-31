@@ -49,18 +49,27 @@ export class FetchInterceptor<T> implements NestInterceptor {
     this.cacheLogger.log(`Set response cache key: ${key}`);
   }
 
+  private generateCacheKey(req: Request): string {
+    const decodedUrl = decodeURIComponent(req.originalUrl);
+    return `${req.method}-${decodedUrl.split("&cache")[0]}`;
+  }
+
   @Implemented()
   public intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
-    const key = `${req.method}-${req.originalUrl}`;
+    const key = this.generateCacheKey(req);
 
     this.timeLogger.receiveRequest(req);
 
-    const cachedResponse = this.getCachedResponse(key);
+    if (req.query.cache === "true") {
+      const cachedResponse = this.getCachedResponse(key);
 
-    if (cachedResponse) {
-      return of(this.responseHandler.response(req, res, cachedResponse));
+      if (cachedResponse) {
+        return of(this.responseHandler.response(req, res, cachedResponse));
+      }
+    } else {
+      this.responseCache.delete(key);
     }
 
     return next.handle().pipe(

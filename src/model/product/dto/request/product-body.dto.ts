@@ -1,6 +1,7 @@
 import { ProductEntity } from "../../entities/product.entity";
 import { ApiProperty, PickType } from "@nestjs/swagger";
 import { ProductCategory } from "../../types/product-category.type";
+import { Transform } from "class-transformer";
 
 export class ProductBody extends PickType(ProductEntity, [
   "name",
@@ -24,6 +25,7 @@ export class ProductBody extends PickType(ProductEntity, [
     required: true,
     uniqueItems: false,
   })
+  @Transform(({ value }) => parseInt(value))
   price: number;
 
   @ApiProperty({
@@ -56,5 +58,6 @@ export class ProductBody extends PickType(ProductEntity, [
     required: false,
     uniqueItems: false,
   })
+  @Transform(({ value }) => parseInt(value))
   stock: number;
 }

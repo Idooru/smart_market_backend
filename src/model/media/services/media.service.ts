@@ -9,6 +9,7 @@ import { InquiryMediaHeaderKey } from "../../../common/config/header-key-configs
 import { ReviewMediaHeaderKey } from "../../../common/config/header-key-configs/media-header-keys/review-media-header.key";
 import { ReviewImageEntity } from "../entities/review-image.entity";
 import { ReviewVideoEntity } from "../entities/review-video.entity";
+import { ProductImageEntity } from "../entities/product-image.entity";
 
 @Injectable()
 export class MediaService {
@@ -24,12 +25,13 @@ export class MediaService {
   ) {}
 
   @General()
-  public async uploadProductImages(files: Express.Multer.File[]): Promise<string[]> {
+  public async uploadProductImages(files: Express.Multer.File[]): Promise<ProductImageEntity[]> {
     const path = "product/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
     const uploading = stuffs.map((stuff) => this.updateRepository.uploadProductImages(stuff));
-    const productImages = await Promise.all(uploading);
-    return productImages.map((productImage) => productImage.id);
+    return Promise.all(uploading);
+    // const productImages = await Promise.all(uploading);
+    // return productImages.map((productImage) => productImage.id);
     // return this.mediaUtils.getMediaHeaders(ids, files, path, this.productMedia.imageUrlHeader);
   }
 

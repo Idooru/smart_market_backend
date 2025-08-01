@@ -109,28 +109,28 @@ export class MediaV1AdminController {
   //   description:
   //     "상품 이미지를 업로드합니다. 상품 이미지는 api를 호출할 때 하나씩만 업로드가 가능합니다. 업로드된 상품 이미지는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
   // })
-  @UseInterceptors(SetHeadersInterceptor)
-  @UseInterceptors(
-    FilesInterceptor(
-      "product_image",
-      MulterConfigService.maxContentsCount,
-      MulterConfigService.upload("/images/product"),
-    ),
-  )
-  @Post("/product/image")
-  public async uploadProductImage(
-    @UploadedFiles(ProductImagesValidatePipe)
-    files: Express.Multer.File[],
-  ): Promise<SetHeadersResponseInterface<string>> {
-    const productImageIds = await this.mediaService.uploadProductImages(files);
-
-    return {
-      statusCode: 201,
-      message: "상품 사진을 업로드 하였습니다.",
-      headerKey: this.productMedia.imageUrlHeader,
-      headerValues: productImageIds,
-    };
-  }
+  // @UseInterceptors(SetHeadersInterceptor)
+  // @UseInterceptors(
+  //   FilesInterceptor(
+  //     "product_image",
+  //     MulterConfigService.maxContentsCount,
+  //     MulterConfigService.upload("/images/product"),
+  //   ),
+  // )
+  // @Post("/product/image")
+  // public async uploadProductImage(
+  //   @UploadedFiles(ProductImagesValidatePipe)
+  //   files: Express.Multer.File[],
+  // ): Promise<SetHeadersResponseInterface<string>> {
+  //   const productImageIds = await this.mediaService.uploadProductImages(files);
+  //
+  //   return {
+  //     statusCode: 201,
+  //     message: "상품 사진을 업로드 하였습니다.",
+  //     headerKey: this.productMedia.imageUrlHeader,
+  //     headerValues: productImageIds,
+  //   };
+  // }
 
   // @ApiOperation({
   //   summary: "upload inquiry response image",

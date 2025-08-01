@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Param, Patch, Post, UseGuards, UseInterceptors, Put } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+  UseInterceptors,
+  Put,
+  UploadedFiles,
+} from "@nestjs/common";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
@@ -10,42 +21,48 @@ import { ModifyProductDesctiptionDto } from "../../dto/request/modify-product-de
 import { ModifyProductStockDto } from "../../dto/request/modify-product-stock.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { ModifyProductCategoryDto } from "../../dto/request/modify-product-category.dto";
-import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove-headers.interceptor";
-import { MediaHeadersParser } from "src/common/decorators/media-headers-parser.decorator";
-import { RemoveHeadersResponseInterface } from "src/common/interceptors/interface/remove-headers-response.interface";
 import { ProductTransactionExecutor } from "../../logic/transaction/product-transaction.executor";
 import { ProductService } from "../../services/product.service";
-import { ModifyProductDto } from "../../dto/request/modify-product.dto";
 import { CreateProductDto } from "../../dto/request/create-product.dto";
 import { ModifyProductImageDto } from "../../dto/request/modify-product-image.dto";
 import { ProductBody } from "../../dto/request/product-body.dto";
 import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe";
 import { OperateProductValidationPipe } from "../../pipe/none-exist/operate-product-validation.pipe";
-import { MediaHeaderDto } from "../../../media/dto/request/media-header.dto";
-import { productMediaHeaderKey } from "../../../../common/config/header-key-configs/media-header-keys/product-media-header.key";
 import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
 import { CommandInterceptor } from "../../../../common/interceptors/general/command.interceptor";
 import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import { MulterConfigService } from "../../../../common/lib/media/multer-adapt.module";
+import { MediaUtils } from "../../../media/logic/media.utils";
 
 @ApiTags("v1 관리자 Product API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
 @Controller({ path: "/admin/product", version: "1" })
 export class ProductV1AdminController {
-  constructor(private readonly transaction: ProductTransactionExecutor, private readonly service: ProductService) {}
+  constructor(
+    private readonly transaction: ProductTransactionExecutor,
+    private readonly service: ProductService,
+    private readonly mediaUtils: MediaUtils,
+  ) {}
 
-  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor)
+  @UseInterceptors(
+    TransactionInterceptor,
+    FileFieldsInterceptor([{ name: "product_image", maxCount: MulterConfigService.imageMaxCount }], {
+      storage: MulterConfigService.storage("product"),
+      limits: { files: MulterConfigService.totalMaxCount },
+    }),
+  )
   @Post("/")
   public async createProduct(
-    @MediaHeadersParser(productMediaHeaderKey.imageUrlHeader)
-    productImageHeaders: MediaHeaderDto[],
+    @UploadedFiles() mediaFiles: unknown,
     @Body(OperateProductValidationPipe) body: ProductBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<RemoveHeadersResponseInterface> {
+  ): Promise<ApiResultInterface<void>> {
     const dto: CreateProductDto = {
       body,
       userId,
-      productImageHeaders,
+      productImageFiles: this.mediaUtils.parseMediaFiles(mediaFiles, "product_image"),
     };
 
     await this.transaction.executeCreateProduct(dto);
@@ -53,7 +70,6 @@ export class ProductV1AdminController {
     return {
       statusCode: 201,
       message: "상품을 생성하였습니다.",
-      headerKey: [...productImageHeaders.map((header) => header.whatHeader)],
     };
   }
 
@@ -62,26 +78,28 @@ export class ProductV1AdminController {
   //   description:
   //     "상품의 아이디에 해당하는 상품의 전체 column, 상품에 사용되는 이미지를 수정합니다. 수정하려는 상품의 가격, 수량을 양의 정수 이외의 숫자로 지정하거나 수정하려는 상품의 이름이 이미 데이터베이스에 존재 한다면 에러를 반환합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 업로드해야 합니다.",
   // })
-  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor)
+  @UseInterceptors(
+    TransactionInterceptor,
+    FileFieldsInterceptor([{ name: "product_image", maxCount: MulterConfigService.imageMaxCount }], {
+      storage: MulterConfigService.storage("product"),
+      limits: { files: MulterConfigService.totalMaxCount },
+    }),
+  )
   @Put("/:productId")
   public async modifyProduct(
-    @MediaHeadersParser(productMediaHeaderKey.imageUrlHeader)
-    productImageHeaders: MediaHeaderDto[],
+    @UploadedFiles() mediaFiles: unknown,
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Body(OperateProductValidationPipe) body: ProductBody,
-  ): Promise<RemoveHeadersResponseInterface> {
-    const dto: ModifyProductDto = {
+  ): Promise<ApiResultInterface<void>> {
+    await this.transaction.executeModifyProduct({
       productId,
       body,
-      productImageHeaders,
-    };
-
-    await this.transaction.executeModifyProduct(dto);
+      productImageFiles: this.mediaUtils.parseMediaFiles(mediaFiles, "product_image"),
+    });
 
     return {
       statusCode: 201,
       message: `productId(${productId})에 해당하는 상품을 수정하였습니다.`,
-      headerKey: [...productImageHeaders.map((header) => header.whatHeader)],
     };
   }
 
@@ -90,20 +108,27 @@ export class ProductV1AdminController {
   //   description:
   //     "상품의 아이디에 해당하는 상품에 사용되는 이미지를 수정합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 생성해야 합니다.",
   // })
-  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor)
+  @UseInterceptors(
+    TransactionInterceptor,
+    FileFieldsInterceptor([{ name: "product_image", maxCount: MulterConfigService.imageMaxCount }], {
+      storage: MulterConfigService.storage("product"),
+      limits: { files: MulterConfigService.totalMaxCount },
+    }),
+  )
   @Patch("/:productId/image")
   public async modifyProductImage(
-    @MediaHeadersParser(productMediaHeaderKey.imageUrlHeader)
-    productImageHeaders: MediaHeaderDto[],
+    @UploadedFiles() mediaFiles: unknown,
     @Param("productId", ProductIdValidatePipe) productId: string,
-  ): Promise<RemoveHeadersResponseInterface> {
-    const dto: ModifyProductImageDto = { productId, productImageHeaders };
+  ): Promise<ApiResultInterface<void>> {
+    const dto: ModifyProductImageDto = {
+      productId,
+      productImageFiles: this.mediaUtils.parseMediaFiles(mediaFiles, "product_image"),
+    };
     await this.transaction.executeModifyProductImage(dto);
 
     return {
       statusCode: 201,
       message: `productId(${productId})에 해당하는 상품의 사진을 수정하였습니다.`,
-      headerKey: [...productImageHeaders.map((header) => header.whatHeader)],
     };
   }
 

@@ -2,7 +2,6 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ProductUpdateRepository } from "../repositories/product-update.repository";
 import { ProductEntity } from "../entities/product.entity";
 import { CreateProductDto } from "../dto/request/create-product.dto";
-import { ModifyProductDto } from "../dto/request/modify-product.dto";
 import { InsertProductImagesDto } from "../dto/request/insert-product-image.dto";
 import { ChangeProductImageDto } from "../dto/request/change-product-image.dto";
 import { ProductCategory } from "../types/product-category.type";
@@ -11,6 +10,9 @@ import { MediaUtils } from "../../media/logic/media.utils";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "../../../common/decorators/general.decoration";
 import { ProductImageEntity } from "../../media/entities/product-image.entity";
+import { MediaService } from "../../media/services/media.service";
+import { ProductBody } from "../dto/request/product-body.dto";
+import { ModifyProductColumnDto, ModifyProductDto } from "../dto/request/modify-product.dto";
 
 class EntityFinder {
   constructor(private readonly productIdFilter: string, private readonly productSearcher: ProductSearcher) {}
@@ -35,6 +37,7 @@ export class ProductService {
     private readonly productSearcher: ProductSearcher,
     private readonly productUpdateRepository: ProductUpdateRepository,
     private readonly mediaUtils: MediaUtils,
+    private readonly mediaService: MediaService,
   ) {
     this.entityFinder = new EntityFinder(this.productIdFilter, this.productSearcher);
   }
@@ -60,7 +63,7 @@ export class ProductService {
   }
 
   @Transaction()
-  public async modifyProduct(dto: ModifyProductDto): Promise<void> {
+  public async modifyProduct(dto: ModifyProductColumnDto): Promise<void> {
     await this.productUpdateRepository.modifyProduct(dto);
   }
 
@@ -68,7 +71,8 @@ export class ProductService {
   public async changeProductImages(dto: ChangeProductImageDto): Promise<void> {
     const { productId, beforeProductImages, newProductImages } = dto;
 
-    const inserting = newProductImages.map((productImage) => {
+    const productImages = await this.mediaService.uploadProductImages(newProductImages);
+    const inserting = productImages.map((productImage) => {
       const insertProductImageDto = { productId, productImageId: productImage.id };
       return this.productUpdateRepository.insertProductIdOnProductImage(insertProductImageDto);
     });
@@ -77,13 +81,13 @@ export class ProductService {
       this.productUpdateRepository.deleteProductImageWithId(productImage.id),
     );
 
+    await Promise.all([inserting, deleting]);
+
     this.mediaUtils.deleteMediaFiles({
       images: beforeProductImages,
       mediaEntity: "product",
       callWhere: "remove media entity",
     });
-
-    await Promise.all([inserting, deleting]);
   }
 
   @General()

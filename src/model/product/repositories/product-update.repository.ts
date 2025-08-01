@@ -3,7 +3,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { Repository } from "typeorm";
 import { CreateProductDto } from "../dto/request/create-product.dto";
-import { ModifyProductDto } from "../dto/request/modify-product.dto";
 import { ProductCategory } from "../types/product-category.type";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
 import { ProductRepositoryPayload } from "../logic/transaction/product-repository.payload";
@@ -11,6 +10,7 @@ import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "../../../common/decorators/general.decoration";
 import { InsertProductImageDto } from "../dto/request/insert-product-image.dto";
 import { HangulLibrary } from "../../../common/lib/util/hangul.library";
+import { ModifyProductColumnDto, ModifyProductDto } from "../dto/request/modify-product.dto";
 
 @Injectable()
 export class ProductUpdateRepository {
@@ -53,7 +53,7 @@ export class ProductUpdateRepository {
   }
 
   @Transaction()
-  public async modifyProduct({ productId, body }: ModifyProductDto): Promise<void> {
+  public async modifyProduct({ productId, body }: ModifyProductColumnDto): Promise<void> {
     const newProduct = {
       ...body,
       choseong: this.hangulLibrary.getChoseong(body.name),

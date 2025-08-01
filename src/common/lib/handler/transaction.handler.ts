@@ -1,7 +1,7 @@
-import { QueryRunner, TypeORMError } from "typeorm";
+import { QueryRunner } from "typeorm";
 import { loggerFactory } from "../../functions/logger.factory";
 import { TypeOrmException } from "../../errors/typeorm.exception";
-import { InternalServerErrorException } from "@nestjs/common";
+import { ValidationException } from "../../errors/validation.exception";
 
 export class TransactionHandler {
   private queryRunner: QueryRunner;
@@ -18,16 +18,16 @@ export class TransactionHandler {
     await this.queryRunner.commitTransaction();
   }
 
-  public async rollback(err: TypeORMError): Promise<void> {
+  public async rollback(err: any): Promise<void> {
     await this.queryRunner.rollbackTransaction();
-    loggerFactory("TypeOrmError").error(err.stack);
-    throw new TypeOrmException(err);
-  }
 
-  public async rollbackDelayed(diff: number): Promise<void> {
-    await this.queryRunner.rollbackTransaction();
-    loggerFactory("TimeOut").error(`Transaction Delayed at ${diff}ms`);
-    throw new InternalServerErrorException("Transaction Time Out");
+    if (err instanceof ValidationException) {
+      loggerFactory("ValidationError").error(err.stack);
+      throw err;
+    } else {
+      loggerFactory("TypeOrmError").error(err.stack);
+      throw new TypeOrmException(err);
+    }
   }
 
   public async release(): Promise<void> {

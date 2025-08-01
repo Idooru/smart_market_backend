@@ -11,7 +11,6 @@ import { InquiryTransactionExecutor } from "../logic/transaction/inquiry-transac
 import { ProductIdValidatePipe } from "../../product/pipe/exist/product-id-validate.pipe";
 import { FetchInterceptor } from "../../../common/interceptors/general/fetch.interceptor";
 import { InquiryRequestIdValidatePipe } from "../pipe/exist/inquiry-request-id-validate.pipe";
-import { InquiryClientEventInterceptor } from "../interceptor/inquiry-client-event.interceptor";
 import { InquiryRequestBody } from "../dto/inquiry-request/request/inquiry-request-body";
 import { CreateInquiryRequestDto } from "../dto/inquiry-request/request/create-inquiry-request.dto";
 import { InquiryRequestSearcher } from "../logic/inquiry-request.searcher";
@@ -69,7 +68,7 @@ export class InquiryV1ClientController {
   //   summary: "create inquiry reqeust",
   //   description: "문의 요청을 생성합니다. 문의 요청에는 이미지 혹은 비디오가 포함될 수 있습니다.",
   // })
-  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor, InquiryClientEventInterceptor)
+  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor)
   @Post("/product/:productId")
   public async createInquiryRequest(
     @Param("productId", ProductIdValidatePipe) productId: string,

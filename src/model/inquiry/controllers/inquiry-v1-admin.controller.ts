@@ -29,7 +29,7 @@ import { ApiResultInterface } from "../../../common/interceptors/interface/api-r
 @ApiTags("v1 관리자 Inquiry API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
-@Controller({ path: "admin/inquiry", version: "1" })
+@Controller({ path: "/admin/inquiry", version: "1" })
 export class InquiryV1AdminController {
   constructor(
     private readonly transaction: InquiryTransactionExecutor,
@@ -88,7 +88,7 @@ export class InquiryV1AdminController {
   //   summary: "create inquiry response",
   //   description: "문의 응답을 생성합니다. 문의 응답에는 이미지 혹은 비디오가 포함될 수 있습니다.",
   // })
-  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor, InquiryAdminEventInterceptor)
+  @UseInterceptors(TransactionInterceptor, RemoveHeadersInterceptor)
   @Post("/inquiry-request/:inquiryRequestId/client-user/:inquiryRequesterId")
   public async createInquiryResponse(
     @Param("inquiryRequestId", InquiryRequestIdValidatePipe)

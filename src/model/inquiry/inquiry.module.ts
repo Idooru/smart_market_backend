@@ -1,4 +1,4 @@
-import { Module, forwardRef } from "@nestjs/common";
+import { forwardRef, MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
 import { InquiryV1ClientController } from "./controllers/inquiry-v1-client.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
@@ -27,6 +27,9 @@ import { InquiryResponseSearcher } from "./logic/inquiry-response.searcher";
 import { InquiryResponseSearchRepository } from "./repositories/inquiry-response-search.repository";
 import { AuthModule } from "../auth/auth.module";
 import { inquiryMediaHeaderKey } from "../../common/config/header-key-configs/media-header-keys/inquiry-media-header.key";
+import { Implemented } from "../../common/decorators/implemented.decoration";
+import { InquiryClientEventMiddleware } from "./middlewares/inquiry-client-event.middleware";
+import { InquiryAdminEventMiddleware } from "./middlewares/inquiry-admin-event.middleware";
 
 @Module({
   imports: [
@@ -59,4 +62,10 @@ import { inquiryMediaHeaderKey } from "../../common/config/header-key-configs/me
     InquiryValidateRepository,
   ],
 })
-export class InquiryModule {}
+export class InquiryModule implements NestModule {
+  @Implemented()
+  public configure(consumer: MiddlewareConsumer) {
+    consumer.apply(InquiryClientEventMiddleware).forRoutes({ path: "*/client/inquiry/*", method: RequestMethod.POST });
+    consumer.apply(InquiryAdminEventMiddleware).forRoutes({ path: "*/admin/inquiry/*", method: RequestMethod.POST });
+  }
+}

@@ -289,8 +289,8 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┃ ┃ ┣ 📜inquiry-request.entity.ts
 ┃ ┃ ┃ ┗ 📜inquiry-response.entity.ts
 ┃ ┃ ┣ 📂interceptor
-┃ ┃ ┃ ┣ 📜inquiry-admin-event.interceptor.ts
-┃ ┃ ┃ ┗ 📜inquiry-client-event.interceptor.ts
+┃ ┃ ┃ ┣ 📜inquiry-admin-event.middleware.ts
+┃ ┃ ┃ ┗ 📜inquiry-client-event.middleware.ts
 ┃ ┃ ┣ 📂logic
 ┃ ┃ ┃ ┣ 📂transaction
 ┃ ┃ ┃ ┃ ┣ 📜inquiry-repository.payload.ts

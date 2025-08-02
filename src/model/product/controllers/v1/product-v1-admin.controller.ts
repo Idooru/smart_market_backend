@@ -55,7 +55,7 @@ export class ProductV1AdminController {
   )
   @Post("/")
   public async createProduct(
-    @UploadedFiles() mediaFiles: unknown,
+    @UploadedFiles() mediaFiles: Express.Multer.File[],
     @Body(OperateProductValidationPipe) body: ProductBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
   ): Promise<ApiResultInterface<void>> {
@@ -87,7 +87,7 @@ export class ProductV1AdminController {
   )
   @Put("/:productId")
   public async modifyProduct(
-    @UploadedFiles() mediaFiles: unknown,
+    @UploadedFiles() mediaFiles: Express.Multer.File[],
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Body(OperateProductValidationPipe) body: ProductBody,
   ): Promise<ApiResultInterface<void>> {
@@ -117,7 +117,7 @@ export class ProductV1AdminController {
   )
   @Patch("/:productId/image")
   public async modifyProductImage(
-    @UploadedFiles() mediaFiles: unknown,
+    @UploadedFiles() mediaFiles: Express.Multer.File[],
     @Param("productId", ProductIdValidatePipe) productId: string,
   ): Promise<ApiResultInterface<void>> {
     const dto: ModifyProductImageDto = {

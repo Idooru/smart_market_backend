@@ -81,7 +81,7 @@ export class ReviewV1ClientController {
   @Post("/product/:productId")
   public async createReview(
     @Param("productId", ProductIdValidatePipe) productId: string,
-    @UploadedFiles() mediaFiles: unknown,
+    @UploadedFiles() mediaFiles: Express.Multer.File[],
     @Body() body: ReviewBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
   ): Promise<ApiResultInterface<void>> {
@@ -118,7 +118,7 @@ export class ReviewV1ClientController {
   public async modifyReview(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
-    @UploadedFiles() mediaFiles: unknown,
+    @UploadedFiles() mediaFiles: Express.Multer.File[],
     @Body() body: ReviewBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
   ): Promise<ApiResultInterface<void>> {

@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { MediaEventMapSetter } from "./media-event-map.setter";
-// import { MediaHeaderDto } from "../dto/request/media-header.dto";
 import { UploadMediaDto } from "../dto/request/upload-media.dto";
 import { SetDeleteMediaFilesDto } from "../dto/response/set-delete-media-files.dto";
 import { DeleteMediaFilesDto } from "../dto/request/delete-media-files.dto";
@@ -13,7 +12,7 @@ export class MediaUtils {
     private readonly mediaEventMapSetter: MediaEventMapSetter,
   ) {}
 
-  public parseMediaFiles(mediaFiles: unknown, key: string): Express.Multer.File[] {
+  public parseMediaFiles(mediaFiles: Express.Multer.File[], key: string): Express.Multer.File[] {
     if (!mediaFiles) return [];
     return mediaFiles[key] ?? [];
   }

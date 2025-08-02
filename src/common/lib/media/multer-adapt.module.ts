@@ -4,6 +4,7 @@ import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer
 import { promises as fsPromises } from "fs";
 import { loggerFactory } from "../../functions/logger.factory";
 import { Implemented } from "../../decorators/implemented.decoration";
+import { v4 } from "uuid";
 
 import * as path from "path";
 import * as multer from "multer";
@@ -106,7 +107,7 @@ export class MulterConfigService implements MulterOptionsFactory {
       },
       filename(req, file, cb) {
         const ext: string = path.extname(file.originalname);
-        const fileName = `${path.basename(file.originalname, ext)}-${Date.now()}${ext}`;
+        const fileName = `${v4()}-${Date.now()}${ext}`;
 
         cb(null, fileName);
       },

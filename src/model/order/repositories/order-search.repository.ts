@@ -91,8 +91,8 @@ export class OrderSearchRepository extends SearchRepository<OrderEntity, FindAll
           price: payment.Product.price,
           category: payment.Product.category,
           imageUrls: payment.Product.ProductImage.length
-            ? payment.Product.ProductImage.map((image) => image.url)
-            : [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")],
+            ? payment.Product.ProductImage.map((image) => this.mediaUtils.setUrl(image.filePath))
+            : [this.mediaUtils.setUrl("/media/product/images/default_product_image.jpg")],
         },
       })),
     }));

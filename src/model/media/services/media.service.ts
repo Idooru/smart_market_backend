@@ -106,7 +106,7 @@ export class MediaService {
     );
 
     this.mediaUtils.deleteMediaFiles({
-      images: headers.map((img) => ({ url: img.fileName })),
+      images: headers.map((img) => ({ filePath: img.fileName })),
       mediaEntity: "product",
       callWhere: "cancel upload",
     });
@@ -123,7 +123,7 @@ export class MediaService {
     );
 
     this.mediaUtils.deleteMediaFiles({
-      images: headers.map((img) => ({ url: img.fileName })),
+      images: headers.map((img) => ({ filePath: img.fileName })),
       mediaEntity: "review",
       callWhere: "cancel upload",
     });
@@ -140,7 +140,7 @@ export class MediaService {
     );
 
     this.mediaUtils.deleteMediaFiles({
-      videos: headers.map((vdo) => ({ url: vdo.fileName })),
+      videos: headers.map((vdo) => ({ filePath: vdo.fileName })),
       mediaEntity: "review",
       callWhere: "cancel upload",
     });
@@ -157,7 +157,7 @@ export class MediaService {
     );
 
     this.mediaUtils.deleteMediaFiles({
-      images: headers.map((img) => ({ url: img.fileName })),
+      images: headers.map((img) => ({ filePath: img.fileName })),
       mediaEntity: "inquiry",
       option: "request",
       callWhere: "cancel upload",
@@ -175,7 +175,7 @@ export class MediaService {
     );
 
     this.mediaUtils.deleteMediaFiles({
-      videos: headers.map((vdo) => ({ url: vdo.fileName })),
+      videos: headers.map((vdo) => ({ filePath: vdo.fileName })),
       mediaEntity: "inquiry",
       option: "request",
       callWhere: "cancel upload",
@@ -193,7 +193,7 @@ export class MediaService {
     );
 
     this.mediaUtils.deleteMediaFiles({
-      images: headers.map((img) => ({ url: img.fileName })),
+      images: headers.map((img) => ({ filePath: img.fileName })),
       mediaEntity: "inquiry",
       option: "response",
       callWhere: "cancel upload",
@@ -211,7 +211,7 @@ export class MediaService {
     );
 
     this.mediaUtils.deleteMediaFiles({
-      videos: headers.map((vdo) => ({ url: vdo.fileName })),
+      videos: headers.map((vdo) => ({ filePath: vdo.fileName })),
       mediaEntity: "inquiry",
       option: "response",
       callWhere: "cancel upload",

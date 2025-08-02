@@ -57,7 +57,7 @@ export class ReviewImageSearchRepository extends SearchRepository<ReviewImageEnt
     return reviewImages.map((reviewImage) => ({
       id: reviewImage.id,
       size: reviewImage.size,
-      url: reviewImage.url,
+      url: reviewImage.filePath,
     }));
   }
 }

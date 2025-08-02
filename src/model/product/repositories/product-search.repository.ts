@@ -53,8 +53,8 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
       category: product.category,
       createdAt: formatDate(product.createdAt),
       imageUrls: product.ProductImage.length
-        ? product.ProductImage.map((image) => image.url)
-        : [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")],
+        ? product.ProductImage.map((image) => this.mediaUtils.setUrl(image.filePath))
+        : [this.mediaUtils.setUrl("/media/product/images/default_product_image.jpg")],
       averageScore: this.getAverageScore(product.StarRate.averageScore),
       reviewCount: product.Review.length,
     }));
@@ -147,16 +147,16 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
         description: product.description,
         stock: product.stock,
         imageUrls: product.ProductImage.length
-          ? product.ProductImage.map((image) => image.url)
-          : [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")],
+          ? product.ProductImage.map((image) => this.mediaUtils.setUrl(image.filePath))
+          : [this.mediaUtils.setUrl("/media/product/images/default_product_image.jpg")],
         averageScore: this.getAverageScore(product.StarRate.averageScore),
       },
       reviews: product.Review.map((review) => ({
         id: review.id,
         content: review.content,
         starRateScore: this.getAverageScore(review.starRateScore),
-        imageUrls: review.ReviewImage.map((image) => image.url),
-        videoUrls: review.ReviewVideo.map((video) => video.url),
+        imageUrls: review.ReviewImage.map((image) => this.mediaUtils.setUrl(image.filePath)),
+        videoUrls: review.ReviewVideo.map((video) => this.mediaUtils.setUrl(video.filePath)),
         createdAt: formatDate(review.createdAt),
         nickName: review.ClientUser.User.UserAuth.nickName,
       })),

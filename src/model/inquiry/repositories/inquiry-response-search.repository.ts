@@ -12,6 +12,7 @@ import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { InquiryResponseBasicRawDto } from "../dto/inquiry-response/response/inquiry-response-basic-raw.dto";
 import { InquiryResponseDetailRawDto } from "../dto/inquiry-response/response/inquiry-response-detail-raw.dto";
 import { FindAllInquiryResponsesDto } from "../dto/inquiry-response/request/find-all-inquiry-responses.dto";
+import { MediaUtils } from "../../media/logic/media.utils";
 
 @Injectable()
 export class InquiryResponseSearchRepository extends SearchRepository<
@@ -23,6 +24,7 @@ export class InquiryResponseSearchRepository extends SearchRepository<
     @Inject("inquiry-select")
     private readonly select: InquirySelect,
     @InjectRepository(InquiryResponseEntity) private readonly repository: Repository<InquiryResponseEntity>,
+    private readonly mediaUtils: MediaUtils,
   ) {
     super();
   }
@@ -93,8 +95,8 @@ export class InquiryResponseSearchRepository extends SearchRepository<
         id: inquiryResponse.id,
         title: inquiryResponse.title,
         content: inquiryResponse.content,
-        imageUrls: inquiryResponse.InquiryResponseImage.map((image) => image.url),
-        videoUrls: inquiryResponse.InquiryResponseVideo.map((video) => video.url),
+        imageUrls: inquiryResponse.InquiryResponseImage.map((image) => this.mediaUtils.setUrl(image.filePath)),
+        videoUrls: inquiryResponse.InquiryResponseVideo.map((video) => this.mediaUtils.setUrl(video.filePath)),
       },
       inquiryRequest: {
         id: inquiryResponse.InquiryRequest.id,
@@ -102,8 +104,12 @@ export class InquiryResponseSearchRepository extends SearchRepository<
         content: inquiryResponse.InquiryRequest.content,
         option: inquiryResponse.InquiryRequest.inquiryOption,
         isAnswered: Boolean(inquiryResponse.InquiryRequest.isAnswered),
-        imageUrls: inquiryResponse.InquiryRequest.InquiryRequestImage.map((image) => image.url),
-        videoUrls: inquiryResponse.InquiryRequest.InquiryRequestVideo.map((video) => video.url),
+        imageUrls: inquiryResponse.InquiryRequest.InquiryRequestImage.map((image) =>
+          this.mediaUtils.setUrl(image.filePath),
+        ),
+        videoUrls: inquiryResponse.InquiryRequest.InquiryRequestVideo.map((video) =>
+          this.mediaUtils.setUrl(video.filePath),
+        ),
       },
       product: {
         id: inquiryResponse.InquiryRequest.Product.id,

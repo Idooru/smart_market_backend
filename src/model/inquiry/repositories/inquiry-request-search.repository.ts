@@ -13,6 +13,7 @@ import { InquiryRequestBasicRawDto } from "../dto/inquiry-request/response/inqui
 import { InquiryRequestDetailRawDto } from "../dto/inquiry-request/response/inquiry-request-detail-raw.dto";
 import { InquiryRequestFromAdminProductRawDto } from "../dto/inquiry-request/response/inquiry-request-from-admin-product-raw.dto";
 import { FindAllInquiryRequestsDto } from "../dto/inquiry-request/request/find-all-inquiry-requests.dto";
+import { MediaUtils } from "../../media/logic/media.utils";
 
 @Injectable()
 export class InquiryRequestSearchRepository extends SearchRepository<
@@ -24,6 +25,7 @@ export class InquiryRequestSearchRepository extends SearchRepository<
     @Inject("inquiry-select")
     private readonly select: InquirySelect,
     @InjectRepository(InquiryRequestEntity) private readonly repository: Repository<InquiryRequestEntity>,
+    private readonly mediaUtils: MediaUtils,
   ) {
     super();
   }
@@ -144,16 +146,20 @@ export class InquiryRequestSearchRepository extends SearchRepository<
         content: inquiryRequest.content,
         option: inquiryRequest.inquiryOption,
         isAnswered: inquiryRequest.isAnswered,
-        imageUrls: inquiryRequest.InquiryRequestImage.map((image) => image.url),
-        videoUrls: inquiryRequest.InquiryRequestVideo.map((video) => video.url),
+        imageUrls: inquiryRequest.InquiryRequestImage.map((image) => this.mediaUtils.setUrl(image.filePath)),
+        videoUrls: inquiryRequest.InquiryRequestVideo.map((video) => this.mediaUtils.setUrl(video.filePath)),
       },
       inquiryResponse: inquiryRequest.InquiryResponse
         ? {
             id: inquiryRequest.InquiryResponse.id,
             title: inquiryRequest.InquiryResponse.title,
             content: inquiryRequest.InquiryResponse.content,
-            imageUrls: inquiryRequest.InquiryResponse.InquiryResponseImage.map((image) => image.url),
-            videoUrls: inquiryRequest.InquiryResponse.InquiryResponseVideo.map((video) => video.url),
+            imageUrls: inquiryRequest.InquiryResponse.InquiryResponseImage.map((image) =>
+              this.mediaUtils.setUrl(image.filePath),
+            ),
+            videoUrls: inquiryRequest.InquiryResponse.InquiryResponseVideo.map((video) =>
+              this.mediaUtils.setUrl(video.filePath),
+            ),
           }
         : null,
       product: {
@@ -165,20 +171,3 @@ export class InquiryRequestSearchRepository extends SearchRepository<
     };
   }
 }
-
-// inquiryRequestId: inquiryRequest.id,
-//   inquiryRequestTitle: inquiryRequest.title,
-//   inquiryRequestContent: inquiryRequest.content,
-//   inquiryOption: inquiryRequest.inquiryOption,
-//   isAnswered: Boolean(inquiryRequest.isAnswered),
-//   inquiryRequestImageUrls: inquiryRequest.InquiryRequestImage.map((image) => image.url),
-//   inquiryRequestVideoUrls: inquiryRequest.InquiryRequestVideo.map((video) => video.url),
-//   inquiryResponseId: inquiryRequest.InquiryResponse.id,
-//   inquiryResponseTitle: inquiryRequest.InquiryResponse.title,
-//   inquiryResponseContent: inquiryRequest.InquiryResponse.content,
-//   inquiryResponseImageUrls: inquiryRequest.InquiryResponse.InquiryResponseImage.map((image) => image.url),
-//   inquiryResponseVideoUrls: inquiryRequest.InquiryResponse.InquiryResponseVideo.map((video) => video.url),
-//   productId: inquiryRequest.Product.id,
-//   productName: inquiryRequest.Product.name,
-//   productPrice: inquiryRequest.Product.price,
-//   productCategory: inquiryRequest.Product.category,

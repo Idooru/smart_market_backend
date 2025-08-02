@@ -11,6 +11,6 @@ export const orderSelect: OrderSelect = {
     "Product.name",
     "Product.price",
     "Product.category",
-    "ProductImage.url",
+    "ProductImage.filePath",
   ],
 };

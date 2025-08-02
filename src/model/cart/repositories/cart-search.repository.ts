@@ -72,8 +72,8 @@ export class CartSearchRepository extends SearchRepository<CartEntity, FindAllCa
         price: cart.Product.price,
         category: cart.Product.category,
         imageUrls: cart.Product.ProductImage.length
-          ? cart.Product.ProductImage.map((image) => image.url)
-          : [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")],
+          ? cart.Product.ProductImage.map((image) => this.mediaUtils.setUrl(image.filePath))
+          : [this.mediaUtils.setUrl("/media/product/images/default_product_image.jpg")],
       },
     }));
   }

@@ -74,8 +74,8 @@ export class ReviewSearchRepository extends SearchRepository<ReviewEntity, FindA
         id: review.Product.id,
         name: review.Product.name,
         imageUrls: review.Product.ProductImage.length
-          ? review.Product.ProductImage.map((image) => image.url)
-          : [this.mediaUtils.setUrl("default_product_image.jpg", "product/images")],
+          ? review.Product.ProductImage.map((image) => this.mediaUtils.setUrl(image.filePath))
+          : [this.mediaUtils.setUrl("/media/product/images/default_product_image.jpg")],
       },
     }));
   }
@@ -107,8 +107,8 @@ export class ReviewSearchRepository extends SearchRepository<ReviewEntity, FindA
       content: review.content,
       starRateScore: review.starRateScore,
       countForModify: review.countForModify,
-      imageUrls: review.ReviewImage.map((image) => image.url),
-      videoUrls: review.ReviewVideo.map((video) => video.url),
+      imageUrls: review.ReviewImage.map((image) => this.mediaUtils.setUrl(image.filePath)),
+      videoUrls: review.ReviewVideo.map((video) => this.mediaUtils.setUrl(video.filePath)),
     };
   }
 }

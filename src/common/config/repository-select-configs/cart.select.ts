@@ -13,6 +13,6 @@ export const cartSelect: CartSelect = {
     "Product.name",
     "Product.price",
     "Product.category",
-    "Image.url",
+    "Image.filePath",
   ],
 };

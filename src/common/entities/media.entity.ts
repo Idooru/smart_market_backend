@@ -6,7 +6,7 @@ export abstract class MediaEntity extends CommonEntity {
   @IsUrl()
   @IsString()
   @Column({ type: "varchar", nullable: false, unique: true })
-  public url: string;
+  public filePath: string;
 
   @IsInt()
   @Column({ type: "int", nullable: false, unique: false })

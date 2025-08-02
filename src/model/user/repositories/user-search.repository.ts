@@ -25,7 +25,7 @@ export class UserSearchRepository extends SearchRepository<UserEntity, FindAllUs
     private readonly userIdFilter: string,
     @InjectRepository(UserEntity)
     private readonly repository: Repository<UserEntity>,
-    private readonly utils: MediaUtils,
+    private readonly mediaUtils: MediaUtils,
   ) {
     super();
   }
@@ -136,10 +136,9 @@ export class UserSearchRepository extends SearchRepository<UserEntity, FindAllUs
               price: payment.Product.price,
               origin: payment.Product.origin,
               category: payment.Product.category,
-              imageUrls: (() =>
-                payment.Product.ProductImage.length
-                  ? payment.Product.ProductImage.map((image) => image.url)
-                  : [this.utils.setUrl("default_product_image.jpg", "product/images")])(),
+              imageUrls: payment.Product.ProductImage.length
+                ? payment.Product.ProductImage.map((image) => this.mediaUtils.setUrl(image.filePath))
+                : [this.mediaUtils.setUrl("/media/product/images/default_product_image.jpg")],
             }
           : null,
       })),
@@ -148,8 +147,8 @@ export class UserSearchRepository extends SearchRepository<UserEntity, FindAllUs
         content: review.content,
         starRateScore: review.starRateScore,
         countForModify: review.countForModify,
-        imageUrls: review.ReviewImage.map((image) => image.url),
-        videoUrls: review.ReviewVideo.map((video) => video.url),
+        imageUrls: review.ReviewImage.map((image) => this.mediaUtils.setUrl(image.filePath)),
+        videoUrls: review.ReviewVideo.map((video) => this.mediaUtils.setUrl(video.filePath)),
       })),
       inquiryRequests: user.ClientUser.InquiryRequest.map((inquiryRequest) => ({
         id: inquiryRequest.id,
@@ -157,8 +156,8 @@ export class UserSearchRepository extends SearchRepository<UserEntity, FindAllUs
         content: inquiryRequest.content,
         inquiryOption: inquiryRequest.inquiryOption,
         isAnswered: inquiryRequest.isAnswered,
-        imageUrls: inquiryRequest.InquiryRequestImage.map((image) => image.url),
-        videoUrls: inquiryRequest.InquiryRequestVideo.map((video) => video.url),
+        imageUrls: inquiryRequest.InquiryRequestImage.map((image) => this.mediaUtils.setUrl(image.filePath)),
+        videoUrls: inquiryRequest.InquiryRequestVideo.map((video) => this.mediaUtils.setUrl(video.filePath)),
       })),
     };
   }

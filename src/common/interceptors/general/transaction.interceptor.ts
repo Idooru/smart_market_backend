@@ -1,7 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
 import { catchError, map, Observable, tap } from "rxjs";
 import { Implemented } from "../../decorators/implemented.decoration";
-import { DataSource, TypeORMError } from "typeorm";
+import { DataSource } from "typeorm";
 import { TransactionHandler } from "../../lib/handler/transaction.handler";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { Request, Response } from "express";
@@ -14,10 +14,10 @@ export class TransactionInterceptor<T> implements NestInterceptor {
     private readonly dataSource: DataSource,
     private readonly handler: TransactionHandler,
     private readonly timeLogger: TimeLoggerLibrary,
-    private readonly responseHandler: ResponseHandler<T>,
+    private readonly responseHandler: ResponseHandler,
   ) {}
 
-  private async catchError(err: TypeORMError): Promise<void> {
+  private async catchError(err: Error): Promise<void> {
     await this.handler.rollback(err);
     await this.handler.release();
   }
@@ -41,7 +41,7 @@ export class TransactionInterceptor<T> implements NestInterceptor {
     this.handler.setQueryRunner(queryRunner);
 
     return next.handle().pipe(
-      catchError((err) => this.catchError(err)),
+      catchError((err: Error) => this.catchError(err)),
       tap(() => this.commitTransaction()),
       map((payload: ApiResultInterface<T>) => this.responseHandler.response(req, res, payload)),
     );

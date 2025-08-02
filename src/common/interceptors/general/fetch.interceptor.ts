@@ -19,7 +19,7 @@ export class FetchInterceptor<T> implements NestInterceptor {
   private readonly cacheLogger = loggerFactory("FetchCache");
   private readonly DEFAULT_TTL = 30 * 60 * 1000; // 30분
 
-  constructor(private readonly timeLogger: TimeLoggerLibrary, private readonly responseHandler: ResponseHandler<T>) {}
+  constructor(private readonly timeLogger: TimeLoggerLibrary, private readonly responseHandler: ResponseHandler) {}
 
   private isExpired(item: CacheItem<T>): boolean {
     return Date.now() - item.timestamp > item.ttl;

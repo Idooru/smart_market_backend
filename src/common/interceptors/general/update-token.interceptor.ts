@@ -8,10 +8,7 @@ import { ResponseHandler } from "../../lib/handler/response.handler";
 
 @Injectable()
 export class UpdateTokenInterceptor implements NestInterceptor {
-  constructor(
-    private readonly timeLogger: TimeLoggerLibrary,
-    private readonly responseHandler: ResponseHandler<string>,
-  ) {}
+  constructor(private readonly timeLogger: TimeLoggerLibrary, private readonly responseHandler: ResponseHandler) {}
 
   @Implemented()
   public intercept(context: ExecutionContext, next: CallHandler): Observable<any> {

@@ -12,10 +12,11 @@ import {
   InvalidJwtPayload,
   JwtExceptionMessageGenerator,
 } from "../../model/auth/jwt/jwt-exception-followup";
+import { ResponseHandler } from "../lib/handler/response.handler";
 
 @Catch(JwtException)
 export class JwtExceptionFilter implements ExceptionFilter {
-  jwtExceptionMap: Record<string, new () => JwtExceptionMessageGenerator> = {
+  private jwtExceptionMap: Record<string, new () => JwtExceptionMessageGenerator> = {
     "invalid token:access_token": InvalidAccessToken,
     "invalid token:refresh_token": InvalidRefreshToken,
     "invalid signature:access_token": InvalidAccessToken,
@@ -23,6 +24,8 @@ export class JwtExceptionFilter implements ExceptionFilter {
     "jwt expired:access_token": ExpiredAccessToken,
     "jwt expired:refresh_token": ExpiredRefreshToken,
   };
+
+  constructor(private readonly responseHandler: ResponseHandler) {}
 
   @Implemented()
   public catch(exception: JwtException, host: ArgumentsHost) {
@@ -33,11 +36,9 @@ export class JwtExceptionFilter implements ExceptionFilter {
     const message = this.generateResponseMessage(generator);
     loggerFactory(error.name).error(message);
 
-    return res.status(exception.getStatus()).json({
-      success: false,
+    return this.responseHandler.responseError(res, exception.stack, {
       error: error.name,
       statusCode: error.status,
-      timeStamp: new Date().toString(),
       message,
     });
   }

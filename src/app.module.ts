@@ -11,6 +11,12 @@ import { InquiryModule } from "./model/inquiry/inquiry.module";
 import { CartModule } from "./model/cart/cart.module";
 import { OrderModule } from "./model/order/order.module";
 import { AccountModule } from "./model/account/account.module";
+import { APP_FILTER } from "@nestjs/core";
+import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
+import { LibraryExceptionFilter } from "./common/filters/library-exception.filter";
+import { TypeormErrorFilter } from "./common/filters/typeorm-error.filter";
+import { ValidationExceptionFilter } from "./common/filters/validation-exception.filter";
+import { JwtExceptionFilter } from "./common/filters/jwt-exception.filter";
 
 @Module({
   imports: [
@@ -26,7 +32,28 @@ import { AccountModule } from "./model/account/account.module";
     AccountModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: LibraryExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: TypeormErrorFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: ValidationExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: JwtExceptionFilter,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {

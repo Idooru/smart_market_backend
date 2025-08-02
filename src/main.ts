@@ -2,17 +2,12 @@ import { ValidationError, ValidationPipe, VersioningType } from "@nestjs/common"
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "./app.module";
-import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
-import { ValidationExceptionFilter } from "./common/filters/validation-exception.filter";
 import { ValidationException } from "./common/errors/validation.exception";
-import { TypeOrmExceptionFilter } from "./common/filters/typeorm-exception.filter";
-import { LibraryExceptionFilter } from "./common/filters/library-exception.filter";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { loggerFactory } from "./common/functions/logger.factory";
 import { EnvData } from "./common/classes/env-data";
 import { envKeys } from "./common/security/env-keys";
 import { staticMediaConfigs } from "./common/config/static-media-configs";
-import { JwtExceptionFilter } from "./common/filters/jwt-exception.filter";
 
 import path from "path";
 import helmet from "helmet";
@@ -57,19 +52,25 @@ class NestCoreConfig {
   }
 
   private setGlobals() {
-    this.app.useGlobalFilters(
-      new HttpExceptionFilter(),
-      new LibraryExceptionFilter(),
-      new TypeOrmExceptionFilter(),
-      new ValidationExceptionFilter(),
-      new JwtExceptionFilter(),
-    );
     this.app.useGlobalPipes(
       new ValidationPipe({
         transform: true,
         whitelist: true,
         forbidNonWhitelisted: true,
         exceptionFactory: (validationErrors: ValidationError[]) => {
+          loggerFactory("ValidationException").error(
+            `reason: \n${JSON.stringify(
+              validationErrors.reduce(
+                (acc, error) => ({
+                  ...acc,
+                  [error.property]: Object.values(error.constraints),
+                }),
+                {},
+              ),
+              null,
+              2,
+            )}`,
+          );
           throw new ValidationException(validationErrors);
         },
       }),

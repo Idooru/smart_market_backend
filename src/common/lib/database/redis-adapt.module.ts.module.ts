@@ -12,8 +12,8 @@
 //   public createCacheOptions(): CacheModuleOptions {
 //     return {
 //       store: redisStore,
-//       host: this.configService.get("REDIS_HOST"),
-//       port: this.configService.get("REDIS_PORT"),
+//       host: this.configService.get<string>("REDIS_HOST"),
+//       port: this.configService.get<number>("REDIS_PORT"),
 //       ttl: 60,
 //     };
 //   }

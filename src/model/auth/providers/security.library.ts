@@ -19,38 +19,38 @@ export class SecurityLibrary {
   }
 
   public get hashSalt(): number {
-    return +this.configService.get("HASH_SALT");
+    return +this.configService.get<number>("HASH_SALT");
   }
 
   private readonly _jwtAccessTokenSignOption: JwtSignOptions = {
-    secret: this.configService.get("JWT_ACCESSTOKEN_SECRET"),
-    expiresIn: this.configService.get("JWT_ACCESSTOKEN_EXPIRES"),
+    secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
+    expiresIn: this.configService.get<string>("JWT_ACCESS_TOKEN_EXPIRES"),
   };
 
   private readonly _jwtAccessTokenVerifyOption: JwtVerifyOptions = {
-    secret: this.configService.get("JWT_ACCESSTOKEN_SECRET"),
+    secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
   };
 
   private readonly _jwtRefreshTokenSignOption: JwtSignOptions = {
-    secret: this.configService.get("JWT_REFRESHTOKEN_SECRET"),
-    expiresIn: this.configService.get("JWT_REFRESHTOKEN_EXPIRES"),
+    secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
+    expiresIn: this.configService.get<string>("JWT_REFRESH_TOKEN_EXPIRES"),
   };
 
   private readonly _jwtRefreshTokenVerifyOption: JwtVerifyOptions = {
-    secret: this.configService.get("JWT_REFRESHTOKEN_SECRET"),
+    secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
   };
 
   private readonly _jwtAccessTokenModuleOption: JwtModuleOptions = {
-    secret: this.configService.get("JWT_ACCESSTOKEN_SECRET"),
+    secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
     signOptions: {
-      expiresIn: this.configService.get("JWT_ACCESSTOKEN_EXPIRES"),
+      expiresIn: this.configService.get<string>("JWT_ACCESS_TOKEN_EXPIRES"),
     },
   };
 
   private readonly _jwtRefreshTokenModuleOption: JwtModuleOptions = {
-    secret: this.configService.get("JWT_REFRESHTOKEN_SECRET"),
+    secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
     signOptions: {
-      expiresIn: this.configService.get("JWT_REFRESHTOKEN_EXPIRES"),
+      expiresIn: this.configService.get<string>("JWT_REFRESH_TOKEN_EXPIRES"),
     },
   };
 

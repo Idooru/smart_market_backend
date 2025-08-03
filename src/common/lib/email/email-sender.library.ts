@@ -58,8 +58,8 @@ export class EmailSenderLibrary {
 
     await this.mailerService
       .sendMail({
-        to: this.configService.get("MAIL_USER"),
-        from: this.configService.get("MAIL_USER"),
+        to: this.configService.get<string>("MAIL_USER"),
+        from: this.configService.get<string>("MAIL_USER"),
         subject: "관리자님, 사용자로부터 문의 요청이 들어왔습니다.",
         html,
       })
@@ -116,7 +116,7 @@ export class EmailSenderLibrary {
     await this.mailerService
       .sendMail({
         to: inquiryRequester.User.UserAuth.email,
-        from: this.configService.get("MAIL_USER"),
+        from: this.configService.get<string>("MAIL_USER"),
         subject: `${inquiryRequester.User.UserAuth.nickName}님, 서비스 관리자로부터 문의 응답이 도착하였습니다.`,
         html,
       })
@@ -130,7 +130,7 @@ export class EmailSenderLibrary {
     // await this.mailerService
     //   .sendMail({
     //     to: email,
-    //     from: this.configService.get("MAIL_USER"),
+    //     from: this.configService.get<string>("MAIL_USER"),
     //     subject: `${nickName}님, 저희 서비스에 회원 가입을 해주셔서 진심으로 감사드립니다!`,
     //     text: `환영합니다!`,
     //   })

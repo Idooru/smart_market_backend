@@ -30,12 +30,12 @@ const isNodeEnvProd = (): boolean => process.env.NODE_ENV === "prod";
   imports: [
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService): TypeOrmModuleOptions => ({
-        type: "mysql",
-        host: configService.get("DB_HOST"),
-        port: configService.get("DB_PORT"),
-        username: configService.get("DB_USERNAME"),
-        password: configService.get("DB_PASSWORD"),
-        database: configService.get("DB_SCHEMA"),
+        type: configService.get<string>("DB_TYPE") as "mysql",
+        host: configService.get<string>("DB_HOST"),
+        port: configService.get<number>("DB_PORT"),
+        username: configService.get<string>("DB_USERNAME"),
+        password: configService.get<string>("DB_PASSWORD"),
+        database: configService.get<string>("DB_SCHEMA"),
         entities: [
           UserEntity,
           UserProfileEntity,

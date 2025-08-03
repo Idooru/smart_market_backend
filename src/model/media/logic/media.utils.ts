@@ -19,9 +19,9 @@ export class MediaUtils {
   }
 
   public setUrl(filePath: string): string {
-    const baseUrl = `${this.configService.get("APPLICATION_SCHEME")}://${this.configService.get(
+    const baseUrl = `${this.configService.get<string>("APPLICATION_SCHEME")}://${this.configService.get<string>(
       "APPLICATION_HOST",
-    )}:${this.configService.get("APPLICATION_PORT")}`;
+    )}:${this.configService.get<number>("APPLICATION_PORT")}`;
     return new URL(filePath, baseUrl).toString();
   }
 

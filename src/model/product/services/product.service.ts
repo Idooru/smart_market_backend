@@ -10,9 +10,7 @@ import { MediaUtils } from "../../media/logic/media.utils";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "../../../common/decorators/general.decoration";
 import { ProductImageEntity } from "../../media/entities/product-image.entity";
-import { MediaService } from "../../media/services/media.service";
-import { ProductBody } from "../dto/request/product-body.dto";
-import { ModifyProductColumnDto, ModifyProductDto } from "../dto/request/modify-product.dto";
+import { ModifyProductColumnDto } from "../dto/request/modify-product.dto";
 
 class EntityFinder {
   constructor(private readonly productIdFilter: string, private readonly productSearcher: ProductSearcher) {}
@@ -34,10 +32,9 @@ export class ProductService {
   constructor(
     @Inject("product-id-filter")
     private readonly productIdFilter: string,
+    private readonly mediaUtils: MediaUtils,
     private readonly productSearcher: ProductSearcher,
     private readonly productUpdateRepository: ProductUpdateRepository,
-    private readonly mediaUtils: MediaUtils,
-    private readonly mediaService: MediaService,
   ) {
     this.entityFinder = new EntityFinder(this.productIdFilter, this.productSearcher);
   }
@@ -71,8 +68,7 @@ export class ProductService {
   public async changeProductImages(dto: ChangeProductImageDto): Promise<void> {
     const { productId, beforeProductImages, newProductImages } = dto;
 
-    const productImages = await this.mediaService.uploadProductImages(newProductImages);
-    const inserting = productImages.map((productImage) => {
+    const inserting = newProductImages.map((productImage) => {
       const insertProductImageDto = { productId, productImageId: productImage.id };
       return this.productUpdateRepository.insertProductIdOnProductImage(insertProductImageDto);
     });

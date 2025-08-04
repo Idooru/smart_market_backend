@@ -37,11 +37,12 @@ export class ProductTransactionContext {
       }),
     );
     if (beforeProductImages && productImageFiles) {
+      const newProductImages = await this.mediaService.uploadProductImages(dto.productImageFiles);
       promises.push(
         this.productService.changeProductImages({
           productId,
           beforeProductImages,
-          newProductImages: productImageFiles,
+          newProductImages,
         }),
       );
     }
@@ -50,10 +51,11 @@ export class ProductTransactionContext {
   }
 
   public async modifyProductImage(dto: SearchModifyProductImageDto): Promise<void> {
+    const newProductImages = await this.mediaService.uploadProductImages(dto.productImageFiles);
     await this.productService.changeProductImages({
       productId: dto.productId,
       beforeProductImages: dto.beforeProductImages,
-      newProductImages: dto.productImageFiles,
+      newProductImages,
     });
   }
 }

@@ -66,13 +66,13 @@ export class ReviewTransactionContext {
     const changeReviewImageDto: ChangeReviewImageDto = {
       reviewId: review.id,
       beforeReviewImages,
-      newReviewImages: reviewImageFiles,
+      newReviewImages: await this.mediaService.uploadReviewImages(reviewImageFiles),
     };
 
     const changeReviewVideoDto: ChangeReviewVideoDto = {
       reviewId: review.id,
       beforeReviewVideos,
-      newReviewVideos: reviewVideoFiles,
+      newReviewVideos: await this.mediaService.uploadReviewVideos(reviewVideoFiles),
     };
 
     const modifyStarRateDto: ModifyStarRateDto = {

@@ -8,7 +8,6 @@ import { LogoutResponseInterface } from "src/common/interceptors/interface/logou
 import { ApiTags } from "@nestjs/swagger";
 import { UserTransactionExecutor } from "../../logic/transaction/user-transaction.executor";
 import { UserSearcher } from "../../logic/user.searcher";
-import { UserService } from "../../services/user.service";
 import { UserEmailValidatePipe as UserEmailNoneExistValidatePipe } from "../../pipe/none-exist/user-email-validate.pipe";
 import { UserBodyPhoneNumberValidatePipe } from "../../pipe/none-exist/user-phoneNumber-validate.pipe";
 import { UserNicknameValidatePipe } from "../../pipe/none-exist/user-nickName-validate.pipe";
@@ -26,6 +25,8 @@ import { GetBasicAuth } from "../../../../common/decorators/get-basic-auth.decor
 import { TransactionInterceptor } from "../../../../common/interceptors/general/transaction.interceptor";
 import { CommandInterceptor } from "../../../../common/interceptors/general/command.interceptor";
 import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
+import { UserService } from "../../services/user.service";
+import { AuthService } from "../../../auth/services/auth.service";
 
 @ApiTags("v1 공용 User API")
 @Controller({ path: "/user", version: "1" })
@@ -33,7 +34,8 @@ export class UserV1Controller {
   constructor(
     private readonly transaction: UserTransactionExecutor,
     private readonly searcher: UserSearcher,
-    private readonly service: UserService,
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
   ) {}
 
   @UseInterceptors(TransactionInterceptor)
@@ -93,7 +95,7 @@ export class UserV1Controller {
     @Body(UserEmailNoneExistValidatePipe) { email }: ModifyUserEmailDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<ApiResultInterface<void>> {
-    await this.service.modifyUserEmail(email, jwtPayload.userId);
+    await this.userService.modifyUserEmail(email, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -109,7 +111,7 @@ export class UserV1Controller {
     @Body(UserNicknameValidatePipe) { nickName }: ModifyUserNicknameDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<ApiResultInterface<void>> {
-    await this.service.modifyUserNickname(nickName, jwtPayload.userId);
+    await this.userService.modifyUserNickname(nickName, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -126,7 +128,7 @@ export class UserV1Controller {
     { phoneNumber }: ModifyUserPhoneNumberDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<ApiResultInterface<void>> {
-    await this.service.modifyUserPhoneNumber(phoneNumber, jwtPayload.userId);
+    await this.userService.modifyUserPhoneNumber(phoneNumber, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -142,7 +144,8 @@ export class UserV1Controller {
     @Body() { password }: ModifyUserPasswordDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<ApiResultInterface<void>> {
-    await this.service.modifyUserPassword(password, jwtPayload.userId);
+    password = await this.authService.hashPassword(password, false);
+    await this.userService.modifyUserPassword(password, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -158,7 +161,7 @@ export class UserV1Controller {
     @Body() { address }: ModifyUserAddressDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<ApiResultInterface<void>> {
-    await this.service.modifyUserAddress(address, jwtPayload.userId);
+    await this.userService.modifyUserAddress(address, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -171,7 +174,7 @@ export class UserV1Controller {
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
   public async secession(@GetJWT() jwtPayload: JwtAccessTokenPayload): Promise<LogoutResponseInterface> {
-    await this.service.deleteUser(jwtPayload.userId);
+    await this.userService.deleteUser(jwtPayload.userId);
 
     return {
       statusCode: 200,
@@ -185,7 +188,8 @@ export class UserV1Controller {
   @UseGuards(IsNotLoginGuard)
   @Patch("/reset-password")
   public async resetPassword(@GetBasicAuth() dto: BasicAuthDto): Promise<ApiResultInterface<void>> {
-    await this.service.resetPassword(dto);
+    dto.password = await this.authService.hashPassword(dto.password, false);
+    await this.userService.resetPassword(dto);
 
     return {
       statusCode: 200,

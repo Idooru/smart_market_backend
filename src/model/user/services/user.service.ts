@@ -11,7 +11,6 @@ import { ModifyUserAuthDto, ModifyUserDto, ModifyUserProfileDto } from "../dto/r
 import { UserAuthEntity } from "../entities/user-auth.entity";
 import { BasicAuthDto } from "../dto/request/basic-auth.dto";
 import { loggerFactory } from "src/common/functions/logger.factory";
-import { AuthService } from "../../auth/services/auth.service";
 
 class EntityFinder {
   constructor(private readonly userSearcher: UserSearcher) {}
@@ -33,7 +32,6 @@ export class UserService {
   constructor(
     protected readonly userSearcher: UserSearcher,
     private readonly userUpdateRepository: UserUpdateRepository,
-    private readonly authService: AuthService,
     private readonly userEventMapSetter: UserEventMapSetter,
   ) {
     this.entityFinder = new EntityFinder(this.userSearcher);
@@ -55,8 +53,6 @@ export class UserService {
   @Transaction()
   public async createUserBase({ id }: UserEntity, dto: RegisterUserDto): Promise<void> {
     const { realName, nickName, birth, gender, email, phoneNumber, password, address } = dto;
-    const hashed = await this.authService.hashPassword(password, true);
-
     const userProfileColumn = {
       id,
       realName,
@@ -66,7 +62,7 @@ export class UserService {
       address,
     };
 
-    const userAuthColumn = { id, nickName, email, password: hashed };
+    const userAuthColumn = { id, nickName, email, password };
     const sendMailToClientAboutRegisterDto = { email, nickName };
 
     await Promise.all([
@@ -108,9 +104,7 @@ export class UserService {
 
   @General()
   public async modifyUserPassword(password: string, id: string): Promise<void> {
-    const hashed = await this.authService.hashPassword(password, false);
-
-    await this.userUpdateRepository.modifyUserPassword(hashed, id);
+    await this.userUpdateRepository.modifyUserPassword(password, id);
   }
 
   @General()
@@ -121,10 +115,7 @@ export class UserService {
   @General()
   public async resetPassword(dto: BasicAuthDto): Promise<void> {
     const { email, password } = dto;
-    const [hashed, user] = await Promise.all([
-      this.authService.hashPassword(password, false),
-      this.entityFinder.findUser(email),
-    ]);
+    const user = await this.entityFinder.findUser(email);
 
     if (!user) {
       const message = "존재하지 않은 이메일입니다.";
@@ -132,7 +123,7 @@ export class UserService {
       throw new BadRequestException(message);
     }
 
-    await this.userUpdateRepository.modifyUserPassword(hashed, user.id);
+    await this.userUpdateRepository.modifyUserPassword(password, user.id);
   }
 
   @General()

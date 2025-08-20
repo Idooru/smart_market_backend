@@ -2,7 +2,7 @@ import { ProductEntity } from "src/model/product/entities/product.entity";
 import { Column, Entity, OneToOne, JoinColumn } from "typeorm";
 import { ChildEntity } from "src/common/entities/child.entity";
 
-@Entity({ name: "star_rates", synchronize: true })
+@Entity({ name: "product_star_rates", synchronize: true })
 export class StarRateEntity extends ChildEntity {
   @OneToOne(() => ProductEntity, (product) => product.StarRate, {
     onDelete: "CASCADE",

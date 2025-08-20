@@ -3,7 +3,7 @@ import { IsEmail, IsJWT, IsNotEmpty, IsString, Matches } from "class-validator";
 import { UserEntity } from "./user.entity";
 import { ChildEntity } from "src/common/entities/child.entity";
 
-@Entity({ name: "users_auth", synchronize: true })
+@Entity({ name: "user_auths", synchronize: true })
 export class UserAuthEntity extends ChildEntity {
   @OneToOne(() => UserEntity, (user) => user.UserAuth, {
     onDelete: "CASCADE",

@@ -4,7 +4,7 @@ import { UserEntity } from "./user.entity";
 import { ChildEntity } from "src/common/entities/child.entity";
 import { UserGender, userGender } from "../types/user-gender.type";
 
-@Entity({ name: "users_profile", synchronize: true })
+@Entity({ name: "user_profiles", synchronize: true })
 export class UserProfileEntity extends ChildEntity {
   @OneToOne(() => UserEntity, (user) => user.UserProfile, {
     onDelete: "CASCADE",

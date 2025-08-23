@@ -416,8 +416,8 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┣ 📂product
 ┃ ┃ ┣ 📂controllers
 ┃ ┃ ┃ ┗ 📂v1
-┃ ┃ ┃ ┃ ┣ 📜product-v1-admin.controller.ts
-┃ ┃ ┃ ┃ ┗ 📜product-v1.controller.ts
+┃ ┃ ┃ ┃ ┣ 📜product-v2-admin.controller.ts
+┃ ┃ ┃ ┃ ┗ 📜product-v2.controller.ts
 ┃ ┃ ┣ 📂docs
 ┃ ┃ ┃ ┣ 📂product-v1-admin-controller
 ┃ ┃ ┃ ┃ ┗ 📜create-product.swagger.ts

@@ -7,7 +7,7 @@ import { FetchInterceptor } from "src/common/interceptors/general/fetch.intercep
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 import { ApiTags } from "@nestjs/swagger";
 import { ReviewTransactionExecutor } from "../../logic/transaction/review-transaction.executor";
-import { ProductIdValidatePipe } from "../../../product/pipe/exist/product-id-validate.pipe";
+import { ProductIdValidatePipe } from "../../../product/validate/pipe/exist/product-id-validate.pipe";
 import { ReviewIdValidatePipe } from "../../pipe/exist/review-id-validate.pipe";
 import { ReviewSearcher } from "../../logic/review.searcher";
 import { ReviewBasicRawDto } from "../../dto/response/review-basic-raw.dto";

@@ -5,7 +5,7 @@ import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { ProductQuantity } from "../types/product-quantity.type";
 import { AccountSearcher } from "../../account/logic/account.searcher";
 import { AccountEntity } from "../../account/entities/account.entity";
-import { ProductSearcher } from "../../product/logic/product.searcher";
+import { ProductSearcher } from "../../product/utils/product.searcher";
 import { ProductEntity } from "../../product/entities/product.entity";
 import { AdminUserEntity } from "../../user/entities/admin-user.entity";
 import { CreateOrderRowDto } from "../dto/request/create-order.dto";

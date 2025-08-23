@@ -4,7 +4,7 @@ import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { FetchInterceptor } from "src/common/interceptors/general/fetch.interceptor";
 import { ApiTags } from "@nestjs/swagger";
 import { ReviewSearcher } from "../../logic/review.searcher";
-import { ProductIdValidatePipe } from "../../../product/pipe/exist/product-id-validate.pipe";
+import { ProductIdValidatePipe } from "../../../product/validate/pipe/exist/product-id-validate.pipe";
 import { ReviewFromProductRawDto } from "../../dto/response/review-from-product-raw.dto";
 import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
 

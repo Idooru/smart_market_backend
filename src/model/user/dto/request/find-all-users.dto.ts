@@ -2,7 +2,7 @@ import { align, Align } from "../../../../common/types/align-by.type";
 import { IsEnum, IsNotEmpty, IsOptional } from "class-validator";
 import { warnEnumMessage } from "../../../../common/functions/none-enum";
 
-type UserAlignColumn = "createdAt" | "role" | "nickName" | "email";
+export type UserAlignColumn = "createdAt" | "role" | "nickName" | "email";
 const userAlignColumn = ["createdAt", "role", "nickName", "email"];
 
 export class FindAllUsersDto {

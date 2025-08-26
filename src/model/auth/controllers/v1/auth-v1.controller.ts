@@ -7,14 +7,14 @@ import { BasicAuthDto } from "../../../user/dto/request/basic-auth.dto";
 import { ApiResultInterface } from "../../../../common/interceptors/interface/api-result.interface";
 import { FetchInterceptor } from "../../../../common/interceptors/general/fetch.interceptor";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
-import { RefreshTokenSwagger } from "../../../user/docs/user-v1-controller/refresh-token.swagger";
+import { RefreshTokenSwagger } from "../../../user/api/docs/user-v1-controller/refresh-token.swagger";
 import { IsRefreshTokenAvailableGuard } from "../../../../common/guards/authenticate/is-refresh-token-available.guard";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { JwtRefreshTokenPayload } from "../../jwt/jwt-refresh-token-payload.interface";
 import { LogoutInterceptor } from "../../../../common/interceptors/general/logout.interceptor";
 import { LogoutGuard } from "../../../../common/guards/authenticate/logout.guard";
 import { JwtAccessTokenPayload } from "../../jwt/jwt-access-token-payload.interface";
-import { FindEmailValidationPipe } from "../../../user/pipe/exist/find-email-validation.pipe";
+import { FindEmailValidationPipe } from "../../../user/api/v1/validate/pipe/exist/find-email-validation.pipe";
 import { FindEmailDto } from "../../../user/dto/request/find-email.dto";
 import { AuthService } from "../../services/auth.service";
 

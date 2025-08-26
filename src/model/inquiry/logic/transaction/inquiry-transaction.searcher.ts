@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ProductSearcher } from "../../../product/utils/product.searcher";
-import { UserSearcher } from "../../../user/logic/user.searcher";
+import { UserSearcher } from "../../../user/utils/user.searcher";
 import { ClientUserEntity } from "../../../user/entities/client-user.entity";
 import { AdminUserEntity } from "../../../user/entities/admin-user.entity";
 import { UserEntity } from "../../../user/entities/user.entity";

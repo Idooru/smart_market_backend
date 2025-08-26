@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { UserSearcher } from "../../../../user/logic/user.searcher";
+import { UserSearcher } from "../../../../user/utils/user.searcher";
 import { CreateProductDto } from "../../../dto/request/create-product.dto";
 import { SearchCreateProductDto } from "../../../dto/request/search-create-product.dto";
 import { SearchModifyProductDto } from "../../../dto/request/search-modify-product.dto";

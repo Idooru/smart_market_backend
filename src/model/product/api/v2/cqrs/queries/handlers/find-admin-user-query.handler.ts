@@ -2,7 +2,7 @@ import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { FindAdminUserQuery } from "../classes/find-admin-user.query";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
 import { Inject } from "@nestjs/common";
-import { UserSearcher } from "../../../../../../user/logic/user.searcher";
+import { UserSearcher } from "../../../../../../user/utils/user.searcher";
 import { UserEntity } from "../../../../../../user/entities/user.entity";
 import { AdminUserEntity } from "../../../../../../user/entities/admin-user.entity";
 

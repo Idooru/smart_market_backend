@@ -4,7 +4,7 @@ import { SecurityLibrary } from "./security.library";
 import { JwtErrorHandlerLibrary } from "src/model/auth/providers/jwt-error-handler.library";
 import { JwtAccessTokenPayload } from "../jwt/jwt-access-token-payload.interface";
 import { JwtRefreshTokenPayload } from "../jwt/jwt-refresh-token-payload.interface";
-import { UserUpdateRepository } from "src/model/user/repositories/user-update.repository";
+import { UserUpdateRepository } from "src/model/user/api/v1/repositories/user-update.repository";
 
 @Injectable()
 export class ValidateTokenLibrary {

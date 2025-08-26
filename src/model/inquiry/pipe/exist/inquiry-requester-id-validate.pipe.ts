@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform } from "@nestjs/common";
-import { UserValidator } from "../../../user/logic/user.validator";
+import { UserValidator } from "../../../user/api/v1/validate/user.validator";
 import { Implemented } from "../../../../common/decorators/implemented.decoration";
 
 @Injectable()

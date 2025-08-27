@@ -1,15 +1,15 @@
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
-import { FindUserQuery } from "../events/find-user.query";
+import { FindUserWithEmailQuery } from "../events/find-user-with-email.query";
 import { UserAuthEntity } from "../../../../../entities/user-auth.entity";
 import { UserEntity } from "../../../../../entities/user.entity";
 import { UserSearcher } from "../../../../../utils/user.searcher";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
 
-@QueryHandler(FindUserQuery)
-export class FindUserQueryHandler implements IQueryHandler<FindUserQuery> {
+@QueryHandler(FindUserWithEmailQuery)
+export class FindUserWithEmailQueryHandler implements IQueryHandler<FindUserWithEmailQuery> {
   constructor(private readonly searcher: UserSearcher) {}
 
-  private query(email: string) {
+  private query(email: string): Promise<UserEntity> {
     return this.searcher.findEntity({
       property: "UserAuth.email = :email",
       alias: { email },
@@ -19,7 +19,7 @@ export class FindUserQueryHandler implements IQueryHandler<FindUserQuery> {
   }
 
   @Implemented()
-  public execute(query: FindUserQuery): Promise<UserEntity> {
+  public execute(query: FindUserWithEmailQuery): Promise<UserEntity> {
     const { email } = query;
     return this.query(email);
   }

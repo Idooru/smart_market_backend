@@ -1,5 +1,5 @@
 import { IQuery } from "@nestjs/cqrs";
 
-export class FindUserQuery implements IQuery {
+export class FindUserWithEmailQuery implements IQuery {
   constructor(public readonly email: string) {}
 }

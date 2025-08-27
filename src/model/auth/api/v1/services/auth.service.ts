@@ -4,17 +4,17 @@ import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-pay
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { JwtService } from "@nestjs/jwt";
 import { SecurityLibrary } from "src/model/auth/providers/security.library";
-import { CatchCallbackFactoryLibrary } from "../../../common/lib/util/catch-callback-factory.library";
+import { CatchCallbackFactoryLibrary } from "../../../../../common/lib/util/catch-callback-factory.library";
 import { BaseEntity } from "typeorm";
 import bcrypt from "bcrypt";
-import { UserSearcher } from "../../user/utils/user.searcher";
-import { UserEntity } from "../../user/entities/user.entity";
-import { FindEmailDto } from "../../user/dto/request/find-email.dto";
-import { UserAuthEntity } from "../../user/entities/user-auth.entity";
-import { UserProfileEntity } from "../../user/entities/user-profile.entity";
-import { JwtErrorHandlerLibrary } from "../providers/jwt-error-handler.library";
-import { UserUpdateRepository } from "../../user/api/v1/repositories/user-update.repository";
-import { BasicAuthDto } from "../../user/dto/request/basic-auth.dto";
+import { UserSearcher } from "../../../../user/utils/user.searcher";
+import { UserEntity } from "../../../../user/entities/user.entity";
+import { FindEmailDto } from "../../../../user/dto/request/find-email.dto";
+import { UserAuthEntity } from "../../../../user/entities/user-auth.entity";
+import { UserProfileEntity } from "../../../../user/entities/user-profile.entity";
+import { JwtErrorHandlerLibrary } from "../../../providers/jwt-error-handler.library";
+import { UserUpdateRepository } from "../../../../user/api/v1/repositories/user-update.repository";
+import { BasicAuthDto } from "../../../../user/dto/request/basic-auth.dto";
 
 class EntityFinder {
   constructor(private readonly userSearcher: UserSearcher) {}

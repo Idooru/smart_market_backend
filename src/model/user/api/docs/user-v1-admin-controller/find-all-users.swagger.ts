@@ -1,8 +1,8 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
-import { JwtAuthFailSwagger, JwtAuthHeaderSwagger } from "../../../../auth/docs/jwt-auth.swagger";
+import { JwtAuthFailSwagger, JwtAuthHeaderSwagger } from "../../../../auth/api/docs/jwt-auth.swagger";
 import { ServerErrorSwagger } from "../../../../../common/docs/internal-server-error.swagger";
-import { IsNotAdminSwagger } from "../../../../auth/docs/is-not-admin.swagger";
+import { IsNotAdminSwagger } from "../../../../auth/api/docs/is-not-admin.swagger";
 import { AlignSwagger } from "../../../../../common/docs/align.swagger";
 
 export const FindAllUsersSwagger = () => {

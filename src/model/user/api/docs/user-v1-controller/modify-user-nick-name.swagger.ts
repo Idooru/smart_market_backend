@@ -1,6 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { JwtAuthFailSwagger, JwtAuthHeaderSwagger } from "../../../../auth/docs/jwt-auth.swagger";
+import { JwtAuthFailSwagger, JwtAuthHeaderSwagger } from "../../../../auth/api/docs/jwt-auth.swagger";
 import { ServerErrorSwagger } from "../../../../../common/docs/internal-server-error.swagger";
 import { ModifyUserNicknameDto } from "../../../dto/request/modify-user-nickname.dto";
 

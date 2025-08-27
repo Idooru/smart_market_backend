@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { UserService } from "../services/user.service";
 import { RegisterUserDto } from "../../../dto/request/register-user.dto";
 import { ModifyUserDto } from "../../../dto/request/modify-user.dto";
-import { AuthService } from "../../../../auth/services/auth.service";
+import { AuthService } from "../../../../auth/api/v1/services/auth.service";
 
 @Injectable()
 export class UserTransactionContext {

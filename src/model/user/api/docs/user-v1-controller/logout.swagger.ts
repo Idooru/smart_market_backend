@@ -1,6 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { JwtAuthFailSwagger, JwtAuthHeaderSwagger } from "../../../../auth/docs/jwt-auth.swagger";
+import { JwtAuthFailSwagger, JwtAuthHeaderSwagger } from "../../../../auth/api/docs/jwt-auth.swagger";
 import { ServerErrorSwagger } from "../../../../../common/docs/internal-server-error.swagger";
 
 export const LogoutSwagger = () => {

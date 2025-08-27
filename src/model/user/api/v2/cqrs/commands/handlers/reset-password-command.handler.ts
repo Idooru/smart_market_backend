@@ -5,7 +5,7 @@ import { UserRepositoryPayload } from "../../../../v1/transaction/user-repositor
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
 import { UserEntity } from "../../../../../entities/user.entity";
-import { FindUserQuery } from "../../queries/events/find-user.query";
+import { FindUserWithEmailQuery } from "../../queries/events/find-user-with-email.query";
 import { loggerFactory } from "../../../../../../../common/functions/logger.factory";
 import { BadRequestException } from "@nestjs/common";
 
@@ -18,7 +18,7 @@ export class ResetPasswordCommandHandler implements ICommandHandler<ResetPasswor
   ) {}
 
   private async findUser(email: string): Promise<UserEntity> {
-    const query = new FindUserQuery(email);
+    const query = new FindUserWithEmailQuery(email);
     const user = await this.queryBus.execute(query);
 
     if (!user) {

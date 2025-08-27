@@ -26,7 +26,7 @@ import { TransactionInterceptor } from "../../../../../common/interceptors/gener
 import { CommandInterceptor } from "../../../../../common/interceptors/general/command.interceptor";
 import { ApiResultInterface } from "../../../../../common/interceptors/interface/api-result.interface";
 import { UserService } from "../services/user.service";
-import { AuthService } from "../../../../auth/services/auth.service";
+import { AuthService } from "../../../../auth/api/v1/services/auth.service";
 
 @ApiTags("v1 공용 User API")
 @Controller({ path: "/user", version: "1" })

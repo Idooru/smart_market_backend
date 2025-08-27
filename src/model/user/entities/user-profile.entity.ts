@@ -29,7 +29,7 @@ export class UserProfileEntity extends ChildEntity {
 
   @IsMobilePhone()
   @IsNotEmpty()
-  @Column({ type: "varchar", length: 13, unique: true, nullable: false })
+  @Column({ type: "varchar", length: 15, unique: true, nullable: false })
   public phoneNumber: string;
 
   @IsString()

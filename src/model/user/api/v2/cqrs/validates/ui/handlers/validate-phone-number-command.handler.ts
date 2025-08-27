@@ -30,8 +30,8 @@ export class ValidatePhoneNumberCommandHandler implements ICommandHandler<Valida
       errors = [...errors, "'000-0000-0000'형태를 준수해주세요."];
     }
 
-    if (currentPhoneNumber.length > 13) {
-      errors = [...errors, "길이가 13자를 넘어갑니다."];
+    if (currentPhoneNumber.length > 15) {
+      errors = [...errors, "길이가 15자를 넘어갑니다."];
     }
 
     if (hasDuplicateValidation) {

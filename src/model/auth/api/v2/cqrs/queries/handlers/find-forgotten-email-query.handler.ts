@@ -1,22 +1,43 @@
-import { CommandHandler, IQueryHandler, QueryBus, QueryHandler } from "@nestjs/cqrs";
+import { IQueryHandler, QueryBus, QueryHandler } from "@nestjs/cqrs";
 import { FindForgottenEmailQuery } from "../events/find-forgotten-email.query";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
-import { FindUserWithRealNameQueryHandler } from "./find-user-with-real-name-query.handler";
-import { FindUserWithRealNameQuery } from "../events/find-user-with-real-name.query";
-import { FindUserWithPhoneNumberQuery } from "../events/find-user-with-phone-number.query";
 import { loggerFactory } from "../../../../../../../common/functions/logger.factory";
 import { BadRequestException } from "@nestjs/common";
+import { UserEntity } from "../../../../../../user/entities/user.entity";
+import { FindUserEntityQuery } from "../../../../../../user/api/v2/cqrs/queries/events/find-user-entity.query";
+import { UserProfileEntity } from "../../../../../../user/entities/user-profile.entity";
 
 @QueryHandler(FindForgottenEmailQuery)
 export class FindForgottenEmailQueryHandler implements IQueryHandler<FindForgottenEmailQuery> {
   constructor(private readonly queryBus: QueryBus) {}
 
+  private async findUserWithRealName(realName: string): Promise<UserEntity> {
+    const query = new FindUserEntityQuery({
+      property: "UserProfile.realName = :realName",
+      alias: { realName },
+      getOne: true,
+      entities: [UserProfileEntity],
+    });
+    return this.queryBus.execute(query);
+  }
+
+  private async findUserWithPhoneNumber(phoneNumber: string): Promise<UserEntity> {
+    const query = new FindUserEntityQuery({
+      property: "UserProfile.phoneNumber = :phoneNumber",
+      alias: { phoneNumber },
+      getOne: true,
+      entities: [UserProfileEntity],
+    });
+    return this.queryBus.execute(query);
+  }
+
   private async findEmail(query: FindForgottenEmailQuery): Promise<string> {
     const { realName, phoneNumber } = query;
-    const query1 = new FindUserWithRealNameQuery(realName);
-    const query2 = new FindUserWithPhoneNumberQuery(phoneNumber);
 
-    const [found1, found2] = await Promise.all([this.queryBus.execute(query1), this.queryBus.execute(query2)]);
+    const [found1, found2] = await Promise.all([
+      this.findUserWithRealName(realName),
+      this.findUserWithPhoneNumber(phoneNumber),
+    ]);
 
     if (found1.id !== found2.id) {
       const message = "입력한 실명과 전화번호가 일치하지 않는 사용자입니다.";

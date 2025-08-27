@@ -3,11 +3,12 @@ import { CreateProductCommand } from "../classes/create-product.command";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
 import { ProductRepositoryPayload } from "../../../../v1/transaction/product-repository.payload";
-import { FindAdminUserQuery } from "../../queries/classes/find-admin-user.query";
 import { AdminUserEntity } from "../../../../../../user/entities/admin-user.entity";
 import { ProductEntity } from "../../../../../entities/product.entity";
 import { ProductBody } from "../../../../../dto/request/product-body.dto";
 import { CommonProductCommandHandler } from "./common-product-command.handler";
+import { FindUserEntityQuery } from "../../../../../../user/api/v2/cqrs/queries/events/find-user-entity.query";
+import { UserAuthEntity } from "../../../../../../user/entities/user-auth.entity";
 
 @CommandHandler(CreateProductCommand)
 export class CreateProductCommandHandler implements ICommandHandler<CreateProductCommand> {
@@ -18,8 +19,15 @@ export class CreateProductCommandHandler implements ICommandHandler<CreateProduc
   ) {}
 
   private async findAdminUser(userId: string): Promise<AdminUserEntity> {
-    const query = new FindAdminUserQuery(userId);
-    return this.queryBus.execute(query);
+    const query = new FindUserEntityQuery({
+      property: "user.id = :id",
+      alias: { id: userId },
+      getOne: true,
+      entities: [UserAuthEntity, AdminUserEntity],
+    });
+
+    const user = await this.queryBus.execute(query);
+    return user.AdminUser;
   }
 
   private createProduct(body: ProductBody, admin: AdminUserEntity): Promise<ProductEntity> {

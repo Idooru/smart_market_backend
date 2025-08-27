@@ -30,7 +30,6 @@ import { CqrsModule } from "@nestjs/cqrs";
 import { ProductV2Controller } from "./api/v2/controllers/product-v2.controller";
 import { ProductV2AdminController } from "./api/v2/controllers/product-v2-admin.controller";
 import { CreateProductCommandHandler } from "./api/v2/cqrs/commands/handlers/create-product-command.handler";
-import { FindAdminUserQueryHandler } from "./api/v2/cqrs/queries/handlers/find-admin-user-query.handler";
 import { CommonProductCommandHandler } from "./api/v2/cqrs/commands/handlers/common-product-command.handler";
 import { ModifyProductCommandHandler } from "./api/v2/cqrs/commands/handlers/modify-product-command.handler";
 import { FindBeforeProductImagesQueryHandler } from "./api/v2/cqrs/queries/handlers/find-before-product-images-query.handler";
@@ -83,7 +82,6 @@ const productIdFilter = { provide: "product-id-filter", useValue: "product.id = 
       ModifyProductCommandHandler,
       RemoveProductCommandHandler,
       CommonProductQueryHandler,
-      FindAdminUserQueryHandler,
       FindBeforeProductImagesQueryHandler,
       FindProductAutocompleteQueryHandler,
       FindConditionalProductsQueryHandler,

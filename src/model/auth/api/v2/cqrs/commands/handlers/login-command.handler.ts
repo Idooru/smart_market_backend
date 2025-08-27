@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler, QueryBus } from "@nestjs/cqrs";
 import { LoginCommand } from "../events/login.command";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
-import { FindUserWithEmailQuery } from "../../../../../../user/api/v2/cqrs/queries/events/find-user-with-email.query";
 import { UserEntity } from "../../../../../../user/entities/user.entity";
 import { loggerFactory } from "../../../../../../../common/functions/logger.factory";
 import { BadRequestException } from "@nestjs/common";
@@ -10,6 +9,8 @@ import { Transactional } from "../../../../../../../common/interfaces/initialize
 import { CommonAuthCommandHandler } from "./common-auth-command.handler";
 
 import bcrypt from "bcrypt";
+import { FindUserEntityQuery } from "../../../../../../user/api/v2/cqrs/queries/events/find-user-entity.query";
+import { UserAuthEntity } from "../../../../../../user/entities/user-auth.entity";
 
 @CommandHandler(LoginCommand)
 export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
@@ -18,6 +19,16 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
     private readonly queryBus: QueryBus,
     private readonly transaction: Transactional<UserRepositoryPayload>,
   ) {}
+
+  private findUser(email: string): Promise<UserEntity> {
+    const query = new FindUserEntityQuery({
+      property: "UserAuth.email = :email",
+      alias: { email },
+      getOne: true,
+      entities: [UserAuthEntity],
+    });
+    return this.queryBus.execute(query);
+  }
 
   private async comparePassword(password: string, user: UserEntity): Promise<void> {
     const compared = await bcrypt.compare(password, user.UserAuth.password);
@@ -36,8 +47,7 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
   @Implemented()
   public async execute(command: LoginCommand): Promise<string> {
     const { email, password } = command;
-    const query = new FindUserWithEmailQuery(email);
-    const user: UserEntity = await this.queryBus.execute(query);
+    const user = await this.findUser(email);
 
     this.transaction.initRepository();
     await this.comparePassword(password, user);

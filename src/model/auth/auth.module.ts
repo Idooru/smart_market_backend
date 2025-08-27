@@ -25,8 +25,6 @@ import { UserTransactionInitializer } from "../user/api/v1/transaction/user-tran
 import { RefreshTokenCommandHandler } from "./api/v2/cqrs/commands/handlers/refresh-token-command.handler";
 import { LogoutCommandHandler } from "./api/v2/cqrs/commands/handlers/logout-command.handler";
 import { FindForgottenEmailQueryHandler } from "./api/v2/cqrs/queries/handlers/find-forgotten-email-query.handler";
-import { FindUserWithPhoneNumberQueryHandler } from "./api/v2/cqrs/queries/handlers/find-user-with-phone-number-query.handler";
-import { FindUserWithRealNameQueryHandler } from "./api/v2/cqrs/queries/handlers/find-user-with-real-name-query.handler";
 
 @Module({
   imports: [
@@ -55,7 +53,7 @@ import { FindUserWithRealNameQueryHandler } from "./api/v2/cqrs/queries/handlers
       // commands
       ...[CommonAuthCommandHandler, LoginCommandHandler, RefreshTokenCommandHandler, LogoutCommandHandler],
       // queries
-      ...[FindForgottenEmailQueryHandler, FindUserWithPhoneNumberQueryHandler, FindUserWithRealNameQueryHandler],
+      ...[FindForgottenEmailQueryHandler],
     ],
   ],
   exports: [

@@ -37,7 +37,6 @@ import { FindProfileQueryHandler } from "./api/v2/cqrs/queries/handlers/find-pro
 import { ModifyUserCommandHandler } from "./api/v2/cqrs/commands/handlers/modify-user-command.handler";
 import { ResignUserCommandHandler } from "./api/v2/cqrs/commands/handlers/resign-user-command.handler";
 import { ResetPasswordCommandHandler } from "./api/v2/cqrs/commands/handlers/reset-password-command.handler";
-import { FindUserWithEmailQueryHandler } from "./api/v2/cqrs/queries/handlers/find-user-with-email-query.handler";
 import { FindAllUsersQueryHandler } from "./api/v2/cqrs/queries/handlers/find-all-users-query.handler";
 import { UserV2AdminController } from "./api/v2/controllers/user-v2-admin.controller";
 import { FindDetailClientUserQueryHandler } from "./api/v2/cqrs/queries/handlers/find-detail-client-user-query.handler";
@@ -53,7 +52,7 @@ import { ValidatePhoneNumberCommandHandler } from "./api/v2/cqrs/validates/ui/ha
 import { ValidateAddressCommandHandler } from "./api/v2/cqrs/validates/ui/handlers/validate-address-command.handler";
 import { ValidateEmailCommandHandler } from "./api/v2/cqrs/validates/ui/handlers/validate-email-command.handler";
 import { ValidatePasswordCommandHandler } from "./api/v2/cqrs/validates/ui/handlers/validate-password-command.handler";
-import { FindUserWithIdQueryHandler } from "./api/v2/cqrs/queries/handlers/find-user-with-id-query.handler";
+import { FindUserEntityQueryHandler } from "./api/v2/cqrs/queries/handlers/find-user-entity-query.handler";
 
 const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
 
@@ -107,9 +106,8 @@ const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
       ],
       // queries
       ...[
+        FindUserEntityQueryHandler,
         FindProfileQueryHandler,
-        FindUserWithIdQueryHandler,
-        FindUserWithEmailQueryHandler,
         FindAllUsersQueryHandler,
         FindDetailClientUserQueryHandler,
       ],

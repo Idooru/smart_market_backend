@@ -15,9 +15,8 @@ import { RefreshTokenCommand } from "../cqrs/commands/events/refresh-token.comma
 import { LogoutGuard } from "../../../../../common/guards/authenticate/logout.guard";
 import { JwtAccessTokenPayload } from "../../../jwt/jwt-access-token-payload.interface";
 import { LogoutCommand } from "../cqrs/commands/events/logout.command";
-import { FindEmailValidationPipe } from "../../../../user/api/v1/validate/pipe/exist/find-email-validation.pipe";
-import { FindEmailDto } from "../../../../user/dto/request/find-email.dto";
 import { FindForgottenEmailQuery } from "../cqrs/queries/events/find-forgotten-email.query";
+import { FindForgottenEmailDto } from "../dto/find-forgotten-email.dto";
 
 @ApiTags("v2 공용 Auth API")
 @Controller({ path: "/auth", version: "2" })
@@ -80,9 +79,9 @@ export class AuthV2Controller {
   @UseGuards(IsNotLoginGuard)
   @Get("/forgotten-email")
   public async findForgottenEmail(
-    @Query(FindEmailValidationPipe<FindEmailDto>) { realName, phoneNumber }: FindEmailDto,
+    @Query() { realName, phoneNumber, nickName }: FindForgottenEmailDto,
   ): Promise<ApiResultInterface<string>> {
-    const query = new FindForgottenEmailQuery(realName, phoneNumber);
+    const query = new FindForgottenEmailQuery(realName, phoneNumber, nickName);
     const email: string = await this.queryBus.execute(query);
 
     return {

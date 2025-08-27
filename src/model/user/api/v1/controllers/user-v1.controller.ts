@@ -7,7 +7,7 @@ import { FetchInterceptor } from "src/common/interceptors/general/fetch.intercep
 import { LogoutResponseInterface } from "src/common/interceptors/interface/logout-response.interface";
 import { ApiTags } from "@nestjs/swagger";
 import { UserTransactionExecutor } from "../transaction/user-transaction.executor";
-import { UserSearcher } from "../../../utils/user.searcher";
+import { UserSearcher } from "../services/user.searcher";
 import { UserEmailValidatePipe as UserEmailNoneExistValidatePipe } from "../validate/pipe/none-exist/user-email-validate.pipe";
 import { UserBodyPhoneNumberValidatePipe } from "../validate/pipe/none-exist/user-phonenumber-validate.pipe";
 import { UserNicknameValidatePipe } from "../validate/pipe/none-exist/user-nickname-validate.pipe";

@@ -3,7 +3,7 @@ import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { FetchInterceptor } from "src/common/interceptors/general/fetch.interceptor";
 import { ApiTags } from "@nestjs/swagger";
-import { UserSearcher } from "../../../utils/user.searcher";
+import { UserSearcher } from "../services/user.searcher";
 import { UserService } from "../services/user.service";
 import { UserIdValidatePipe } from "../validate/pipe/exist/user-id-validate.pipe";
 import { ClientUserRawDto } from "../../../dto/response/client-user-raw.dto";

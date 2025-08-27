@@ -1,6 +1,6 @@
 import { ForbiddenException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { loggerFactory } from "../../../../common/functions/logger.factory";
-import { UserSearcher } from "../../../user/utils/user.searcher";
+import { UserSearcher } from "../../../user/api/v1/services/user.searcher";
 import { CartSearcher } from "../../../cart/logic/cart.searcher";
 import { AccountSearcher } from "../../../account/logic/account.searcher";
 import { ClientUserEntity } from "../../../user/entities/client-user.entity";

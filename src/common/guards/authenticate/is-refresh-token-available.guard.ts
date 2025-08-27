@@ -4,7 +4,7 @@ import { loggerFactory } from "../../functions/logger.factory";
 import { Implemented } from "../../decorators/implemented.decoration";
 import { UserAuthEntity } from "../../../model/user/entities/user-auth.entity";
 import { UserEntity } from "../../../model/user/entities/user.entity";
-import { UserSearcher } from "../../../model/user/utils/user.searcher";
+import { UserSearcher } from "../../../model/user/api/v1/services/user.searcher";
 import { ValidateTokenLibrary } from "src/model/auth/providers/validate-token.library";
 
 class EntityFinder {

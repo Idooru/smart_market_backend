@@ -1,7 +1,7 @@
 import { UserUpdateRepository } from "../repositories/user-update.repository";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { UserEntity } from "../../../entities/user.entity";
-import { UserSearcher } from "../../../utils/user.searcher";
+import { UserSearcher } from "./user.searcher";
 import { UserEventMapSetter } from "../../../utils/user-event-map.setter";
 import { Transaction } from "../../../../../common/decorators/transaction.decorator";
 import { General } from "src/common/decorators/general.decoration";

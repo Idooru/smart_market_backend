@@ -14,7 +14,7 @@ import { AdminUserEntity } from "./entities/admin-user.entity";
 import { UserEntity } from "./entities/user.entity";
 import { userSelect } from "src/common/config/repository-select-configs/user.select";
 import { UserTransactionExecutor } from "./api/v1/transaction/user-transaction.executor";
-import { UserSearcher } from "./utils/user.searcher";
+import { UserSearcher } from "./api/v1/services/user.searcher";
 import { UserUpdateRepository } from "./api/v1/repositories/user-update.repository";
 import { UserSearchRepository } from "./api/v1/repositories/user-search.repository";
 import { UserService } from "./api/v1/services/user.service";

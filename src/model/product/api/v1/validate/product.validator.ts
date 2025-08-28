@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ValidateLibrary } from "../../../common/lib/util/validate.library";
+import { ValidateLibrary } from "../../../../../common/lib/util/validate.library";
 import { ProductValidateRepository } from "./product-validate.repository";
 
 @Injectable()

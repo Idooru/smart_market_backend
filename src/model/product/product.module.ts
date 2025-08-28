@@ -16,9 +16,9 @@ import { ProductService } from "./api/v1/services/product.service";
 import { ProductUpdateRepository } from "./api/v1/repositories/product-update.repository";
 import { ProductEntity } from "./entities/product.entity";
 import { ProductTransactionInitializer } from "./api/v1/transaction/product-transaction.initializer";
-import { ProductValidator } from "./validate/product.validator";
-import { ProductValidateRepository } from "./validate/product-validate.repository";
-import { ProductIdValidatePipe } from "./validate/pipe/exist/product-id-validate.pipe";
+import { ProductValidator } from "./api/v1/validate/product.validator";
+import { ProductValidateRepository } from "./api/v1/validate/product-validate.repository";
+import { ProductIdValidatePipe } from "./api/v1/validate/pipe/exist/product-id-validate.pipe";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
 import { ProductTransactionSearcher } from "./api/v1/transaction/product-transaction.searcher";
 import { AuthModule } from "../auth/auth.module";
@@ -41,6 +41,8 @@ import { FindHighRatedProductStrategy } from "./api/v2/strategy/find-high-rated-
 import { FindMostReviewProductStrategy } from "./api/v2/strategy/find-most-review-product.strategy";
 import { SearchProductsQueryHandler } from "./api/v2/cqrs/queries/handlers/search-products-query.handler";
 import { FindDetailProductQueryHandler } from "./api/v2/cqrs/queries/handlers/find-detail-product-query.handler";
+import { IsExistProductIdCommandHandler } from "./api/v2/cqrs/validates/db/handlers/is-exist-product-id-command.handler";
+import { IsExistProductNameCommandHandler } from "./api/v2/cqrs/validates/db/handlers/is-exist-product-name-command.handler";
 
 const productIdFilter = { provide: "product-id-filter", useValue: "product.id = :id" };
 
@@ -77,16 +79,24 @@ const productIdFilter = { provide: "product-id-filter", useValue: "product.id = 
     ],
     // cqrs handlers
     ...[
-      CommonProductCommandHandler,
-      CreateProductCommandHandler,
-      ModifyProductCommandHandler,
-      RemoveProductCommandHandler,
-      CommonProductQueryHandler,
-      FindBeforeProductImagesQueryHandler,
-      FindProductAutocompleteQueryHandler,
-      FindConditionalProductsQueryHandler,
-      SearchProductsQueryHandler,
-      FindDetailProductQueryHandler,
+      // commands
+      ...[
+        CommonProductCommandHandler,
+        CreateProductCommandHandler,
+        ModifyProductCommandHandler,
+        RemoveProductCommandHandler,
+      ],
+      // queries
+      ...[
+        CommonProductQueryHandler,
+        FindBeforeProductImagesQueryHandler,
+        FindProductAutocompleteQueryHandler,
+        FindConditionalProductsQueryHandler,
+        SearchProductsQueryHandler,
+        FindDetailProductQueryHandler,
+      ],
+      // validates
+      ...[IsExistProductIdCommandHandler, IsExistProductNameCommandHandler],
     ],
     // find conditional product strategies
     ...[FindHighRatedProductStrategy, FindMostReviewProductStrategy],

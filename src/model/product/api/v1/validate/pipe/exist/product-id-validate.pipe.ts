@@ -1,6 +1,6 @@
 import { Injectable, PipeTransform } from "@nestjs/common";
 import { ProductValidator } from "../../product.validator";
-import { Implemented } from "../../../../../common/decorators/implemented.decoration";
+import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
 
 @Injectable()
 export class ProductIdValidatePipe implements PipeTransform {

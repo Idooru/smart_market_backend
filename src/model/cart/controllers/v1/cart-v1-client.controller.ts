@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { IsClientGuard } from "../../../../common/guards/authenticate/is-client.guard";
-import { ProductIdValidatePipe } from "../../../product/validate/pipe/exist/product-id-validate.pipe";
+import { ProductIdValidatePipe } from "../../../product/api/v1/validate/pipe/exist/product-id-validate.pipe";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";

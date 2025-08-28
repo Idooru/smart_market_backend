@@ -1,7 +1,7 @@
 import { Injectable, PipeTransform } from "@nestjs/common";
 import { ProductValidator } from "../../product.validator";
 import { Implemented } from "src/common/decorators/implemented.decoration";
-import { ProductCategory } from "../../../types/product-category.type";
+import { ProductCategory } from "../../../../../types/product-category.type";
 
 type DTO = {
   name: string;

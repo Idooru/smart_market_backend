@@ -9,9 +9,9 @@ import { SearchProductsDto } from "../../../dto/request/search-product.dto";
 import { FindProductAutocompleteQuery } from "../cqrs/queries/classes/find-product-autocomplete.query";
 import { FindConditionalProductsQuery } from "../cqrs/queries/classes/find-conditional-products.query";
 import { SearchProductsQuery } from "../cqrs/queries/classes/search-products.query";
-import { ProductIdValidatePipe } from "../../../validate/pipe/exist/product-id-validate.pipe";
 import { ProductDetailRawDto } from "../../../dto/response/product-detail-raw.dto";
 import { FindDetailProductQuery } from "../cqrs/queries/classes/find-detail-product.query";
+import { IsExistProductIdPipe } from "../pipes/is-exist-product-id.pipe";
 
 @ApiTags("v2 공용 Product API")
 @Controller({ path: "/product", version: "2" })
@@ -62,7 +62,7 @@ export class ProductV2Controller {
   @UseInterceptors(FetchInterceptor)
   @Get("/:productId")
   public async findDetailProduct(
-    @Param("productId", ProductIdValidatePipe) productId: string,
+    @Param("productId", IsExistProductIdPipe) productId: string,
   ): Promise<ApiResultInterface<ProductDetailRawDto>> {
     const query = new FindDetailProductQuery(productId);
     const result: ProductDetailRawDto = await this.queryBus.execute(query);

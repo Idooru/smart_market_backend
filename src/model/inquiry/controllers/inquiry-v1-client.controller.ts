@@ -8,7 +8,7 @@ import { RemoveHeadersInterceptor } from "src/common/interceptors/general/remove
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ApiTags } from "@nestjs/swagger";
 import { InquiryTransactionExecutor } from "../logic/transaction/inquiry-transaction.executor";
-import { ProductIdValidatePipe } from "../../product/validate/pipe/exist/product-id-validate.pipe";
+import { ProductIdValidatePipe } from "../../product/api/v1/validate/pipe/exist/product-id-validate.pipe";
 import { FetchInterceptor } from "../../../common/interceptors/general/fetch.interceptor";
 import { InquiryRequestIdValidatePipe } from "../pipe/exist/inquiry-request-id-validate.pipe";
 import { InquiryRequestBody } from "../dto/inquiry-request/request/inquiry-request-body";

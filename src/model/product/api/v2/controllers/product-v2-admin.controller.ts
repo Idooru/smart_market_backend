@@ -6,16 +6,17 @@ import { CommandBus } from "@nestjs/cqrs";
 import { TransactionInterceptor } from "../../../../../common/interceptors/general/transaction.interceptor";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { MulterConfigService } from "../../../../../common/lib/media/multer-adapt.module";
-import { OperateProductValidationPipe } from "../../../validate/pipe/none-exist/operate-product-validation.pipe";
 import { ProductBody } from "../../../dto/request/product-body.dto";
 import { GetJWT } from "../../../../../common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "../../../../auth/jwt/jwt-access-token-payload.interface";
 import { ApiResultInterface } from "../../../../../common/interceptors/interface/api-result.interface";
 import { MediaUtils } from "../../../../media/logic/media.utils";
 import { CreateProductCommand } from "../cqrs/commands/classes/create-product.command";
-import { ProductIdValidatePipe } from "../../../validate/pipe/exist/product-id-validate.pipe";
 import { ModifyProductCommand } from "../cqrs/commands/classes/modify-product.command";
 import { RemoveProductCommand } from "../cqrs/commands/classes/remove-product.command";
+import { IsExistProductIdPipe } from "../pipes/is-exist-product-id.pipe";
+import { ValidateProductBodyPipe } from "../pipes/validate-product-body.pipe";
+// import { OperateProductValidationPipe } from "../../v1/validate/pipe/none-exist/operate-product-validation.pipe";
 
 @ApiTags("v2 관리자 Product API")
 @UseGuards(IsAdminGuard)
@@ -34,7 +35,7 @@ export class ProductV2AdminController {
   @Post("/")
   public async createProduct(
     @UploadedFiles() mediaFiles: Express.Multer.File[],
-    @Body(OperateProductValidationPipe) body: ProductBody,
+    @Body(ValidateProductBodyPipe) body: ProductBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
   ): Promise<ApiResultInterface<void>> {
     const command = new CreateProductCommand(
@@ -66,8 +67,8 @@ export class ProductV2AdminController {
   @Put("/:productId")
   public async modifyProduct(
     @UploadedFiles() mediaFiles: Express.Multer.File[],
-    @Param("productId", ProductIdValidatePipe) productId: string,
-    @Body(OperateProductValidationPipe) body: ProductBody,
+    @Param("productId", IsExistProductIdPipe) productId: string,
+    @Body(ValidateProductBodyPipe) body: ProductBody,
   ): Promise<ApiResultInterface<void>> {
     const command = new ModifyProductCommand(
       body,
@@ -86,7 +87,7 @@ export class ProductV2AdminController {
   @UseInterceptors(TransactionInterceptor)
   @Delete("/:productId")
   public async removeProduct(
-    @Param("productId", ProductIdValidatePipe) productId: string,
+    @Param("productId", IsExistProductIdPipe) productId: string,
   ): Promise<ApiResultInterface<void>> {
     const command = new RemoveProductCommand(productId);
 

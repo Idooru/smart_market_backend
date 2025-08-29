@@ -3,7 +3,7 @@ import { OrderUpdateRepository } from "../repositories/order-update.repository";
 import { OrderEntity } from "../entities/order.entity";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { ProductQuantity } from "../types/product-quantity.type";
-import { AccountSearcher } from "../../account/logic/account.searcher";
+import { AccountSearcher } from "../../account/api/v1/services/account.searcher";
 import { AccountEntity } from "../../account/entities/account.entity";
 import { ProductSearcher } from "../../product/utils/product.searcher";
 import { ProductEntity } from "../../product/entities/product.entity";

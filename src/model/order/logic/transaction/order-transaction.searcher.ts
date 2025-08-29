@@ -2,7 +2,7 @@ import { ForbiddenException, Inject, Injectable, NotFoundException } from "@nest
 import { loggerFactory } from "../../../../common/functions/logger.factory";
 import { UserSearcher } from "../../../user/api/v1/services/user.searcher";
 import { CartSearcher } from "../../../cart/logic/cart.searcher";
-import { AccountSearcher } from "../../../account/logic/account.searcher";
+import { AccountSearcher } from "../../../account/api/v1/services/account.searcher";
 import { ClientUserEntity } from "../../../user/entities/client-user.entity";
 import { AccountEntity } from "../../../account/entities/account.entity";
 import { UserEntity } from "../../../user/entities/user.entity";

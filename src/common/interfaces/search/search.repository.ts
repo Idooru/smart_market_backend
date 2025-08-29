@@ -33,12 +33,14 @@ export abstract class SearchRepository<E, D, R> {
 }
 
 export class FindPureEntityArgs {
+  selects?: string[];
   property: string;
   alias: unknown;
   getOne: boolean;
 }
 
 export class FindOptionalEntityArgs {
+  selects?: string[];
   property: string;
   alias: unknown;
   entities: (typeof BaseEntity)[];

@@ -6,6 +6,7 @@ export interface Searcher<T, D, R> {
 }
 
 export class FindEntityArgs {
+  selects?: string[];
   property: string;
   alias: unknown;
   getOne: boolean;

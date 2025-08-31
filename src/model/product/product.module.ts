@@ -43,6 +43,7 @@ import { SearchProductsQueryHandler } from "./api/v2/cqrs/queries/handlers/searc
 import { FindDetailProductQueryHandler } from "./api/v2/cqrs/queries/handlers/find-detail-product-query.handler";
 import { IsExistProductIdCommandHandler } from "./api/v2/cqrs/validates/db/handlers/is-exist-product-id-command.handler";
 import { IsExistProductNameCommandHandler } from "./api/v2/cqrs/validates/db/handlers/is-exist-product-name-command.handler";
+import { FindProductEntityQueryHandler } from "./api/v2/cqrs/queries/handlers/find-product-entity-query.handler";
 
 const productIdFilter = { provide: "product-id-filter", useValue: "product.id = :id" };
 
@@ -89,6 +90,7 @@ const productIdFilter = { provide: "product-id-filter", useValue: "product.id = 
       // queries
       ...[
         CommonProductQueryHandler,
+        FindProductEntityQueryHandler,
         FindBeforeProductImagesQueryHandler,
         FindProductAutocompleteQueryHandler,
         FindConditionalProductsQueryHandler,

@@ -2,7 +2,7 @@ import { IsEnum, IsOptional } from "class-validator";
 import { warnEnumMessage } from "../../../../common/functions/none-enum";
 import { align, Align } from "../../../../common/types/align-by.type";
 
-type CartAlignColumn = "createdAt" | "quantity" | "totalPrice";
+export type CartAlignColumn = "createdAt" | "quantity" | "totalPrice";
 const cartAlignColumn = ["createdAt", "quantity", "totalPrice"];
 
 export class FindAllCartsDto {

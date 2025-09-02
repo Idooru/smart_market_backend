@@ -378,7 +378,7 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┣ 📂order
 ┃ ┃ ┣ 📂controllers
 ┃ ┃ ┃ ┗ 📂v1
-┃ ┃ ┃ ┃ ┗ 📜order-v1-client.contoller.ts
+┃ ┃ ┃ ┃ ┗ 📜order-v2-client.contoller.ts
 ┃ ┃ ┣ 📂dto
 ┃ ┃ ┃ ┣ 📂request
 ┃ ┃ ┃ ┃ ┣ 📜create-order.dto.ts

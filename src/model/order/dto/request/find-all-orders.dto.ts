@@ -4,7 +4,7 @@ import { align, Align } from "../../../../common/types/align-by.type";
 import { DeliveryOption, deliveryOption } from "../../types/delivery-option.type";
 import { TransactionStatus, transactionStatus } from "../../types/transaction-status.type";
 
-type OrderAlignColumn = "createdAt" | "totalPrice";
+export type OrderAlignColumn = "createdAt" | "totalPrice";
 const orderAlignColumn = ["createdAt", "totalPrice"];
 
 export class FindAllOrdersDto {

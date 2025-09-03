@@ -5,7 +5,7 @@ import { ResponseValidateDto } from "../../../../../../../../common/classes/v2/r
 import { IsExistAccountNumberCommand } from "../../db/events/is-exist-account-number.command";
 
 @CommandHandler(ValidateAccountNumberCommand)
-export class ValidateAccountNumberCommandHandler implements ICommandHandler<ValidateAccountNumberCommand> {
+export class ValidateAccountNumberHandler implements ICommandHandler<ValidateAccountNumberCommand> {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Implemented()

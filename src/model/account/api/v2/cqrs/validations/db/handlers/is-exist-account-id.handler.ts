@@ -6,7 +6,7 @@ import { AccountEntity } from "../../../../../../entities/account.entity";
 import { Repository } from "typeorm";
 
 @CommandHandler(IsExistAccountIdCommand)
-export class IsExistAccountIdCommandHandler implements ICommandHandler<IsExistAccountIdCommand> {
+export class IsExistAccountIdHandler implements ICommandHandler<IsExistAccountIdCommand> {
   constructor(
     @InjectRepository(AccountEntity)
     private readonly repository: Repository<AccountEntity>,

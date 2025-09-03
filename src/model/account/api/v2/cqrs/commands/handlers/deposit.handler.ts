@@ -5,12 +5,12 @@ import { DepositResultDto } from "../../../../../dtos/response/deposit-result.dt
 import { AccountEntity } from "../../../../../entities/account.entity";
 import { AccountRepositoryPayload } from "../../../../v1/transaction/account-repository.payload";
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
-import { CommonAccountCommandHandler } from "./common-account-command.handler";
+import { CommonAccountCommandHelper } from "../../../helpers/common-account-command.helper";
 
 @CommandHandler(DepositCommand)
-export class DepositCommandHandler implements ICommandHandler<DepositCommand> {
+export class DepositHandler implements ICommandHandler<DepositCommand> {
   constructor(
-    private readonly common: CommonAccountCommandHandler,
+    private readonly common: CommonAccountCommandHelper,
     private readonly transaction: Transactional<AccountRepositoryPayload>,
   ) {}
 

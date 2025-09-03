@@ -11,7 +11,7 @@ import { AccountSelect } from "../../../../../../../common/config/repository-sel
 import { loggerFactory } from "../../../../../../../common/functions/logger.factory";
 
 @CommandHandler(DeleteAccountCommand)
-export class DeleteAccountCommandHandler implements ICommandHandler<DeleteAccountCommand> {
+export class DeleteAccountHandler implements ICommandHandler<DeleteAccountCommand> {
   constructor(
     private readonly queryBus: QueryBus,
     private readonly commandBus: CommandBus,

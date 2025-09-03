@@ -4,16 +4,16 @@ import { Implemented } from "../../../../../../../common/decorators/implemented.
 import { WithdrawResultDto } from "../../../../../dtos/response/withdraw-result.dto";
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
 import { AccountRepositoryPayload } from "../../../../v1/transaction/account-repository.payload";
-import { CommonAccountCommandHandler } from "./common-account-command.handler";
+import { CommonAccountCommandHelper } from "../../../helpers/common-account-command.helper";
 import { AccountEntity } from "../../../../../entities/account.entity";
 import { QueryFailedError } from "typeorm";
 import { loggerFactory } from "../../../../../../../common/functions/logger.factory";
 import { ForbiddenException } from "@nestjs/common";
 
 @CommandHandler(WithdrawCommand)
-export class WithdrawCommandHandler implements ICommandHandler<WithdrawCommand> {
+export class WithdrawHandler implements ICommandHandler<WithdrawCommand> {
   constructor(
-    private readonly common: CommonAccountCommandHandler,
+    private readonly common: CommonAccountCommandHelper,
     private readonly transaction: Transactional<AccountRepositoryPayload>,
   ) {}
 

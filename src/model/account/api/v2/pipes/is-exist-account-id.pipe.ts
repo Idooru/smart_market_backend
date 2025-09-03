@@ -2,7 +2,7 @@ import { Injectable, PipeTransform } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
 import { ValidateLibrary } from "../../../../../common/lib/util/validate.library";
 import { Implemented } from "../../../../../common/decorators/implemented.decoration";
-import { IsExistAccountIdCommand } from "../cqrs/validates/db/events/is-exist-account-id.command";
+import { IsExistAccountIdCommand } from "../cqrs/validations/db/events/is-exist-account-id.command";
 
 @Injectable()
 export class IsExistAccountIdPipe implements PipeTransform {

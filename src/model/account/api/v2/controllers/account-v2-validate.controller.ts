@@ -2,7 +2,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Controller, Get, Param } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
 import { ResponseValidateDto } from "../../../../../common/classes/response-validate.dto";
-import { ValidateAccountNumberCommand } from "../cqrs/validates/ui/events/validate-account-number.command";
+import { ValidateAccountNumberCommand } from "../cqrs/validations/ui/events/validate-account-number.command";
 
 @ApiTags("v2 검증 Account API")
 @Controller({ path: "/validate/account", version: "2" })

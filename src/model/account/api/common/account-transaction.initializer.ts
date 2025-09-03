@@ -1,9 +1,9 @@
 import { Transactional } from "src/common/interfaces/initializer/transactional";
-import { AccountRepositoryPayload } from "./account-repository.payload";
+import { AccountRepositoryPayload } from "../v1/transaction/account-repository.payload";
 import { Implemented } from "src/common/decorators/implemented.decoration";
-import { AccountEntity } from "../../../entities/account.entity";
+import { AccountEntity } from "../../entities/account.entity";
 import { Injectable } from "@nestjs/common";
-import { TransactionHandler } from "../../../../../common/lib/handler/transaction.handler";
+import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
 
 @Injectable()
 export class AccountTransactionInitializer extends Transactional<AccountRepositoryPayload> {

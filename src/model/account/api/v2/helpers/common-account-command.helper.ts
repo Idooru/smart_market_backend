@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { QueryBus } from "@nestjs/cqrs";
-import { AccountEntity } from "../../../../../entities/account.entity";
-import { FindAccountEntityQuery } from "../../queries/events/find-account-entity.query";
-import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
-import { AccountRepositoryPayload } from "../../../../v1/transaction/account-repository.payload";
+import { AccountEntity } from "../../../entities/account.entity";
+import { FindAccountEntityQuery } from "../cqrs/queries/events/find-account-entity.query";
+import { Transactional } from "../../../../../common/interfaces/initializer/transactional";
+import { AccountRepositoryPayload } from "../../v1/transaction/account-repository.payload";
 
 @Injectable()
-export class CommonAccountCommandHandler {
+export class CommonAccountCommandHelper {
   constructor(
     private readonly queryBus: QueryBus,
     private readonly transaction: Transactional<AccountRepositoryPayload>,

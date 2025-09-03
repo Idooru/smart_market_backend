@@ -10,7 +10,7 @@ import { AccountSelect } from "../../../../../../../common/config/repository-sel
 import { formatDate } from "../../../../../../../common/functions/format-date";
 
 @QueryHandler(FindAllAccountsQuery)
-export class FindAllAccountsQueryHandler implements IQueryHandler<FindAllAccountsQuery> {
+export class FindAllAccountsHandler implements IQueryHandler<FindAllAccountsQuery> {
   constructor(
     @Inject("account-select")
     private readonly select: AccountSelect,

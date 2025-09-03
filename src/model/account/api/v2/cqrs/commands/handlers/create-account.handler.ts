@@ -13,7 +13,7 @@ import { loggerFactory } from "../../../../../../../common/functions/logger.fact
 import { ForbiddenException } from "@nestjs/common";
 
 @CommandHandler(CreateAccountCommand)
-export class CreateAccountCommandHandler implements ICommandHandler<CreateAccountCommand> {
+export class CreateAccountHandler implements ICommandHandler<CreateAccountCommand> {
   constructor(
     private readonly queryBus: QueryBus,
     private readonly commandBus: CommandBus,

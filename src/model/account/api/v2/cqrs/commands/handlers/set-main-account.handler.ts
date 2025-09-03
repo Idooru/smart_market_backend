@@ -6,7 +6,7 @@ import { AccountRepositoryPayload } from "../../../../v1/transaction/account-rep
 import { AccountEntity } from "../../../../../entities/account.entity";
 
 @CommandHandler(SetMainAccountCommand)
-export class SetMainAccountCommandHandler implements ICommandHandler<SetMainAccountCommand> {
+export class SetMainAccountHandler implements ICommandHandler<SetMainAccountCommand> {
   constructor(private readonly transaction: Transactional<AccountRepositoryPayload>) {}
 
   private async disableAllAccount(userId: string): Promise<void> {

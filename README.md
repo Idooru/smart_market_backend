@@ -477,8 +477,8 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┣ 📂review
 ┃ ┃ ┣ 📂controllers
 ┃ ┃ ┃ ┗ 📂v1
-┃ ┃ ┃ ┃ ┣ 📜review-v1-admin.controller.ts
-┃ ┃ ┃ ┃ ┗ 📜review-v1-client.controller.ts
+┃ ┃ ┃ ┃ ┣ 📜review-v2-admin.controller.ts
+┃ ┃ ┃ ┃ ┗ 📜review-v2-client.controller.ts
 ┃ ┃ ┣ 📂dto
 ┃ ┃ ┃ ┣ 📂request
 ┃ ┃ ┃ ┃ ┣ 📜change-review-image.dto.ts

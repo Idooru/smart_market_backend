@@ -2,7 +2,7 @@ import { IsEnum, IsOptional } from "class-validator";
 import { warnEnumMessage } from "../../../../common/functions/none-enum";
 import { align, Align } from "../../../../common/types/align-by.type";
 
-type ReviewAlignColumn = "createdAt" | "starRateScore";
+export type ReviewAlignColumn = "createdAt" | "starRateScore";
 const reviewAlignColumn = ["createdAt", "starRateScore"];
 
 export class FindAllReviewsDto {

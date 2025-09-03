@@ -14,5 +14,12 @@ export const reviewSelect: ReviewSelect = {
     "Image.filePath",
     "Video.filePath",
   ],
-  reviewWithProducts: ["review.id", "review.content", "review.starRateScore", "review.countForModify"],
+  reviewWithProducts: [
+    "review.id",
+    "review.content",
+    "review.starRateScore",
+    "review.countForModify",
+    "Image.filePath",
+    "Video.filePath",
+  ],
 };

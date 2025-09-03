@@ -6,13 +6,13 @@ import { ProductEntity } from "../../../../../entities/product.entity";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { Inject } from "@nestjs/common";
 import { ProductSelect } from "../../../../../../../common/config/repository-select-configs/product.select";
-import { FindConditionalProductStrategy } from "../../../strategy/find-conditional-product.strategy";
-import { FindHighRatedProductStrategy } from "../../../strategy/find-high-rated-product.strategy";
+import { FindConditionalProductStrategy } from "../../../strategies/find-conditional-product.strategy";
+import { FindHighRatedProductStrategy } from "../../../strategies/find-high-rated-product.strategy";
 import { ProductBasicRawDto } from "../../../../../dto/response/product-basic-raw.dto";
-import { FindMostReviewProductStrategy } from "../../../strategy/find-most-review-product.strategy";
+import { FindMostReviewProductStrategy } from "../../../strategies/find-most-review-product.strategy";
 
 @QueryHandler(FindConditionalProductsQuery)
-export class FindConditionalProductsQueryHandler implements IQueryHandler<FindConditionalProductsQuery> {
+export class FindConditionalProductsHandler implements IQueryHandler<FindConditionalProductsQuery> {
   private _strategies: Map<string, FindConditionalProductStrategy>;
 
   constructor(

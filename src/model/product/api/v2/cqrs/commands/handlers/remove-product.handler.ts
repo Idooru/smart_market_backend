@@ -2,13 +2,13 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
 import { RemoveProductCommand } from "../classes/remove-product.command";
 import { ProductRepositoryPayload } from "../../../../v1/transaction/product-repository.payload";
-import { CommonProductCommandHandler } from "./common-product-command.handler";
+import { CommonProductCommandHelper } from "../../validations/common-product-command.helper";
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
 
 @CommandHandler(RemoveProductCommand)
-export class RemoveProductCommandHandler implements ICommandHandler<RemoveProductCommand> {
+export class RemoveProductHandler implements ICommandHandler<RemoveProductCommand> {
   constructor(
-    private readonly common: CommonProductCommandHandler,
+    private readonly common: CommonProductCommandHelper,
     private readonly transaction: Transactional<ProductRepositoryPayload>,
   ) {}
 

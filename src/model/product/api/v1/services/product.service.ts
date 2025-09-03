@@ -5,7 +5,7 @@ import { CreateProductDto } from "../../../dto/request/create-product.dto";
 import { InsertProductImagesDto } from "../../../dto/request/insert-product-image.dto";
 import { ChangeProductImageDto } from "../../../dto/request/change-product-image.dto";
 import { ProductCategory } from "../../../types/product-category.type";
-import { ProductSearcher } from "../../../utils/product.searcher";
+import { ProductSearcher } from "./product.searcher";
 import { MediaUtils } from "../../../../media/logic/media.utils";
 import { Transaction } from "../../../../../common/decorators/transaction.decorator";
 import { General } from "../../../../../common/decorators/general.decoration";

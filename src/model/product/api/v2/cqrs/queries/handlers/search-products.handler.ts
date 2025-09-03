@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { SearchProductsQuery } from "../classes/search-products.query";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
-import { CommonProductQueryHandler } from "./common-product-query.handler";
+import { CommonProductQueryHelper } from "../../../helpers/common-product-query.helper";
 import { ProductSelect } from "../../../../../../../common/config/repository-select-configs/product.select";
 import { Inject } from "@nestjs/common";
 import { Repository, SelectQueryBuilder } from "typeorm";
@@ -10,9 +10,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ProductBasicRawDto } from "../../../../../dto/response/product-basic-raw.dto";
 
 @QueryHandler(SearchProductsQuery)
-export class SearchProductsQueryHandler implements IQueryHandler<SearchProductsQuery> {
+export class SearchProductsHandler implements IQueryHandler<SearchProductsQuery> {
   constructor(
-    private readonly common: CommonProductQueryHandler,
+    private readonly common: CommonProductQueryHelper,
     @Inject("product-select")
     private readonly select: ProductSelect,
     @InjectRepository(ProductEntity)

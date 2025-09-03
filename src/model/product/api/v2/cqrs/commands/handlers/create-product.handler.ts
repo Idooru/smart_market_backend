@@ -6,14 +6,14 @@ import { ProductRepositoryPayload } from "../../../../v1/transaction/product-rep
 import { AdminUserEntity } from "../../../../../../user/entities/admin-user.entity";
 import { ProductEntity } from "../../../../../entities/product.entity";
 import { ProductBody } from "../../../../../dto/request/product-body.dto";
-import { CommonProductCommandHandler } from "./common-product-command.handler";
+import { CommonProductCommandHelper } from "../../validations/common-product-command.helper";
 import { FindUserEntityQuery } from "../../../../../../user/api/v2/cqrs/queries/events/find-user-entity.query";
 import { UserAuthEntity } from "../../../../../../user/entities/user-auth.entity";
 
 @CommandHandler(CreateProductCommand)
-export class CreateProductCommandHandler implements ICommandHandler<CreateProductCommand> {
+export class CreateProductHandler implements ICommandHandler<CreateProductCommand> {
   constructor(
-    private readonly common: CommonProductCommandHandler,
+    private readonly common: CommonProductCommandHelper,
     private readonly queryBus: QueryBus,
     private readonly transaction: Transactional<ProductRepositoryPayload>,
   ) {}

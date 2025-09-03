@@ -4,13 +4,13 @@ import { Implemented } from "../../../../../common/decorators/implemented.decora
 import { ProductEntity } from "../../../entities/product.entity";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { Injectable } from "@nestjs/common";
-import { CommonProductQueryHandler } from "../cqrs/queries/handlers/common-product-query.handler";
+import { CommonProductQueryHelper } from "../helpers/common-product-query.helper";
 import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class FindMostReviewProductStrategy implements FindConditionalProductStrategy {
   constructor(
-    private readonly common: CommonProductQueryHandler,
+    private readonly common: CommonProductQueryHelper,
     @InjectRepository(ProductEntity) private readonly repository: Repository<ProductEntity>,
   ) {}
 

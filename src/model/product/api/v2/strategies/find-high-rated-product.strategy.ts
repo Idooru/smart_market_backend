@@ -4,11 +4,11 @@ import { Implemented } from "../../../../../common/decorators/implemented.decora
 import { SelectQueryBuilder } from "typeorm";
 import { ProductEntity } from "../../../entities/product.entity";
 import { Injectable } from "@nestjs/common";
-import { CommonProductQueryHandler } from "../cqrs/queries/handlers/common-product-query.handler";
+import { CommonProductQueryHelper } from "../helpers/common-product-query.helper";
 
 @Injectable()
 export class FindHighRatedProductStrategy implements FindConditionalProductStrategy {
-  constructor(private readonly common: CommonProductQueryHandler) {}
+  constructor(private readonly common: CommonProductQueryHelper) {}
 
   private setQuery(qb: SelectQueryBuilder<ProductEntity>): void {
     qb.orderBy("StarRate.averageScore", "DESC");

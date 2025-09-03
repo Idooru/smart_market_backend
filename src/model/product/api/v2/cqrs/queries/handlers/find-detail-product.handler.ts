@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { FindDetailProductQuery } from "../classes/find-detail-product.query";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
-import { CommonProductQueryHandler } from "./common-product-query.handler";
+import { CommonProductQueryHelper } from "../../../helpers/common-product-query.helper";
 import { Inject } from "@nestjs/common";
 import { ProductSelect } from "../../../../../../../common/config/repository-select-configs/product.select";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -11,9 +11,9 @@ import { ProductDetailRawDto } from "../../../../../dto/response/product-detail-
 import { formatDate } from "../../../../../../../common/functions/format-date";
 
 @QueryHandler(FindDetailProductQuery)
-export class FindDetailProductQueryHandler implements IQueryHandler<FindDetailProductQuery> {
+export class FindDetailProductHandler implements IQueryHandler<FindDetailProductQuery> {
   constructor(
-    private readonly common: CommonProductQueryHandler,
+    private readonly common: CommonProductQueryHelper,
     @Inject("product-select")
     private readonly select: ProductSelect,
     @Inject("product-id-filter")

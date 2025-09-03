@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { HangulLibrary } from "../../../../../../../common/lib/util/hangul.library";
+import { HangulLibrary } from "../../../../../common/lib/util/hangul.library";
 import { SelectQueryBuilder } from "typeorm";
-import { ProductEntity } from "../../../../../entities/product.entity";
-import { formatDate } from "../../../../../../../common/functions/format-date";
-import { ProductBasicRawDto } from "../../../../../dto/response/product-basic-raw.dto";
-import { MediaUtils } from "../../../../../../media/logic/media.utils";
+import { ProductEntity } from "../../../entities/product.entity";
+import { formatDate } from "../../../../../common/functions/format-date";
+import { ProductBasicRawDto } from "../../../dto/response/product-basic-raw.dto";
+import { MediaUtils } from "../../../../media/logic/media.utils";
 
 @Injectable()
-export class CommonProductQueryHandler {
+export class CommonProductQueryHelper {
   constructor(private readonly hangulLibrary: HangulLibrary, private readonly mediaUtils: MediaUtils) {}
 
   private queryWhereChoseong(qb: SelectQueryBuilder<ProductEntity>, keyword: string): void {

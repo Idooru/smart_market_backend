@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { ProductEntity } from "../entities/product.entity";
-import { ProductBasicRawDto } from "../dto/response/product-basic-raw.dto";
-import { ProductDetailRawDto } from "../dto/response/product-detail-raw.dto";
-import { ProductSearchRepository } from "../api/v1/repositories/product-search.repository";
-import { FindEntityArgs, Searcher } from "../../../common/interfaces/search/searcher";
-import { Implemented } from "../../../common/decorators/implemented.decoration";
-import { FindAllProductsDto } from "../dto/request/find-all-products.dto";
-import { SearchProductsDto } from "../dto/request/search-product.dto";
-import { FindConditionalProductDto } from "../dto/request/find-conditional-product.dto";
+import { ProductEntity } from "../../../entities/product.entity";
+import { ProductBasicRawDto } from "../../../dto/response/product-basic-raw.dto";
+import { ProductDetailRawDto } from "../../../dto/response/product-detail-raw.dto";
+import { ProductSearchRepository } from "../repositories/product-search.repository";
+import { FindEntityArgs, Searcher } from "../../../../../common/interfaces/search/searcher";
+import { Implemented } from "../../../../../common/decorators/implemented.decoration";
+import { FindAllProductsDto } from "../../../dto/request/find-all-products.dto";
+import { SearchProductsDto } from "../../../dto/request/search-product.dto";
+import { FindConditionalProductDto } from "../../../dto/request/find-conditional-product.dto";
 
 @Injectable()
 export class ProductSearcher implements Searcher<ProductEntity, FindAllProductsDto, ProductBasicRawDto> {

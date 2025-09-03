@@ -6,7 +6,7 @@ import { Repository } from "typeorm";
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
 
 @CommandHandler(IsExistProductIdCommand)
-export class IsExistProductIdCommandHandler implements ICommandHandler<IsExistProductIdCommand> {
+export class IsExistProductIdHandler implements ICommandHandler<IsExistProductIdCommand> {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly repository: Repository<ProductEntity>,

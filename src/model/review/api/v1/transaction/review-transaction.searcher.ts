@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ProductSearcher } from "../../../../product/utils/product.searcher";
+import { ProductSearcher } from "../../../../product/api/v1/services/product.searcher";
 import { ReviewUtils } from "../services/review.utils";
 import { ReviewEntity } from "../../../entities/review.entity";
 import { StarRateEntity } from "../../../entities/star-rate.entity";

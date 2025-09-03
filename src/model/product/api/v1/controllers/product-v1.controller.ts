@@ -1,7 +1,7 @@
 import { Controller, Get, UseInterceptors, Param, Query } from "@nestjs/common";
 import { FetchInterceptor } from "src/common/interceptors/general/fetch.interceptor";
 import { ApiTags } from "@nestjs/swagger";
-import { ProductSearcher } from "../../../utils/product.searcher";
+import { ProductSearcher } from "../services/product.searcher";
 import { ProductIdValidatePipe } from "../validate/pipe/exist/product-id-validate.pipe";
 import { FindDetailProductSwagger } from "../../docs/product-v1-controller/find-detail-product.swagger";
 import { ProductBasicRawDto } from "../../../dto/response/product-basic-raw.dto";

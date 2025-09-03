@@ -8,7 +8,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, SelectQueryBuilder } from "typeorm";
 
 @QueryHandler(FindProductEntityQuery)
-export class FindProductEntityQueryHandler
+export class FindProductEntityHandler
   extends CommonFindEntity<ProductEntity>
   implements IQueryHandler<FindProductEntityQuery>
 {

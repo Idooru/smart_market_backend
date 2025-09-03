@@ -5,13 +5,13 @@ import { ProductRepositoryPayload } from "../../../../v1/transaction/product-rep
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
 import { ProductImageEntity } from "../../../../../../media/entities/product-image.entity";
 import { ProductBody } from "../../../../../dto/request/product-body.dto";
-import { CommonProductCommandHandler } from "./common-product-command.handler";
+import { CommonProductCommandHelper } from "../../validations/common-product-command.helper";
 import { ProductEntity } from "../../../../../entities/product.entity";
 
 @CommandHandler(ModifyProductCommand)
-export class ModifyProductCommandHandler implements ICommandHandler<ModifyProductCommand> {
+export class ModifyProductHandler implements ICommandHandler<ModifyProductCommand> {
   constructor(
-    private readonly common: CommonProductCommandHandler,
+    private readonly common: CommonProductCommandHelper,
     private readonly transaction: Transactional<ProductRepositoryPayload>,
   ) {}
 

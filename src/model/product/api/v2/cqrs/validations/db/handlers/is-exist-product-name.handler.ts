@@ -6,7 +6,7 @@ import { ProductEntity } from "../../../../../../entities/product.entity";
 import { Repository } from "typeorm";
 
 @CommandHandler(IsExistProductNameCommand)
-export class IsExistProductNameCommandHandler implements ICommandHandler<IsExistProductNameCommand> {
+export class IsExistProductNameHandler implements ICommandHandler<IsExistProductNameCommand> {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly repository: Repository<ProductEntity>,

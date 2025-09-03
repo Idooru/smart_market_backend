@@ -1,10 +1,10 @@
-import { ProductRepositoryPayload } from "./product-repository.payload";
-import { ProductEntity } from "../../../entities/product.entity";
-import { StarRateEntity } from "../../../../review/entities/star-rate.entity";
-import { ProductImageEntity } from "../../../../media/entities/product-image.entity";
-import { Transactional } from "../../../../../common/interfaces/initializer/transactional";
-import { Implemented } from "../../../../../common/decorators/implemented.decoration";
-import { TransactionHandler } from "../../../../../common/lib/handler/transaction.handler";
+import { ProductRepositoryPayload } from "../v1/transaction/product-repository.payload";
+import { ProductEntity } from "../../entities/product.entity";
+import { StarRateEntity } from "../../../review/entities/star-rate.entity";
+import { ProductImageEntity } from "../../../media/entities/product-image.entity";
+import { Transactional } from "../../../../common/interfaces/initializer/transactional";
+import { Implemented } from "../../../../common/decorators/implemented.decoration";
+import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()

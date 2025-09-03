@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import { CartUpdateRepository } from "../repositories/cart-update.repository";
 import { UserSearcher } from "../../../../user/api/v1/services/user.searcher";
-import { ProductSearcher } from "../../../../product/utils/product.searcher";
+import { ProductSearcher } from "../../../../product/api/v1/services/product.searcher";
 import { CartSearcher } from "./cart.searcher";
 import { loggerFactory } from "../../../../../common/functions/logger.factory";
 import { General } from "../../../../../common/decorators/general.decoration";

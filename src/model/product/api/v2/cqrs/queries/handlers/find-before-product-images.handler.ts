@@ -5,7 +5,7 @@ import { ProductImageEntity } from "../../../../../../media/entities/product-ima
 import { ProductImageSearcher } from "../../../../../../media/logic/product-image.searcher";
 
 @QueryHandler(FindBeforeProductImagesQuery)
-export class FindBeforeProductImagesQueryHandler implements IQueryHandler<FindBeforeProductImagesQuery> {
+export class FindBeforeProductImagesHandler implements IQueryHandler<FindBeforeProductImagesQuery> {
   constructor(private readonly searcher: ProductImageSearcher) {}
 
   private findProductImages(productId: string): Promise<ProductImageEntity[]> {

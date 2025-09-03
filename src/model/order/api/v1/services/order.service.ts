@@ -5,7 +5,7 @@ import { Transaction } from "../../../../../common/decorators/transaction.decora
 import { ProductQuantity } from "../../../types/product-quantity.type";
 import { AccountSearcher } from "../../../../account/api/v1/services/account.searcher";
 import { AccountEntity } from "../../../../account/entities/account.entity";
-import { ProductSearcher } from "../../../../product/utils/product.searcher";
+import { ProductSearcher } from "../../../../product/api/v1/services/product.searcher";
 import { ProductEntity } from "../../../../product/entities/product.entity";
 import { AdminUserEntity } from "../../../../user/entities/admin-user.entity";
 import { CreateOrderRowDto } from "../../../dto/request/create-order.dto";

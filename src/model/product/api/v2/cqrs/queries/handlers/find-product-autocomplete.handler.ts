@@ -4,12 +4,12 @@ import { Implemented } from "../../../../../../../common/decorators/implemented.
 import { ProductEntity } from "../../../../../entities/product.entity";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CommonProductQueryHandler } from "./common-product-query.handler";
+import { CommonProductQueryHelper } from "../../../helpers/common-product-query.helper";
 
 @QueryHandler(FindProductAutocompleteQuery)
-export class FindProductAutocompleteQueryHandler implements IQueryHandler<FindProductAutocompleteQuery> {
+export class FindProductAutocompleteHandler implements IQueryHandler<FindProductAutocompleteQuery> {
   constructor(
-    private readonly common: CommonProductQueryHandler,
+    private readonly common: CommonProductQueryHelper,
     @InjectRepository(ProductEntity)
     private readonly repository: Repository<ProductEntity>,
   ) {}

@@ -6,7 +6,7 @@ import { AccountEntity } from "../../../../account/entities/account.entity";
 import { QueryFailedError } from "typeorm";
 import { loggerFactory } from "../../../../../common/functions/logger.factory";
 import { Transactional } from "../../../../../common/interfaces/initializer/transactional";
-import { OrderRepositoryPayload } from "../transaction/order-repository.payload";
+import { OrderRepositoryPayload } from "../../common/order-repository.payload";
 import { Transaction } from "../../../../../common/decorators/transaction.decorator";
 import { DecreaseProductStockDto } from "../../../dto/request/decrease-product-stock.dto";
 import { CreateOrderRowDto } from "../../../dto/request/create-order.dto";

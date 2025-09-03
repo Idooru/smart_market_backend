@@ -11,7 +11,7 @@ import { OrderBasicRawDto } from "../../../../../dto/response/order-basic-raw.dt
 import { formatDate } from "../../../../../../../common/functions/format-date";
 
 @QueryHandler(FindAllOrdersQuery)
-export class FindAllOrdersQueryHandler implements IQueryHandler<FindAllOrdersQuery> {
+export class FindAllOrdersHandler implements IQueryHandler<FindAllOrdersQuery> {
   constructor(
     @Inject("order-select")
     private readonly select: OrderSelect,

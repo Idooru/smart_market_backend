@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { AccountEntity } from "../../../../../../account/entities/account.entity";
-import { FindAccountEntityQuery } from "../../../../../../account/api/v2/cqrs/queries/events/find-account-entity.query";
+import { AccountEntity } from "../../../../account/entities/account.entity";
+import { FindAccountEntityQuery } from "../../../../account/api/v2/cqrs/queries/events/find-account-entity.query";
 import { QueryBus } from "@nestjs/cqrs";
 
 @Injectable()
-export class CommonOrderCommandHandler {
+export class CommonOrderCommandHelper {
   constructor(private readonly queryBus: QueryBus) {}
 
   public findAccounts(userId: string): Promise<AccountEntity[]> {

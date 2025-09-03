@@ -1,14 +1,14 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { DestructResourceCommand } from "../../events/create-order/destruct-resource.command";
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
-import { OrderRepositoryPayload } from "../../../../../v1/transaction/order-repository.payload";
+import { OrderRepositoryPayload } from "../../../../../common/order-repository.payload";
 import { Transactional } from "../../../../../../../../common/interfaces/initializer/transactional";
 import { CartEntity } from "../../../../../../../cart/entities/cart.entity";
 import { ProductQuantity } from "../../../../../../types/product-quantity.type";
 import { ProductEntity } from "../../../../../../../product/entities/product.entity";
 
 @CommandHandler(DestructResourceCommand)
-export class DestructResourceCommandHandler implements ICommandHandler<DestructResourceCommand> {
+export class DestructResourceHandler implements ICommandHandler<DestructResourceCommand> {
   constructor(private readonly transaction: Transactional<OrderRepositoryPayload>) {}
 
   private async deleteAllCarts(userId: string): Promise<void> {

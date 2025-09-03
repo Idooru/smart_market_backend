@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { ConstructResourceCommand } from "../../events/create-order/construct-resource.command";
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
 import { Transactional } from "../../../../../../../../common/interfaces/initializer/transactional";
-import { OrderRepositoryPayload } from "../../../../../v1/transaction/order-repository.payload";
+import { OrderRepositoryPayload } from "../../../../../common/order-repository.payload";
 import { OrderBody } from "../../../../../../dto/request/order-body.dto";
 import { ClientUserEntity } from "../../../../../../../user/entities/client-user.entity";
 import { Inject } from "@nestjs/common";
@@ -10,7 +10,7 @@ import { OrderEntity } from "../../../../../../entities/order.entity";
 import { ProductQuantity } from "../../../../../../types/product-quantity.type";
 
 @CommandHandler(ConstructResourceCommand)
-export class ConstructResourceCommandHandler implements ICommandHandler<ConstructResourceCommand> {
+export class ConstructResourceHandler implements ICommandHandler<ConstructResourceCommand> {
   constructor(
     private readonly transaction: Transactional<OrderRepositoryPayload>,
     @Inject("surtax-price")

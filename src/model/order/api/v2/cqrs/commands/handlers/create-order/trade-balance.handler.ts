@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler, QueryBus } from "@nestjs/cqrs";
 import { TradeBalanceCommand } from "../../events/create-order/trade-balance.command";
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
 import { Transactional } from "../../../../../../../../common/interfaces/initializer/transactional";
-import { OrderRepositoryPayload } from "../../../../../v1/transaction/order-repository.payload";
+import { OrderRepositoryPayload } from "../../../../../common/order-repository.payload";
 import { ForbiddenException, Inject } from "@nestjs/common";
 import { AccountEntity } from "../../../../../../../account/entities/account.entity";
 import { QueryFailedError } from "typeorm";
@@ -11,14 +11,14 @@ import { ProductQuantity } from "../../../../../../types/product-quantity.type";
 import { ProductEntity } from "../../../../../../../product/entities/product.entity";
 import { FindProductEntityQuery } from "../../../../../../../product/api/v2/cqrs/queries/classes/find-product-entity.query";
 import { AdminUserEntity } from "../../../../../../../user/entities/admin-user.entity";
-import { CommonOrderCommandHandler } from "../common-order-command.handler";
+import { CommonOrderCommandHelper } from "../../../../helpers/common-order-command.helper";
 import { DivideBalanceDto } from "../../../../dto/divide-balance.dto";
 import { BalanceGroup } from "../../../../../../types/balance-group.type";
 
 @CommandHandler(TradeBalanceCommand)
-export class TradeBalanceCommandHandler implements ICommandHandler<TradeBalanceCommand> {
+export class TradeBalanceHandler implements ICommandHandler<TradeBalanceCommand> {
   constructor(
-    private readonly common: CommonOrderCommandHandler,
+    private readonly common: CommonOrderCommandHelper,
     @Inject("surtax-price")
     private readonly surtaxPrice: number,
     private readonly queryBus: QueryBus,

@@ -13,7 +13,7 @@ import { ProductQuantity } from "../../../../../../types/product-quantity.type";
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
 import { PrepareCreateOrderDto } from "../../../../dto/prepare-create-order.dto";
 import { PrepareCreateOrderCommand } from "../../events/create-order/prepare-create-order.command";
-import { CommonOrderCommandHandler } from "../common-order-command.handler";
+import { CommonOrderCommandHelper } from "../../../../helpers/common-order-command.helper";
 
 class EntityFinder {
   constructor(private readonly queryBus: QueryBus) {}
@@ -79,12 +79,12 @@ class Validator {
 }
 
 @CommandHandler(PrepareCreateOrderCommand)
-export class PrepareCreateOrderCommandHandler implements ICommandHandler<PrepareCreateOrderCommand> {
+export class PrepareCreateOrderHandler implements ICommandHandler<PrepareCreateOrderCommand> {
   public readonly finder: EntityFinder;
   public readonly validator: Validator;
 
   constructor(
-    private readonly common: CommonOrderCommandHandler,
+    private readonly common: CommonOrderCommandHelper,
     private readonly queryBus: QueryBus,
     @Inject("surtax-price")
     private readonly surtaxPrice: number,

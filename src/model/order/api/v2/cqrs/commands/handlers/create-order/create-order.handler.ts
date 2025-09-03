@@ -3,14 +3,14 @@ import { CreateOrderCommand } from "../../events/create-order/create-order.comma
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
 import { PrepareCreateOrderCommand } from "../../events/create-order/prepare-create-order.command";
 import { PrepareCreateOrderDto } from "../../../../dto/prepare-create-order.dto";
-import { OrderRepositoryPayload } from "../../../../../v1/transaction/order-repository.payload";
+import { OrderRepositoryPayload } from "../../../../../common/order-repository.payload";
 import { Transactional } from "../../../../../../../../common/interfaces/initializer/transactional";
 import { DestructResourceCommand } from "../../events/create-order/destruct-resource.command";
 import { TradeBalanceCommand } from "../../events/create-order/trade-balance.command";
 import { ConstructResourceCommand } from "../../events/create-order/construct-resource.command";
 
 @CommandHandler(CreateOrderCommand)
-export class CreateOrderCommandHandler implements ICommandHandler<CreateOrderCommand> {
+export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly transaction: Transactional<OrderRepositoryPayload>,

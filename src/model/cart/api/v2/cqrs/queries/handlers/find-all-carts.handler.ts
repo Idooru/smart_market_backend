@@ -11,7 +11,7 @@ import { formatDate } from "../../../../../../../common/functions/format-date";
 import { MediaUtils } from "../../../../../../media/logic/media.utils";
 
 @QueryHandler(FindAllCartsQuery)
-export class FindAllCartsQueryHandler implements IQueryHandler<FindAllCartsQuery> {
+export class FindAllCartsHandler implements IQueryHandler<FindAllCartsQuery> {
   constructor(
     @Inject("cart-select")
     private readonly select: CartSelect,

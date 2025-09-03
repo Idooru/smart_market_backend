@@ -6,7 +6,7 @@ import { CartEntity } from "../../../../../../entities/cart.entity";
 import { Repository } from "typeorm";
 
 @CommandHandler(IsExistCartIdCommand)
-export class IsExistCartIdCommandHandler implements ICommandHandler<IsExistCartIdCommand> {
+export class IsExistCartIdHandler implements ICommandHandler<IsExistCartIdCommand> {
   constructor(
     @InjectRepository(CartEntity)
     private readonly repository: Repository<CartEntity>,

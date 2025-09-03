@@ -2,10 +2,10 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { DeleteAllCartsCommand } from "../events/delete-all-carts.command";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
-import { CartRepositoryPayload } from "../../../../v1/transaction/cart-repository.payload";
+import { CartRepositoryPayload } from "../../../../common/cart-repository.payload";
 
 @CommandHandler(DeleteAllCartsCommand)
-export class DeleteAllCartsCommandHandler implements ICommandHandler<DeleteAllCartsCommand> {
+export class DeleteAllCartsHandler implements ICommandHandler<DeleteAllCartsCommand> {
   constructor(private readonly transaction: Transactional<CartRepositoryPayload>) {}
 
   private async deleteAllCarts(userId: string): Promise<void> {

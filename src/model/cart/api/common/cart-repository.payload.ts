@@ -1,4 +1,4 @@
-import { CartEntity } from "../../../entities/cart.entity";
+import { CartEntity } from "../../entities/cart.entity";
 import { Repository } from "typeorm";
 
 export interface CartRepositoryPayload {

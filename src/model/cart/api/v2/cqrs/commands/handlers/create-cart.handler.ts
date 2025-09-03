@@ -2,12 +2,12 @@ import { CommandHandler, ICommandHandler, QueryBus } from "@nestjs/cqrs";
 import { CreateCartCommand } from "../events/create-cart.command";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
-import { CartRepositoryPayload } from "../../../../v1/transaction/cart-repository.payload";
+import { CartRepositoryPayload } from "../../../../common/cart-repository.payload";
 import { ClientUserEntity } from "../../../../../../user/entities/client-user.entity";
 import { ProductEntity } from "../../../../../../product/entities/product.entity";
 import { UserEntity } from "../../../../../../user/entities/user.entity";
 import { FindUserEntityQuery } from "../../../../../../user/api/v2/cqrs/queries/events/find-user-entity.query";
-import { CommonCartCommandHandler } from "./common-cart-command.handler";
+import { CommonCartCommandHelper } from "../../../helpers/common-cart-command.helper";
 import { CartBody } from "../../../../../dto/request/cart-body.dto";
 import { FindCartEntityQuery } from "../../queries/events/find-cart-entity.query";
 import { CartEntity } from "../../../../../entities/cart.entity";
@@ -16,9 +16,9 @@ import { BadRequestException, Inject } from "@nestjs/common";
 import { CartSelect } from "../../../../../../../common/config/repository-select-configs/cart.select";
 
 @CommandHandler(CreateCartCommand)
-export class CreateCartCommandHandler implements ICommandHandler<CreateCartCommand> {
+export class CreateCartHandler implements ICommandHandler<CreateCartCommand> {
   constructor(
-    private readonly common: CommonCartCommandHandler,
+    private readonly common: CommonCartCommandHelper,
     private readonly queryBus: QueryBus,
     private readonly transaction: Transactional<CartRepositoryPayload>,
     @Inject("cart-select")

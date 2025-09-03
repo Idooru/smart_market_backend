@@ -1,15 +1,15 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { ModifyCartCommand } from "../events/modify-cart.command";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
-import { CommonCartCommandHandler } from "./common-cart-command.handler";
+import { CommonCartCommandHelper } from "../../../helpers/common-cart-command.helper";
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
-import { CartRepositoryPayload } from "../../../../v1/transaction/cart-repository.payload";
+import { CartRepositoryPayload } from "../../../../common/cart-repository.payload";
 import { CartBody } from "../../../../../dto/request/cart-body.dto";
 
 @CommandHandler(ModifyCartCommand)
-export class ModifyCartCommandHandler implements ICommandHandler<ModifyCartCommand> {
+export class ModifyCartHandler implements ICommandHandler<ModifyCartCommand> {
   constructor(
-    private readonly common: CommonCartCommandHandler,
+    private readonly common: CommonCartCommandHelper,
     private readonly transaction: Transactional<CartRepositoryPayload>,
   ) {}
 

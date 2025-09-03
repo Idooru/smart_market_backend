@@ -8,10 +8,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, SelectQueryBuilder } from "typeorm";
 
 @QueryHandler(FindCartEntityQuery)
-export class FindCartEntityQueryHandler
-  extends CommonFindEntity<CartEntity>
-  implements IQueryHandler<FindCartEntityQuery>
-{
+export class FindCartEntityHandler extends CommonFindEntity<CartEntity> implements IQueryHandler<FindCartEntityQuery> {
   constructor(
     @InjectRepository(CartEntity)
     private readonly repository: Repository<CartEntity>,

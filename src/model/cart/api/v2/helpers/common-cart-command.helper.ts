@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { loggerFactory } from "../../../../../../../common/functions/logger.factory";
-import { ProductEntity } from "../../../../../../product/entities/product.entity";
-import { CartBody } from "../../../../../dto/request/cart-body.dto";
-import { FindProductEntityQuery } from "../../../../../../product/api/v2/cqrs/queries/classes/find-product-entity.query";
+import { loggerFactory } from "../../../../../common/functions/logger.factory";
+import { ProductEntity } from "../../../../product/entities/product.entity";
+import { CartBody } from "../../../dto/request/cart-body.dto";
+import { FindProductEntityQuery } from "../../../../product/api/v2/cqrs/queries/classes/find-product-entity.query";
 import { QueryBus } from "@nestjs/cqrs";
 
 @Injectable()
-export class CommonCartCommandHandler {
+export class CommonCartCommandHelper {
   constructor(private readonly queryBus: QueryBus) {}
 
   public findProduct(productId: string): Promise<ProductEntity> {

@@ -5,7 +5,7 @@ import { Transactional } from "../../../../../../../common/interfaces/initialize
 import { UserRepositoryPayload } from "../../../../../../user/api/v1/transaction/user-repository.payload";
 
 @CommandHandler(LogoutCommand)
-export class LogoutCommandHandler implements ICommandHandler<LogoutCommand> {
+export class LogoutHandler implements ICommandHandler<LogoutCommand> {
   constructor(private readonly transaction: Transactional<UserRepositoryPayload>) {}
 
   private async removeRefreshToken(userId: string): Promise<void> {

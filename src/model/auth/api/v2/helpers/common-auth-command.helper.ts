@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { SecurityLibrary } from "../../../../../providers/security.library";
-import { JwtErrorHandlerLibrary } from "../../../../../providers/jwt-error-handler.library";
-import { JwtAccessTokenPayload } from "../../../../../jwt/jwt-access-token-payload.interface";
-import { UserEntity } from "../../../../../../user/entities/user.entity";
-import { JwtRefreshTokenPayload } from "../../../../../jwt/jwt-refresh-token-payload.interface";
+import { SecurityLibrary } from "../../../providers/security.library";
+import { JwtErrorHandlerLibrary } from "../../../providers/jwt-error-handler.library";
+import { JwtAccessTokenPayload } from "../../../jwt/jwt-access-token-payload.interface";
+import { UserEntity } from "../../../../user/entities/user.entity";
+import { JwtRefreshTokenPayload } from "../../../jwt/jwt-refresh-token-payload.interface";
 
 @Injectable()
-export class CommonAuthCommandHandler {
+export class CommonAuthCommandHelper {
   constructor(
     private readonly jwtService: JwtService,
     private readonly securityLibrary: SecurityLibrary,

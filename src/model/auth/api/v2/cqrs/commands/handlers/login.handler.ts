@@ -6,16 +6,16 @@ import { loggerFactory } from "../../../../../../../common/functions/logger.fact
 import { BadRequestException } from "@nestjs/common";
 import { UserRepositoryPayload } from "../../../../../../user/api/v1/transaction/user-repository.payload";
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
-import { CommonAuthCommandHandler } from "./common-auth-command.handler";
+import { CommonAuthCommandHelper } from "../../../helpers/common-auth-command.helper";
 
 import bcrypt from "bcrypt";
 import { FindUserEntityQuery } from "../../../../../../user/api/v2/cqrs/queries/events/find-user-entity.query";
 import { UserAuthEntity } from "../../../../../../user/entities/user-auth.entity";
 
 @CommandHandler(LoginCommand)
-export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
+export class LoginHandler implements ICommandHandler<LoginCommand> {
   constructor(
-    private readonly common: CommonAuthCommandHandler,
+    private readonly common: CommonAuthCommandHelper,
     private readonly queryBus: QueryBus,
     private readonly transaction: Transactional<UserRepositoryPayload>,
   ) {}

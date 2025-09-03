@@ -16,15 +16,15 @@ import { IsRefreshTokenAvailableGuard } from "src/common/guards/authenticate/is-
 import { JwtErrorHandlerLibrary } from "src/model/auth/providers/jwt-error-handler.library";
 import { AuthV1Controller } from "./api/v1/controllers/auth-v1.controller";
 import { AuthService } from "./api/v1/services/auth.service";
-import { LoginCommandHandler } from "./api/v2/cqrs/commands/handlers/login-command.handler";
+import { LoginHandler } from "./api/v2/cqrs/commands/handlers/login.handler";
 import { CqrsModule } from "@nestjs/cqrs";
 import { AuthV2Controller } from "./api/v2/controllers/auth-v2.controller";
-import { CommonAuthCommandHandler } from "./api/v2/cqrs/commands/handlers/common-auth-command.handler";
+import { CommonAuthCommandHelper } from "./api/v2/helpers/common-auth-command.helper";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
 import { UserTransactionInitializer } from "../user/api/common/user-transaction.initializer";
-import { RefreshTokenCommandHandler } from "./api/v2/cqrs/commands/handlers/refresh-token-command.handler";
-import { LogoutCommandHandler } from "./api/v2/cqrs/commands/handlers/logout-command.handler";
-import { FindForgottenEmailQueryHandler } from "./api/v2/cqrs/queries/handlers/find-forgotten-email-query.handler";
+import { RefreshTokenHandler } from "./api/v2/cqrs/commands/handlers/refresh-token.handler";
+import { LogoutHandler } from "./api/v2/cqrs/commands/handlers/logout.handler";
+import { FindForgottenEmailHandler } from "./api/v2/cqrs/queries/handlers/find-forgotten-email.handler";
 
 @Module({
   imports: [
@@ -48,12 +48,17 @@ import { FindForgottenEmailQueryHandler } from "./api/v2/cqrs/queries/handlers/f
     ],
     // v1 logic
     ...[AuthService],
-    // cqrs handlers
+    // v2 logic
     ...[
-      // commands
-      ...[CommonAuthCommandHandler, LoginCommandHandler, RefreshTokenCommandHandler, LogoutCommandHandler],
-      // queries
-      ...[FindForgottenEmailQueryHandler],
+      // cqrs handlers
+      ...[
+        // commands
+        ...[LoginHandler, RefreshTokenHandler, LogoutHandler],
+        // queries
+        ...[FindForgottenEmailHandler],
+      ],
+      // helpers
+      ...[CommonAuthCommandHelper],
     ],
   ],
   exports: [

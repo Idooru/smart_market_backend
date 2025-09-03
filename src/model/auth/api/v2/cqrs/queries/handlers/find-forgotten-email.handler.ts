@@ -9,7 +9,7 @@ import { UserProfileEntity } from "../../../../../../user/entities/user-profile.
 import { UserAuthEntity } from "../../../../../../user/entities/user-auth.entity";
 
 @QueryHandler(FindForgottenEmailQuery)
-export class FindForgottenEmailQueryHandler implements IQueryHandler<FindForgottenEmailQuery> {
+export class FindForgottenEmailHandler implements IQueryHandler<FindForgottenEmailQuery> {
   constructor(private readonly queryBus: QueryBus) {}
 
   private async findUserWithNickName(nickName: string): Promise<UserEntity> {

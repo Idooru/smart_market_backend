@@ -5,7 +5,7 @@ import { ResponseValidateDto } from "../../../../../../../../common/classes/v2/r
 import { IsExistEmailCommand } from "../../db/events/is-exist-email.command";
 
 @CommandHandler(ValidateEmailCommand)
-export class ValidateEmailCommandHandler implements ICommandHandler<ValidateEmailCommand> {
+export class ValidateEmailHandler implements ICommandHandler<ValidateEmailCommand> {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Implemented()

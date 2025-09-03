@@ -11,10 +11,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { CommonFindEntity } from "../../../../../../../common/classes/v2/common-find-entity-query";
 
 @QueryHandler(FindUserEntityQuery)
-export class FindUserEntityQueryHandler
-  extends CommonFindEntity<UserEntity>
-  implements IQueryHandler<FindUserEntityQuery>
-{
+export class FindUserEntityHandler extends CommonFindEntity<UserEntity> implements IQueryHandler<FindUserEntityQuery> {
   constructor(
     @InjectRepository(UserEntity)
     private readonly repository: Repository<UserEntity>,

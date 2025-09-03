@@ -21,7 +21,7 @@ import { CqrsModule } from "@nestjs/cqrs";
 import { AuthV2Controller } from "./api/v2/controllers/auth-v2.controller";
 import { CommonAuthCommandHandler } from "./api/v2/cqrs/commands/handlers/common-auth-command.handler";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
-import { UserTransactionInitializer } from "../user/api/v1/transaction/user-transaction.initializer";
+import { UserTransactionInitializer } from "../user/api/common/user-transaction.initializer";
 import { RefreshTokenCommandHandler } from "./api/v2/cqrs/commands/handlers/refresh-token-command.handler";
 import { LogoutCommandHandler } from "./api/v2/cqrs/commands/handlers/logout-command.handler";
 import { FindForgottenEmailQueryHandler } from "./api/v2/cqrs/queries/handlers/find-forgotten-email-query.handler";

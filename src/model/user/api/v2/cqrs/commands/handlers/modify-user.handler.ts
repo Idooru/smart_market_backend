@@ -1,15 +1,15 @@
 import { CommandHandler, IQueryHandler } from "@nestjs/cqrs";
 import { ModifyUserCommand } from "../events/modify-user.command";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
-import { CommonUserCommandHandler } from "./common-user-command.handler";
+import { CommonUserCommandHelper } from "../../../helpers/common-user-command.helper";
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
 import { UserRepositoryPayload } from "../../../../v1/transaction/user-repository.payload";
 import { ModifyUserAuthDto, ModifyUserProfileDto } from "../../../../../dto/request/modify-user.dto";
 
 @CommandHandler(ModifyUserCommand)
-export class ModifyUserCommandHandler implements IQueryHandler<ModifyUserCommand> {
+export class ModifyUserHandler implements IQueryHandler<ModifyUserCommand> {
   constructor(
-    private readonly common: CommonUserCommandHandler,
+    private readonly common: CommonUserCommandHelper,
     private readonly transaction: Transactional<UserRepositoryPayload>,
   ) {}
 

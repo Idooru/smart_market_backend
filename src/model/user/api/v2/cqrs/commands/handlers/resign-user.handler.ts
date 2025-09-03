@@ -1,11 +1,11 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { KickUserCommand } from "../events/kick-user.command";
+import { ResignUserCommand } from "../events/resign-user.command";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
-import { UserRepositoryPayload } from "../../../../v1/transaction/user-repository.payload";
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
+import { UserRepositoryPayload } from "../../../../v1/transaction/user-repository.payload";
 
-@CommandHandler(KickUserCommand)
-export class KickUserCommandHandler implements ICommandHandler<KickUserCommand> {
+@CommandHandler(ResignUserCommand)
+export class ResignUserHandler implements ICommandHandler<ResignUserCommand> {
   constructor(private readonly transaction: Transactional<UserRepositoryPayload>) {}
 
   private async deleteUser(userId: string): Promise<void> {
@@ -13,7 +13,7 @@ export class KickUserCommandHandler implements ICommandHandler<KickUserCommand> 
   }
 
   @Implemented()
-  public async execute(command: KickUserCommand): Promise<void> {
+  public async execute(command: ResignUserCommand): Promise<void> {
     const { userId } = command;
     this.transaction.initRepository();
 

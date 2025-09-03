@@ -10,7 +10,7 @@ import { UserProfileRawDto } from "../../../../../dto/response/user-profile-raw.
 import { formatDate } from "../../../../../../../common/functions/format-date";
 
 @QueryHandler(FindProfileQuery)
-export class FindProfileQueryHandler implements IQueryHandler<FindProfileQuery> {
+export class FindProfileHandler implements IQueryHandler<FindProfileQuery> {
   constructor(
     @Inject("user-select")
     private readonly select: UserSelect,

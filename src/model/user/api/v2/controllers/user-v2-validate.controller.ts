@@ -1,11 +1,11 @@
 import { ApiTags } from "@nestjs/swagger";
 import { Controller, Get, Query } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
-import { ValidateNicknameCommand } from "../cqrs/validates/ui/events/validate-nickname.command";
-import { ValidatePhoneNumberCommand } from "../cqrs/validates/ui/events/validate-phonenumber.command";
-import { ValidateAddressCommand } from "../cqrs/validates/ui/events/validate-address.command";
-import { ValidateEmailCommand } from "../cqrs/validates/ui/events/validate-email.command";
-import { ValidatePasswordCommand } from "../cqrs/validates/ui/events/validate-password.command";
+import { ValidateNicknameCommand } from "../cqrs/validations/ui/events/validate-nickname.command";
+import { ValidatePhoneNumberCommand } from "../cqrs/validations/ui/events/validate-phonenumber.command";
+import { ValidateAddressCommand } from "../cqrs/validations/ui/events/validate-address.command";
+import { ValidateEmailCommand } from "../cqrs/validations/ui/events/validate-email.command";
+import { ValidatePasswordCommand } from "../cqrs/validations/ui/events/validate-password.command";
 import { ResponseValidateDto } from "../../../../../common/classes/v2/response-validate.dto";
 
 @ApiTags("v2 검증 User API")

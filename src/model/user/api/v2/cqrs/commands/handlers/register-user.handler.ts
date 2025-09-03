@@ -5,14 +5,14 @@ import { Transactional } from "../../../../../../../common/interfaces/initialize
 import { UserEntity } from "../../../../../entities/user.entity";
 import { UserRepositoryPayload } from "../../../../v1/transaction/user-repository.payload";
 import { UserRole } from "../../../../../types/user-role.type";
-import { CommonUserCommandHandler } from "./common-user-command.handler";
+import { CommonUserCommandHelper } from "../../../helpers/common-user-command.helper";
 import { RegisterUserDto } from "../../../../../dto/request/register-user.dto";
-import { UserEventMapSetter } from "../../../../../utils/user-event-map.setter";
+import { UserEventMapSetter } from "../../../../common/user-event-map.setter";
 
 @CommandHandler(RegisterUserCommand)
-export class RegisterUserCommandHandler implements ICommandHandler<RegisterUserCommand> {
+export class RegisterUserHandler implements ICommandHandler<RegisterUserCommand> {
   constructor(
-    private readonly common: CommonUserCommandHandler,
+    private readonly common: CommonUserCommandHelper,
     private readonly transaction: Transactional<UserRepositoryPayload>,
     private readonly userEventMapSetter: UserEventMapSetter,
   ) {}

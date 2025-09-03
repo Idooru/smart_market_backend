@@ -6,7 +6,7 @@ import { UserProfileEntity } from "../../../../../../entities/user-profile.entit
 import { Repository } from "typeorm";
 
 @CommandHandler(IsExistPhoneNumberCommand)
-export class IsExistPhoneNumberCommandHandler implements ICommandHandler<IsExistPhoneNumberCommand> {
+export class IsExistPhonenumberHandler implements ICommandHandler<IsExistPhoneNumberCommand> {
   constructor(
     @InjectRepository(UserProfileEntity)
     private readonly repository: Repository<UserProfileEntity>,

@@ -6,7 +6,7 @@ import { UserAuthEntity } from "../../../../../../entities/user-auth.entity";
 import { Repository } from "typeorm";
 
 @CommandHandler(IsExistEmailCommand)
-export class IsExistEmailCommandHandler implements ICommandHandler<IsExistEmailCommand> {
+export class IsExistEmailHandler implements ICommandHandler<IsExistEmailCommand> {
   constructor(
     @InjectRepository(UserAuthEntity)
     private readonly repository: Repository<UserAuthEntity>,

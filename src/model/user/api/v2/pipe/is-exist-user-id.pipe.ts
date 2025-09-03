@@ -1,7 +1,7 @@
 import { Injectable, PipeTransform } from "@nestjs/common";
 import { Implemented } from "../../../../../common/decorators/implemented.decoration";
 import { CommandBus } from "@nestjs/cqrs";
-import { IsExistUserIdCommand } from "../cqrs/validates/db/events/is-exist-user-id.command";
+import { IsExistUserIdCommand } from "../cqrs/validations/db/events/is-exist-user-id.command";
 import { ValidateLibrary } from "../../../../../common/lib/util/validate.library";
 
 @Injectable()

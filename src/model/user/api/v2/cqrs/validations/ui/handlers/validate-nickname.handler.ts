@@ -5,7 +5,7 @@ import { IsExistNickNameCommand } from "../../db/events/is-exist-nickname.comman
 import { ResponseValidateDto } from "../../../../../../../../common/classes/v2/response-validate.dto";
 
 @CommandHandler(ValidateNicknameCommand)
-export class ValidateNicknameCommandHandler implements ICommandHandler<ValidateNicknameCommand> {
+export class ValidateNicknameHandler implements ICommandHandler<ValidateNicknameCommand> {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Implemented()

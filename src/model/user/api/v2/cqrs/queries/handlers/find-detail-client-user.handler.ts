@@ -10,7 +10,7 @@ import { ClientUserRawDto } from "../../../../../dto/response/client-user-raw.dt
 import { MediaUtils } from "../../../../../../media/logic/media.utils";
 
 @QueryHandler(FindDetailClientUserQuery)
-export class FindDetailClientUserQueryHandler implements IQueryHandler<FindDetailClientUserQuery> {
+export class FindDetailClientUserHandler implements IQueryHandler<FindDetailClientUserQuery> {
   constructor(
     @Inject("user-select")
     private readonly select: UserSelect,

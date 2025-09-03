@@ -6,7 +6,7 @@ import { UserEntity } from "../../../../../../entities/user.entity";
 import { Repository } from "typeorm";
 
 @CommandHandler(IsExistUserIdCommand)
-export class IsExistIdCommandHandler implements ICommandHandler<IsExistUserIdCommand> {
+export class IsExistIdHandler implements ICommandHandler<IsExistUserIdCommand> {
   constructor(
     @InjectRepository(UserEntity)
     private readonly repository: Repository<UserEntity>,

@@ -4,7 +4,7 @@ import { ResponseValidateDto } from "../../../../../../../../common/classes/v2/r
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
 
 @CommandHandler(ValidateAddressCommand)
-export class ValidateAddressCommandHandler implements ICommandHandler<ValidateAddressCommand> {
+export class ValidateAddressHandler implements ICommandHandler<ValidateAddressCommand> {
   @Implemented()
   public async execute(command: ValidateAddressCommand): Promise<ResponseValidateDto> {
     const { beforeAddress, currentAddress } = command;

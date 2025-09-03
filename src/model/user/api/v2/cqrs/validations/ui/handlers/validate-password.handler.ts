@@ -4,7 +4,7 @@ import { Implemented } from "../../../../../../../../common/decorators/implement
 import { ResponseValidateDto } from "../../../../../../../../common/classes/v2/response-validate.dto";
 
 @CommandHandler(ValidatePasswordCommand)
-export class ValidatePasswordCommandHandler implements ICommandHandler<ValidatePasswordCommand> {
+export class ValidatePasswordHandler implements ICommandHandler<ValidatePasswordCommand> {
   @Implemented()
   public async execute(command: ValidatePasswordCommand): Promise<ResponseValidateDto> {
     const { newPassword, matchPassword } = command;

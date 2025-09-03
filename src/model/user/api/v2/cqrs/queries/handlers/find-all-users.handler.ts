@@ -12,7 +12,7 @@ import { UserAlignColumn } from "../../../../../dto/request/find-all-users.dto";
 import { Align } from "../../../../../../../common/types/align-by.type";
 
 @QueryHandler(FindAllUsersQuery)
-export class FindAllUsersQueryHandler implements IQueryHandler<FindAllUsersQuery> {
+export class FindAllUsersHandler implements IQueryHandler<FindAllUsersQuery> {
   constructor(
     @Inject("user-select")
     private readonly select: UserSelect,

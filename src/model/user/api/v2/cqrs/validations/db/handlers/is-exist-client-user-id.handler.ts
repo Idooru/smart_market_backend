@@ -6,7 +6,7 @@ import { Implemented } from "../../../../../../../../common/decorators/implement
 import { IsExistClientUserIdCommand } from "../events/is-exist-client-user-id.command";
 
 @CommandHandler(IsExistClientUserIdCommand)
-export class IsExistClientUserIdCommandHandler implements ICommandHandler<IsExistClientUserIdCommand> {
+export class IsExistClientUserIdHandler implements ICommandHandler<IsExistClientUserIdCommand> {
   constructor(
     @InjectRepository(ClientUserEntity)
     private readonly repository: Repository<ClientUserEntity>,

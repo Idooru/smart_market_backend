@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler, QueryBus } from "@nestjs/cqrs";
 import { ResetPasswordCommand } from "../events/reset-password.command";
-import { CommonUserCommandHandler } from "./common-user-command.handler";
+import { CommonUserCommandHelper } from "../../../helpers/common-user-command.helper";
 import { UserRepositoryPayload } from "../../../../v1/transaction/user-repository.payload";
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
@@ -12,9 +12,9 @@ import { UserAuthEntity } from "../../../../../entities/user-auth.entity";
 import { UserProfileEntity } from "../../../../../entities/user-profile.entity";
 
 @CommandHandler(ResetPasswordCommand)
-export class ResetPasswordCommandHandler implements ICommandHandler<ResetPasswordCommand> {
+export class ResetPasswordHandler implements ICommandHandler<ResetPasswordCommand> {
   constructor(
-    private readonly common: CommonUserCommandHandler,
+    private readonly common: CommonUserCommandHelper,
     private readonly queryBus: QueryBus,
     private readonly transaction: Transactional<UserRepositoryPayload>,
   ) {}

@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { ModifyStarRateCommand } from "../../events/modify-review/modify-star-rate.command";
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
-import { CommonReviewCommandHelper } from "../../common-review-command.helper";
+import { CommonReviewCommandHelper } from "../../../../helpers/common-review-command.helper";
 
 @CommandHandler(ModifyStarRateCommand)
 export class ModifyStarRateHandler implements ICommandHandler<ModifyStarRateCommand> {

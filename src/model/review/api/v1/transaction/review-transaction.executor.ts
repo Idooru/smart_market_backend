@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Transactional } from "../../../../../common/interfaces/initializer/transactional";
-import { ReviewRepositoryPayload } from "./review-repository.payload";
+import { ReviewRepositoryPayload } from "../../common/review-repository.payload";
 import { ReviewTransactionSearcher } from "./review-transaction.searcher";
 import { ReviewTransactionContext } from "./review-transaction.context";
 import { CreateReviewDto } from "../../../dto/request/create-review.dto";

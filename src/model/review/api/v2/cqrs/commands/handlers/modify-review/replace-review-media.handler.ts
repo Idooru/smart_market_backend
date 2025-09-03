@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { ReplaceReviewMediaCommand } from "../../events/modify-review/replace-review-media.command";
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
-import { CommonReviewCommandHelper } from "../../common-review-command.helper";
+import { CommonReviewCommandHelper } from "../../../../helpers/common-review-command.helper";
 import { Transactional } from "../../../../../../../../common/interfaces/initializer/transactional";
-import { ReviewRepositoryPayload } from "../../../../../v1/transaction/review-repository.payload";
+import { ReviewRepositoryPayload } from "../../../../../common/review-repository.payload";
 import { ReviewImageEntity } from "../../../../../../../media/entities/review-image.entity";
 import { ReviewEntity } from "../../../../../../entities/review.entity";
 import { ReviewVideoEntity } from "../../../../../../../media/entities/review-video.entity";

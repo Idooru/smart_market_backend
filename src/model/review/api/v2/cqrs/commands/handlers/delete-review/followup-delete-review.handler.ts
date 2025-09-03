@@ -4,7 +4,7 @@ import { Implemented } from "../../../../../../../../common/decorators/implement
 import { MediaUtils } from "../../../../../../../media/logic/media.utils";
 import { ReviewImageEntity } from "../../../../../../../media/entities/review-image.entity";
 import { ReviewVideoEntity } from "../../../../../../../media/entities/review-video.entity";
-import { CommonReviewCommandHelper } from "../../common-review-command.helper";
+import { CommonReviewCommandHelper } from "../../../../helpers/common-review-command.helper";
 
 @CommandHandler(FollowupDeleteReviewCommand)
 export class FollowupDeleteReviewHandler implements ICommandHandler<FollowupDeleteReviewCommand> {

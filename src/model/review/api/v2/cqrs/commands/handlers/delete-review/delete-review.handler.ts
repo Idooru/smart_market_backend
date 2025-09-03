@@ -1,7 +1,7 @@
 import { CommandBus, CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { DeleteReviewCommand } from "../../events/delete-review/delete-review.command";
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
-import { ReviewRepositoryPayload } from "../../../../../v1/transaction/review-repository.payload";
+import { ReviewRepositoryPayload } from "../../../../../common/review-repository.payload";
 import { Transactional } from "../../../../../../../../common/interfaces/initializer/transactional";
 import { PrepareDeleteReviewCommand } from "../../events/delete-review/prepare-delete-review.command";
 import { PrepareDeleteReviewDto } from "../../../../dto/prepare-delete-review.dto";

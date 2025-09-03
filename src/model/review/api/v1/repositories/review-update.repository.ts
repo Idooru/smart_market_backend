@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ReviewEntity } from "../../../entities/review.entity";
 import { StarRateEntity } from "../../../entities/star-rate.entity";
 import { Transactional } from "../../../../../common/interfaces/initializer/transactional";
-import { ReviewRepositoryPayload } from "../transaction/review-repository.payload";
+import { ReviewRepositoryPayload } from "../../common/review-repository.payload";
 import { Transaction } from "../../../../../common/decorators/transaction.decorator";
 import { StarRateScore } from "../../../types/star-rate-score.type";
 import { CreateReviewRowDto } from "../../../dto/request/create-review.dto";

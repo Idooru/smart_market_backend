@@ -1,19 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import { MediaUtils } from "../../../../../media/logic/media.utils";
-import { ReviewMediaFilesDto } from "../../dto/review-media-files.dto";
+import { MediaUtils } from "../../../../media/logic/media.utils";
+import { ReviewMediaFilesDto } from "../dto/review-media-files.dto";
 import { QueryBus } from "@nestjs/cqrs";
-import { ReviewImageEntity } from "../../../../../media/entities/review-image.entity";
-import { ReviewRepositoryPayload } from "../../../v1/transaction/review-repository.payload";
-import { Transactional } from "../../../../../../common/interfaces/initializer/transactional";
-import { ReviewVideoEntity } from "../../../../../media/entities/review-video.entity";
-import { ReviewEntity } from "../../../../entities/review.entity";
-import { StarRateEntity } from "../../../../entities/star-rate.entity";
-import { StarRateScore } from "../../../../types/star-rate-score.type";
+import { ReviewImageEntity } from "../../../../media/entities/review-image.entity";
+import { ReviewRepositoryPayload } from "../../common/review-repository.payload";
+import { Transactional } from "../../../../../common/interfaces/initializer/transactional";
+import { ReviewVideoEntity } from "../../../../media/entities/review-video.entity";
+import { ReviewEntity } from "../../../entities/review.entity";
+import { StarRateEntity } from "../../../entities/star-rate.entity";
+import { StarRateScore } from "../../../types/star-rate-score.type";
 import { BaseEntity } from "typeorm";
-import { ProductEntity } from "../../../../../product/entities/product.entity";
-import { FindProductEntityQuery } from "../../../../../product/api/v2/cqrs/queries/classes/find-product-entity.query";
-import { FindReviewImageEntityQuery } from "../queries/events/find-review-image-entity.query";
-import { FindReviewVideoEntityQuery } from "../queries/events/find-review-video-entity.query";
+import { ProductEntity } from "../../../../product/entities/product.entity";
+import { FindProductEntityQuery } from "../../../../product/api/v2/cqrs/queries/classes/find-product-entity.query";
+import { FindReviewImageEntityQuery } from "../cqrs/queries/events/find-review-image-entity.query";
+import { FindReviewVideoEntityQuery } from "../cqrs/queries/events/find-review-video-entity.query";
 
 @Injectable()
 export class CommonReviewCommandHelper {

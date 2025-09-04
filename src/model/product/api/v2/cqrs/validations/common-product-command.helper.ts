@@ -17,6 +17,10 @@ export class CommonProductCommandHelper {
     private readonly hangulLibrary: HangulLibrary,
   ) {}
 
+  public async parseMediaFiles(mediaFiles: Express.Multer.File[]): Promise<Express.Multer.File[]> {
+    return this.mediaUtils.parseMediaFiles(mediaFiles, "product_image");
+  }
+
   public getChoseong(name: string): string {
     return this.hangulLibrary.getChoseong(name);
   }

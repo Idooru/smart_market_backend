@@ -5,6 +5,6 @@ export class CreateProductCommand implements ICommand {
   constructor(
     public readonly body: ProductBody,
     public readonly userId: string,
-    public readonly productImageFiles: Express.Multer.File[],
+    public readonly mediaFiles: Express.Multer.File[],
   ) {}
 }

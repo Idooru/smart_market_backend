@@ -46,8 +46,9 @@ export class CreateProductHandler implements ICommandHandler<CreateProductComman
 
   @Implemented()
   public async execute(command: CreateProductCommand): Promise<void> {
-    const { body, userId, productImageFiles } = command;
+    const { body, userId, mediaFiles } = command;
     const admin = await this.findAdminUser(userId);
+    const productImageFiles = await this.common.parseMediaFiles(mediaFiles);
 
     this.transaction.initRepository();
 

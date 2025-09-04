@@ -5,6 +5,6 @@ export class ModifyProductCommand implements ICommand {
   constructor(
     public readonly body: ProductBody,
     public readonly productId: string,
-    public readonly productImageFiles: Express.Multer.File[],
+    public readonly mediaFiles: Express.Multer.File[],
   ) {}
 }

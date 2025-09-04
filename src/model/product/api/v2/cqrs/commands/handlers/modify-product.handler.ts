@@ -36,7 +36,8 @@ export class ModifyProductHandler implements ICommandHandler<ModifyProductComman
 
   @Implemented()
   public async execute(command: ModifyProductCommand): Promise<void> {
-    const { body, productId, productImageFiles } = command;
+    const { body, productId, mediaFiles } = command;
+    const productImageFiles = await this.common.parseMediaFiles(mediaFiles);
 
     this.transaction.initRepository();
 

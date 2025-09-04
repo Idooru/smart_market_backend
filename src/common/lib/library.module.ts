@@ -13,9 +13,17 @@ import { MulterAdaptModule } from "./media/multer-adapt.module";
 import { TransactionHandler } from "./handler/transaction.handler";
 import { HangulLibrary } from "./util/hangul.library";
 import { ResponseHandler } from "./handler/response.handler";
+import { CacheManagerAdaptModule } from "./cache/cache-manager-adapt.module";
 
 @Module({
-  imports: [TypeormAdaptModule, MailerAdaptModule, DotenvAdaptModule, EventAdaptModule, MulterAdaptModule],
+  imports: [
+    TypeormAdaptModule,
+    MailerAdaptModule,
+    DotenvAdaptModule,
+    EventAdaptModule,
+    MulterAdaptModule,
+    CacheManagerAdaptModule,
+  ],
   providers: [
     ConfigService,
     EmailSenderLibrary,

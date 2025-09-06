@@ -14,6 +14,7 @@ import { TransactionHandler } from "./handler/transaction.handler";
 import { HangulLibrary } from "./util/hangul.library";
 import { ResponseHandler } from "./handler/response.handler";
 import { CacheManagerAdaptModule } from "./cache/cache-manager-adapt.module";
+import { ScheduleAdaptModule } from "./scheduler/schedule-adapt.module";
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CacheManagerAdaptModule } from "./cache/cache-manager-adapt.module";
     EventAdaptModule,
     MulterAdaptModule,
     CacheManagerAdaptModule,
+    ScheduleAdaptModule,
   ],
   providers: [
     ConfigService,

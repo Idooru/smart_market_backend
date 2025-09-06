@@ -2,7 +2,9 @@ import { UserRole } from "aws-sdk/clients/workmail";
 
 export interface JwtAccessTokenPayload {
   userId: string;
-  email?: string;
+  email: string;
   nickName: string;
   userRole: UserRole;
+  iat?: number;
+  exp?: number;
 }

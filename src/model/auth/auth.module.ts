@@ -26,6 +26,8 @@ import { RefreshTokenHandler } from "./api/v2/cqrs/commands/handlers/refresh-tok
 import { LogoutHandler } from "./api/v2/cqrs/commands/handlers/logout.handler";
 import { FindForgottenEmailHandler } from "./api/v2/cqrs/queries/handlers/find-forgotten-email.handler";
 import { FindRefreshTokenHandler } from "./api/v2/cqrs/queries/handlers/find-refresh-token.handler";
+import { ValidateAccessTokenHandler } from "./api/v2/cqrs/validations/jwt/handlers/validate-access-token.handler";
+import { ValidateRefreshTokenHandler } from "./api/v2/cqrs/validations/jwt/handlers/validate-refresh-token.handler";
 
 @Module({
   imports: [
@@ -57,6 +59,8 @@ import { FindRefreshTokenHandler } from "./api/v2/cqrs/queries/handlers/find-ref
         ...[LoginHandler, RefreshTokenHandler, LogoutHandler],
         // queries
         ...[FindForgottenEmailHandler, FindRefreshTokenHandler],
+        // validations
+        ...[ValidateAccessTokenHandler, ValidateRefreshTokenHandler],
       ],
       // helpers
       ...[CommonAuthCommandHelper],

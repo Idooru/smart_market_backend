@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from "@nestjs/common";
+import { HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { SecurityLibrary } from "./security.library";
 import { JwtErrorHandlerLibrary } from "src/model/auth/providers/jwt-error-handler.library";
@@ -6,6 +6,9 @@ import { JwtAccessTokenPayload } from "../jwt/jwt-access-token-payload.interface
 import { JwtRefreshTokenPayload } from "../jwt/jwt-refresh-token-payload.interface";
 import { UserUpdateRepository } from "src/model/user/api/v1/repositories/user-update.repository";
 import { JwtException } from "../../../common/errors/jwt.exception";
+import { QueryBus } from "@nestjs/cqrs";
+import { FindRefreshTokenQuery } from "../api/v2/cqrs/queries/events/find-refresh-token.query";
+import { loggerFactory } from "../../../common/functions/logger.factory";
 
 @Injectable()
 export class ValidateTokenLibrary {
@@ -14,6 +17,7 @@ export class ValidateTokenLibrary {
     private readonly securityLibrary: SecurityLibrary,
     private readonly jwtErrorHandlerLibrary: JwtErrorHandlerLibrary,
     private readonly userUpdateRepository: UserUpdateRepository,
+    private readonly queryBus: QueryBus,
   ) {}
 
   /*
@@ -53,5 +57,18 @@ export class ValidateTokenLibrary {
     }
 
     return accessTokenPayload;
+  }
+
+  public async findRefreshToken(userId: string): Promise<string> {
+    const query = new FindRefreshTokenQuery(userId);
+    const refreshToken = await this.queryBus.execute(query);
+
+    if (!refreshToken) {
+      const message = "현재 로그아웃 중이므로 해당 access-token은 사용이 불가능합니다.";
+      loggerFactory("AccessDeniedToken").error(message);
+      throw new UnauthorizedException(message);
+    }
+
+    return refreshToken;
   }
 }

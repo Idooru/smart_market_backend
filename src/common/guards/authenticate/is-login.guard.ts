@@ -6,7 +6,7 @@ import { ValidateTokenLibrary } from "src/model/auth/providers/validate-token.li
 
 @Injectable()
 export class IsLoginGuard implements CanActivate {
-  constructor(private readonly validateTokenLibrary: ValidateTokenLibrary) {}
+  constructor(private readonly library: ValidateTokenLibrary) {}
 
   @Implemented()
   public async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -21,7 +21,10 @@ export class IsLoginGuard implements CanActivate {
 
     const [, accessToken] = bearerToken.split(" ");
 
-    const payload = await this.validateTokenLibrary.validateAccessToken(accessToken);
+    const payload = await this.library.validateAccessToken(accessToken);
+    const refreshToken = await this.library.findRefreshToken(payload.userId);
+    await this.library.validateRefreshToken(refreshToken, payload.userId);
+
     req.user = payload;
     return true;
   }

@@ -25,6 +25,7 @@ import { UserTransactionInitializer } from "../user/api/common/user-transaction.
 import { RefreshTokenHandler } from "./api/v2/cqrs/commands/handlers/refresh-token.handler";
 import { LogoutHandler } from "./api/v2/cqrs/commands/handlers/logout.handler";
 import { FindForgottenEmailHandler } from "./api/v2/cqrs/queries/handlers/find-forgotten-email.handler";
+import { FindRefreshTokenHandler } from "./api/v2/cqrs/queries/handlers/find-refresh-token.handler";
 
 @Module({
   imports: [
@@ -55,7 +56,7 @@ import { FindForgottenEmailHandler } from "./api/v2/cqrs/queries/handlers/find-f
         // commands
         ...[LoginHandler, RefreshTokenHandler, LogoutHandler],
         // queries
-        ...[FindForgottenEmailHandler],
+        ...[FindForgottenEmailHandler, FindRefreshTokenHandler],
       ],
       // helpers
       ...[CommonAuthCommandHelper],

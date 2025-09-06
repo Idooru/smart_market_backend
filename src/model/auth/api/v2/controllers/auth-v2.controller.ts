@@ -9,10 +9,8 @@ import { TransactionInterceptor } from "../../../../../common/interceptors/gener
 import { LoginCommand } from "../cqrs/commands/events/login.command";
 import { FetchInterceptor } from "../../../../../common/interceptors/general/fetch.interceptor";
 import { IsLoginGuard } from "../../../../../common/guards/authenticate/is-login.guard";
-import { IsRefreshTokenAvailableGuard } from "../../../../../common/guards/authenticate/is-refresh-token-available.guard";
 import { GetJWT } from "../../../../../common/decorators/get.jwt.decorator";
 import { RefreshTokenCommand } from "../cqrs/commands/events/refresh-token.command";
-import { LogoutGuard } from "../../../../../common/guards/authenticate/logout.guard";
 import { JwtAccessTokenPayload } from "../../../jwt/jwt-access-token-payload.interface";
 import { LogoutCommand } from "../cqrs/commands/events/logout.command";
 import { FindForgottenEmailQuery } from "../cqrs/queries/events/find-forgotten-email.query";
@@ -47,7 +45,7 @@ export class AuthV2Controller {
 
   // @RefreshTokenSwagger()
   @UseInterceptors(TransactionInterceptor)
-  @UseGuards(IsRefreshTokenAvailableGuard)
+  @UseGuards(IsLoginGuard)
   @Patch("/refresh-token")
   public async refreshToken(@GetJWT() { userId }: JwtAccessTokenPayload): Promise<ApiResultInterface<string>> {
     const command = new RefreshTokenCommand(userId);
@@ -62,7 +60,7 @@ export class AuthV2Controller {
 
   // @LogoutSwagger()
   @UseInterceptors(TransactionInterceptor)
-  @UseGuards(LogoutGuard)
+  @UseGuards(IsLoginGuard)
   @Delete("/logout")
   public async logout(@GetJWT() { userId }: JwtAccessTokenPayload): Promise<ApiResultInterface<void>> {
     const command = new LogoutCommand(userId);

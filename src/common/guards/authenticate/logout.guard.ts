@@ -11,15 +11,13 @@ export class LogoutGuard implements CanActivate {
   @Implemented()
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
-    const bearerToken = req.headers["authorization"];
+    const accessToken = req.headers["access-token"] as string;
 
-    if (!bearerToken) {
+    if (!accessToken) {
       const message = "access-token이 없으므로 인증이 필요한 작업을 수행할 수 없습니다.";
       loggerFactory("NoneAccessToken").error(message);
       throw new UnauthorizedException(message);
     }
-
-    const [, accessToken] = bearerToken.split(" ");
 
     req.user = await this.validateTokenLibrary.decodeAccessToken(accessToken);
 

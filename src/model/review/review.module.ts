@@ -49,6 +49,7 @@ import { ReviewImageEntity } from "../media/entities/review-image.entity";
 import { ReviewVideoEntity } from "../media/entities/review-video.entity";
 import { PrepareDeleteReviewHandler } from "./api/v2/cqrs/commands/handlers/delete-review/prepare-delete-review.handler";
 import { FollowupDeleteReviewHandler } from "./api/v2/cqrs/commands/handlers/delete-review/followup-delete-review.handler";
+import { DeleteReviewMediaFilesListener } from "./api/v2/events/delete-review-media-files.listener";
 
 const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id" };
 
@@ -108,6 +109,8 @@ const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id
     ],
     // helpers
     ...[CommonReviewCommandHelper],
+    // events
+    ...[DeleteReviewMediaFilesListener],
   ],
   exports: [reviewIdFilter],
 })
@@ -116,8 +119,8 @@ export class ReviewModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(DeleteReviewMediaMiddleware)
-      .forRoutes({ path: "*/client/review/*", method: RequestMethod.PUT })
+      .forRoutes({ path: "*/client/review/*", method: RequestMethod.PUT, version: "1" })
       .apply(DeleteReviewMediaMiddleware)
-      .forRoutes({ path: "*/client/review/*", method: RequestMethod.DELETE });
+      .forRoutes({ path: "*/client/review/*", method: RequestMethod.DELETE, version: "1" });
   }
 }

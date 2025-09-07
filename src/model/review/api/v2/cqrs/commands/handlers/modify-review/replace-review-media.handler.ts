@@ -7,12 +7,14 @@ import { ReviewRepositoryPayload } from "../../../../../common/review-repository
 import { ReviewImageEntity } from "../../../../../../../media/entities/review-image.entity";
 import { ReviewEntity } from "../../../../../../entities/review.entity";
 import { ReviewVideoEntity } from "../../../../../../../media/entities/review-video.entity";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 @CommandHandler(ReplaceReviewMediaCommand)
 export class ReplaceReviewMediaHandler implements ICommandHandler<ReplaceReviewMediaCommand> {
   constructor(
     private readonly common: CommonReviewCommandHelper,
     private readonly transaction: Transactional<ReviewRepositoryPayload>,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   private async changeReviewImages(
@@ -50,6 +52,11 @@ export class ReplaceReviewMediaHandler implements ICommandHandler<ReplaceReviewM
   @Implemented()
   public async execute(command: ReplaceReviewMediaCommand): Promise<void> {
     const { review, beforeReviewImages, beforeReviewVideos, newReviewImages, newReviewVideos } = command;
+
+    this.eventEmitter.emit("delete-review-media-files", {
+      reviewImages: beforeReviewImages,
+      reviewVideos: beforeReviewVideos,
+    });
 
     await Promise.all([
       this.changeReviewImages(beforeReviewImages, newReviewImages, review),

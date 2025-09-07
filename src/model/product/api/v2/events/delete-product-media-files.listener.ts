@@ -1,23 +1,16 @@
 import { OnEvent } from "@nestjs/event-emitter";
 import { ProductImageEntity } from "../../../../media/entities/product-image.entity";
 import { Injectable } from "@nestjs/common";
-import { promises as fs } from "fs";
-import path from "path";
-import process from "process";
+import { MediaFileEraser } from "../../../../../common/lib/event/media-file.eraser";
 
 interface Payload {
   readonly productImages: ProductImageEntity[];
 }
 
 @Injectable()
-export class DeleteProductMediaFilesListener {
+export class DeleteProductMediaFilesListener extends MediaFileEraser {
   private deleteImageFiles(productImages: ProductImageEntity[]): Promise<void>[] {
-    return productImages.map(async (image): Promise<void> => {
-      const fileName = path.parse(image.filePath).base;
-      const filePath = path.join(process.cwd(), "uploads", "images", "product", fileName);
-
-      await fs.unlink(filePath);
-    });
+    return productImages.map((image): Promise<void> => super.erase(image, "images", "product"));
   }
 
   @OnEvent("delete-product-media-files", { async: true })

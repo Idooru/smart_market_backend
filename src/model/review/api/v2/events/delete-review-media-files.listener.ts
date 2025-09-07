@@ -2,9 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ReviewImageEntity } from "../../../../media/entities/review-image.entity";
 import { ReviewVideoEntity } from "../../../../media/entities/review-video.entity";
 import { OnEvent } from "@nestjs/event-emitter";
-import path from "path";
-import process from "process";
-import { promises as fs } from "fs";
+import { MediaFileEraser } from "../../../../../common/lib/event/media-file.eraser";
 
 interface Payload {
   readonly reviewImages: ReviewImageEntity[];
@@ -12,23 +10,13 @@ interface Payload {
 }
 
 @Injectable()
-export class DeleteReviewMediaFilesListener {
+export class DeleteReviewMediaFilesListener extends MediaFileEraser {
   private deleteImageFiles(reviewImages: ReviewImageEntity[]): Promise<void>[] {
-    return reviewImages.map(async (image): Promise<void> => {
-      const fileName = path.parse(image.filePath).base;
-      const filePath = path.join(process.cwd(), "uploads", "images", "review", fileName);
-
-      await fs.unlink(filePath);
-    });
+    return reviewImages.map((image): Promise<void> => super.erase(image, "images", "review"));
   }
 
   private deleteVideoFiles(reviewVideos: ReviewVideoEntity[]): Promise<void>[] {
-    return reviewVideos.map(async (video): Promise<void> => {
-      const fileName = path.parse(video.filePath).base;
-      const filePath = path.join(process.cwd(), "uploads", "videos", "review", fileName);
-
-      await fs.unlink(filePath);
-    });
+    return reviewVideos.map((video): Promise<void> => super.erase(video, "videos", "review"));
   }
 
   @OnEvent("delete-review-media-files", { async: true })

@@ -4,11 +4,13 @@ import { RemoveProductCommand } from "../classes/remove-product.command";
 import { ProductRepositoryPayload } from "../../../../v1/transaction/product-repository.payload";
 import { CommonProductCommandHelper } from "../../validations/common-product-command.helper";
 import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 @CommandHandler(RemoveProductCommand)
 export class RemoveProductHandler implements ICommandHandler<RemoveProductCommand> {
   constructor(
     private readonly common: CommonProductCommandHelper,
+    private readonly eventEmitter: EventEmitter2,
     private readonly transaction: Transactional<ProductRepositoryPayload>,
   ) {}
 
@@ -23,6 +25,6 @@ export class RemoveProductHandler implements ICommandHandler<RemoveProductComman
       this.transaction.getRepository().product.delete({ id: productId }),
     ]);
 
-    this.common.setDeleteProductImageFilesEvent(beforeProductImages);
+    this.eventEmitter.emit("delete-product-media-files", { productImages: beforeProductImages });
   }
 }

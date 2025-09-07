@@ -49,12 +49,4 @@ export class CommonProductCommandHelper {
       ),
     ]);
   }
-
-  public setDeleteProductImageFilesEvent(productImages: ProductImageEntity[]): void {
-    this.mediaUtils.deleteMediaFiles({
-      images: productImages,
-      mediaEntity: "product",
-      callWhere: "remove media entity",
-    });
-  }
 }

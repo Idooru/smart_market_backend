@@ -44,6 +44,7 @@ import { FindDetailProductHandler } from "./api/v2/cqrs/queries/handlers/find-de
 import { IsExistProductIdHandler } from "./api/v2/cqrs/validations/db/handlers/is-exist-product-id.handler";
 import { IsExistProductNameHandler } from "./api/v2/cqrs/validations/db/handlers/is-exist-product-name.handler";
 import { FindProductEntityHandler } from "./api/v2/cqrs/queries/handlers/find-product-entity.handler";
+import { DeleteProductMediaFilesListener } from "./api/v2/events/delete-product-media-files.listener";
 
 const productIdFilter = { provide: "product-id-filter", useValue: "product.id = :id" };
 
@@ -100,6 +101,8 @@ const productIdFilter = { provide: "product-id-filter", useValue: "product.id = 
       ...[CommonProductCommandHelper, CommonProductQueryHelper],
       // strategies
       ...[FindHighRatedProductStrategy, FindMostReviewProductStrategy],
+      // events
+      ...[DeleteProductMediaFilesListener],
     ],
   ],
   exports: [productIdFilter, ProductSearcher, ProductIdValidatePipe, ProductValidator],
@@ -109,10 +112,10 @@ export class ProductModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(DeleteProductMediaMiddleware)
-      .forRoutes({ path: "*/admin/product/*", method: RequestMethod.PUT })
+      .forRoutes({ path: "*/admin/product/*", method: RequestMethod.PUT, version: "1" })
       .apply(DeleteProductMediaMiddleware)
-      .forRoutes({ path: "*/admin/product/*", method: RequestMethod.PATCH })
+      .forRoutes({ path: "*/admin/product/*", method: RequestMethod.PATCH, version: "1" })
       .apply(DeleteProductMediaMiddleware)
-      .forRoutes({ path: "*/admin/product/*", method: RequestMethod.DELETE });
+      .forRoutes({ path: "*/admin/product/*", method: RequestMethod.DELETE, version: "1" });
   }
 }

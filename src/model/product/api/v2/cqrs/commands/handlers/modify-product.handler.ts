@@ -7,11 +7,13 @@ import { ProductImageEntity } from "../../../../../../media/entities/product-ima
 import { ProductBody } from "../../../../../dto/request/product-body.dto";
 import { CommonProductCommandHelper } from "../../validations/common-product-command.helper";
 import { ProductEntity } from "../../../../../entities/product.entity";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 @CommandHandler(ModifyProductCommand)
 export class ModifyProductHandler implements ICommandHandler<ModifyProductCommand> {
   constructor(
     private readonly common: CommonProductCommandHelper,
+    private readonly eventEmitter: EventEmitter2,
     private readonly transaction: Transactional<ProductRepositoryPayload>,
   ) {}
 
@@ -31,7 +33,7 @@ export class ModifyProductHandler implements ICommandHandler<ModifyProductComman
     );
     await Promise.all(deleting);
 
-    this.common.setDeleteProductImageFilesEvent(productImages);
+    this.eventEmitter.emit("delete-product-media-files", { productImages });
   }
 
   @Implemented()

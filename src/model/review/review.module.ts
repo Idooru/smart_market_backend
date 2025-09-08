@@ -50,6 +50,7 @@ import { ReviewVideoEntity } from "../media/entities/review-video.entity";
 import { PrepareDeleteReviewHandler } from "./api/v2/cqrs/commands/handlers/delete-review/prepare-delete-review.handler";
 import { FollowupDeleteReviewHandler } from "./api/v2/cqrs/commands/handlers/delete-review/followup-delete-review.handler";
 import { DeleteReviewMediaFilesListener } from "./api/v2/events/delete-review-media-files.listener";
+import { ReviewMediaFileEraser } from "./scheduler/review-media-file.eraser";
 
 const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id" };
 
@@ -117,6 +118,8 @@ const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id
         ...[DeleteReviewMediaFilesListener],
       ],
     ],
+    // scheduler
+    ...[ReviewMediaFileEraser],
   ],
   exports: [reviewIdFilter],
 })

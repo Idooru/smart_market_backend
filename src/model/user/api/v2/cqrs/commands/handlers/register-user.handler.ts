@@ -7,14 +7,14 @@ import { UserRepositoryPayload } from "../../../../v1/transaction/user-repositor
 import { UserRole } from "../../../../../types/user-role.type";
 import { CommonUserCommandHelper } from "../../../helpers/common-user-command.helper";
 import { RegisterUserDto } from "../../../../../dto/request/register-user.dto";
-import { UserEventMapSetter } from "../../../../common/user-event-map.setter";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 @CommandHandler(RegisterUserCommand)
 export class RegisterUserHandler implements ICommandHandler<RegisterUserCommand> {
   constructor(
     private readonly common: CommonUserCommandHelper,
+    private readonly eventEmitter: EventEmitter2,
     private readonly transaction: Transactional<UserRepositoryPayload>,
-    private readonly userEventMapSetter: UserEventMapSetter,
   ) {}
 
   private async createUser(role: UserRole): Promise<UserEntity> {
@@ -40,14 +40,13 @@ export class RegisterUserHandler implements ICommandHandler<RegisterUserCommand>
       address,
     };
     const auth = { id, nickName, email, password };
-    const eventParam = { email, nickName };
 
     await Promise.all([
       this.transaction.getRepository().userProfile.save(profile),
       this.transaction.getRepository().userAuth.save(auth),
     ]);
 
-    this.userEventMapSetter.setRegisterEventParam(eventParam);
+    this.eventEmitter.emit("send-mail-register", { email, nickName });
   }
 
   @Implemented()

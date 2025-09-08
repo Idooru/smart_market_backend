@@ -69,48 +69,54 @@ const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id
     { provide: "review-select", useValue: reviewSelect },
     { provide: Transactional, useClass: ReviewTransactionInitializer },
     reviewIdFilter,
-    // v1 logic
+    // api
     ...[
-      ReviewSearcher,
-      ReviewTransactionExecutor,
-      ReviewService,
-      ReviewUpdateRepository,
       ReviewTransactionInitializer,
-      ReviewSearchRepository,
-      ReviewUtils,
-      ReviewValidator,
-      ReviewIdValidatePipe,
-      ReviewValidateRepository,
-      ReviewTransactionContext,
-      ReviewTransactionSearcher,
-    ],
-    // cqrs handlers
-    ...[
-      // queries
+      // v1 logic
       ...[
-        FindReviewEntityHandler,
-        FindReviewImageEntityHandler,
-        FindReviewVideoEntityHandler,
-        FindAllReviewsFromAdminHandler,
-        FindAllReviewsFromClientHandler,
-        FindDetailReviewHandler,
+        ReviewSearcher,
+        ReviewTransactionExecutor,
+        ReviewService,
+        ReviewUpdateRepository,
+        ReviewSearchRepository,
+        ReviewUtils,
+        ReviewValidator,
+        ReviewIdValidatePipe,
+        ReviewValidateRepository,
+        ReviewTransactionContext,
+        ReviewTransactionSearcher,
       ],
-      // commands
+      // v2 logic
       ...[
-        // create-review
-        ...[PrepareCreateReviewHandler, CreateReviewHandler, FollowupCreateReviewHandler],
-        // modify-review
-        ...[PrepareModifyReviewHandler, ModifyReviewHandler, ReplaceReviewMediaHandler, ModifyStarRateHandler],
-        // delete-review
-        ...[PrepareDeleteReviewHandler, DeleteReviewHandler, FollowupDeleteReviewHandler],
+        // cqrs handlers
+        ...[
+          // queries
+          ...[
+            FindReviewEntityHandler,
+            FindReviewImageEntityHandler,
+            FindReviewVideoEntityHandler,
+            FindAllReviewsFromAdminHandler,
+            FindAllReviewsFromClientHandler,
+            FindDetailReviewHandler,
+          ],
+          // commands
+          ...[
+            // create-review
+            ...[PrepareCreateReviewHandler, CreateReviewHandler, FollowupCreateReviewHandler],
+            // modify-review
+            ...[PrepareModifyReviewHandler, ModifyReviewHandler, ReplaceReviewMediaHandler, ModifyStarRateHandler],
+            // delete-review
+            ...[PrepareDeleteReviewHandler, DeleteReviewHandler, FollowupDeleteReviewHandler],
+          ],
+          // validations
+          ...[IsExistReviewIdHandler],
+        ],
+        // helpers
+        ...[CommonReviewCommandHelper],
+        // events
+        ...[DeleteReviewMediaFilesListener],
       ],
-      // validations
-      ...[IsExistReviewIdHandler],
     ],
-    // helpers
-    ...[CommonReviewCommandHelper],
-    // events
-    ...[DeleteReviewMediaFilesListener],
   ],
   exports: [reviewIdFilter],
 })

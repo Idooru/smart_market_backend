@@ -348,7 +348,7 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┃ ┃ ┣ 📜inquiry-response-image.searcher.ts
 ┃ ┃ ┃ ┣ 📜inquiry-response-video.searcher.ts
 ┃ ┃ ┃ ┣ 📜media-event-map.setter.ts
-┃ ┃ ┃ ┣ 📜media-file.eraser.ts
+┃ ┃ ┃ ┣ 📜product-media-file.eraser.ts
 ┃ ┃ ┃ ┣ 📜media.utils.ts
 ┃ ┃ ┃ ┣ 📜media.validator.ts
 ┃ ┃ ┃ ┣ 📜product-image.searcher.ts

@@ -64,6 +64,9 @@ const isNodeEnvProd = (): boolean => process.env.NODE_ENV === "prod";
         logging: isNodeEnvDev(),
         dropSchema: false,
         keepConnectionAlive: true,
+        ssl: {
+          rejectUnauthorized: false,
+        },
       }),
       inject: [ConfigService],
     }),

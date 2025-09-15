@@ -1,21 +1,24 @@
-import { CommandHandler, ICommandHandler, QueryBus } from "@nestjs/cqrs";
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { LogoutCommand } from "../events/logout.command";
 import { Implemented } from "../../../../../../../common/decorators/implemented.decoration";
-import { Transactional } from "../../../../../../../common/interfaces/initializer/transactional";
-import { UserRepositoryPayload } from "../../../../../../user/api/v1/transaction/user-repository.payload";
+import { UserAuthEntity } from "../../../../../../user/entities/user-auth.entity";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @CommandHandler(LogoutCommand)
 export class LogoutHandler implements ICommandHandler<LogoutCommand> {
-  constructor(private readonly transaction: Transactional<UserRepositoryPayload>) {}
+  constructor(
+    @InjectRepository(UserAuthEntity)
+    private readonly repository: Repository<UserAuthEntity>,
+  ) {}
 
   private async removeRefreshToken(userId: string): Promise<void> {
-    await this.transaction.getRepository().userAuth.update(userId, { refreshToken: null });
+    await this.repository.update(userId, { refreshToken: null });
   }
 
   @Implemented()
   public async execute(command: LogoutCommand): Promise<any> {
     const { userId } = command;
-    this.transaction.initRepository();
 
     await this.removeRefreshToken(userId);
   }

@@ -30,7 +30,7 @@ export class ValidateEmailHandler implements ICommandHandler<ValidateEmailComman
       errors = [...errors, "'email@domain'형태를 준수해주세요."];
     }
 
-    if (hasDuplicateValidation) {
+    if (hasDuplicateValidation === "true") {
       const command = new IsExistEmailCommand(currentEmail);
       const isExistEmail = await this.commandBus.execute(command);
       if (isExistEmail) {

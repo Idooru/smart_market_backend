@@ -29,7 +29,7 @@ export class ValidateNicknameHandler implements ICommandHandler<ValidateNickname
       errors = [...errors, "길이가 20자를 넘어갑니다."];
     }
 
-    if (hasDuplicateValidation) {
+    if (hasDuplicateValidation === "true") {
       const validateCommand = new IsExistNickNameCommand(currentNickName);
       const isExistNickName = await this.commandBus.execute(validateCommand);
       if (isExistNickName) {

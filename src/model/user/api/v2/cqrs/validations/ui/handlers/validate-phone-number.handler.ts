@@ -34,7 +34,7 @@ export class ValidatePhoneNumberHandler implements ICommandHandler<ValidatePhone
       errors = [...errors, "길이가 15자를 넘어갑니다."];
     }
 
-    if (hasDuplicateValidation) {
+    if (hasDuplicateValidation === "true") {
       const command = new IsExistPhoneNumberCommand(currentPhoneNumber);
       const isExistPhoneNumber = await this.commandBus.execute(command);
       if (isExistPhoneNumber) {

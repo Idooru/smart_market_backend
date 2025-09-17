@@ -15,6 +15,7 @@ import { JwtAccessTokenPayload } from "../../../jwt/jwt-access-token-payload.int
 import { LogoutCommand } from "../cqrs/commands/events/logout.command";
 import { FindForgottenEmailQuery } from "../cqrs/queries/events/find-forgotten-email.query";
 import { FindForgottenEmailDto } from "../dto/find-forgotten-email.dto";
+import { ResetPasswordCommand } from "../../../../user/api/v2/cqrs/commands/events/reset-password.command";
 
 @ApiTags("v2 공용 Auth API")
 @Controller({ path: "/auth", version: "2" })
@@ -86,6 +87,19 @@ export class AuthV2Controller {
       statusCode: 200,
       message: "이메일 정보를 가져옵니다.",
       result: email,
+    };
+  }
+
+  @UseInterceptors(TransactionInterceptor)
+  @UseGuards(IsNotLoginGuard)
+  @Patch("/reset-password")
+  public async resetPassword(@GetBasicAuth() { email, password }: BasicAuthDto): Promise<ApiResultInterface<void>> {
+    const command = new ResetPasswordCommand(email, password);
+    await this.commandBus.execute(command);
+
+    return {
+      statusCode: 200,
+      message: "사용자 비밀번호를 재설정 하였습니다.",
     };
   }
 }

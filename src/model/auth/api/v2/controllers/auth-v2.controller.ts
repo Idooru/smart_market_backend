@@ -77,9 +77,9 @@ export class AuthV2Controller {
   @UseGuards(IsNotLoginGuard)
   @Get("/forgotten-email")
   public async findForgottenEmail(
-    @Query() { realName, phoneNumber, nickName }: FindForgottenEmailDto,
+    @Query() { realName, phoneNumber }: FindForgottenEmailDto,
   ): Promise<ApiResultInterface<string>> {
-    const query = new FindForgottenEmailQuery(realName, phoneNumber, nickName);
+    const query = new FindForgottenEmailQuery(realName, phoneNumber);
     const email: string = await this.queryBus.execute(query);
 
     return {

@@ -27,7 +27,6 @@ export class CreateCartHandler implements ICommandHandler<CreateCartCommand> {
 
   public async validateProductOnCart(userId: string, productId: string): Promise<void> {
     const query = new FindCartEntityQuery({
-      selects: this.select.carts,
       property: "ClientUser.id = :id",
       alias: { id: userId },
       getOne: false,

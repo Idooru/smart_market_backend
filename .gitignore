@@ -37,9 +37,14 @@ lerna-debug.log*
 # .env
 .env.dev
 .env.prod
+.env.test
 
 # uploads
-uploads
+uploads/
+!uploads/images/product/default_product_image.jpg
+!uploads/images/product/
+!uploads/images/
+!uploads/
 
 # security
 src/security/env-keys.ts

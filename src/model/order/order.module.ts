@@ -5,7 +5,7 @@ import { CartModule } from "../cart/cart.module";
 import { UserModule } from "../user/user.module";
 import { OrderEntity } from "./entities/order.entity";
 import { OrderV1ClientController } from "./api/v1/controllers/order-v1-client.contoller";
-import { OrderTransactionInitializer } from "./api/v1/transaction/order-transaction.initializer";
+import { OrderTransactionInitializer } from "./api/common/order-transaction.initializer";
 import { OrderTransactionExecutor } from "./api/v1/transaction/order-transaction.executor";
 import { OrderService } from "./api/v1/services/order.service";
 import { OrderUpdateRepository } from "./api/v1/repositories/order-update.repository";
@@ -22,13 +22,13 @@ import { AuthModule } from "../auth/auth.module";
 import { MediaModule } from "../media/media.module";
 import { OrderV2ClientController } from "./api/v2/controllers/order-v2-client.contoller";
 import { CqrsModule } from "@nestjs/cqrs";
-import { FindAllOrdersQueryHandler } from "./api/v2/cqrs/queries/handlers/find-all-orders-query.handler";
-import { CreateOrderCommandHandler } from "./api/v2/cqrs/commands/handlers/create-order/create-order-command.handler";
-import { PrepareCreateOrderCommandHandler } from "./api/v2/cqrs/commands/handlers/create-order/prepare-create-order-command.handler";
-import { DestructResourceCommandHandler } from "./api/v2/cqrs/commands/handlers/create-order/destruct-resource-command.handler";
-import { TradeBalanceCommandHandler } from "./api/v2/cqrs/commands/handlers/create-order/trade-balance-command.handler";
-import { CommonOrderCommandHandler } from "./api/v2/cqrs/commands/handlers/common-order-command.handler";
-import { ConstructResourceCommandHandler } from "./api/v2/cqrs/commands/handlers/create-order/construct-resource-command.handler";
+import { FindAllOrdersHandler } from "./api/v2/cqrs/queries/handlers/find-all-orders.handler";
+import { CreateOrderHandler } from "./api/v2/cqrs/commands/handlers/create-order/create-order.handler";
+import { PrepareCreateOrderHandler } from "./api/v2/cqrs/commands/handlers/create-order/prepare-create-order.handler";
+import { DestructResourceHandler } from "./api/v2/cqrs/commands/handlers/create-order/destruct-resource.handler";
+import { TradeBalanceHandler } from "./api/v2/cqrs/commands/handlers/create-order/trade-balance.handler";
+import { CommonOrderCommandHelper } from "./api/v2/helpers/common-order-command.helper";
+import { ConstructResourceHandler } from "./api/v2/cqrs/commands/handlers/create-order/construct-resource.handler";
 
 @Module({
   imports: [
@@ -47,9 +47,10 @@ import { ConstructResourceCommandHandler } from "./api/v2/cqrs/commands/handlers
     { provide: "order-select", useValue: orderSelect },
     { provide: Transactional, useClass: OrderTransactionInitializer },
     { provide: "surtax-price", useValue: 5000 },
+    // common
+    ...[OrderTransactionInitializer],
     // v1 logic
     ...[
-      OrderTransactionInitializer,
       OrderTransactionExecutor,
       OrderTransactionSearcher,
       OrderTransactionContext,
@@ -58,22 +59,26 @@ import { ConstructResourceCommandHandler } from "./api/v2/cqrs/commands/handlers
       OrderSearchRepository,
       OrderUpdateRepository,
     ],
-    // cqrs handlers
+    // v2 logic
     ...[
-      // queries
-      ...[FindAllOrdersQueryHandler],
-      // commands
+      // cqrs handlers
       ...[
-        CommonOrderCommandHandler,
-        // create-order
+        // queries
+        ...[FindAllOrdersHandler],
+        // commands
         ...[
-          CreateOrderCommandHandler,
-          PrepareCreateOrderCommandHandler,
-          DestructResourceCommandHandler,
-          TradeBalanceCommandHandler,
-          ConstructResourceCommandHandler,
+          // create-order
+          ...[
+            CreateOrderHandler,
+            PrepareCreateOrderHandler,
+            DestructResourceHandler,
+            TradeBalanceHandler,
+            ConstructResourceHandler,
+          ],
         ],
       ],
+      // helpers
+      ...[CommonOrderCommandHelper],
     ],
   ],
 })

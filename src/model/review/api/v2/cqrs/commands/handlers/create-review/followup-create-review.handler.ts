@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { FollowupCreateReviewCommand } from "../../events/create-review/followup-create-review.command";
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
-import { CommonReviewCommandHelper } from "../../common-review-command.helper";
+import { CommonReviewCommandHelper } from "../../../../helpers/common-review-command.helper";
 
 @CommandHandler(FollowupCreateReviewCommand)
 export class FollowupCreateReviewHandler implements ICommandHandler<FollowupCreateReviewCommand> {

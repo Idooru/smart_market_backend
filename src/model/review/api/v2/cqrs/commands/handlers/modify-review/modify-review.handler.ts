@@ -1,13 +1,13 @@
 import { CommandBus, CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { ModifyReviewCommand } from "../../events/modify-review/modify-review.command";
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
-import { ReviewRepositoryPayload } from "../../../../../v1/transaction/review-repository.payload";
+import { ReviewRepositoryPayload } from "../../../../../common/review-repository.payload";
 import { Transactional } from "../../../../../../../../common/interfaces/initializer/transactional";
 import { PrepareModifyReviewCommand } from "../../events/modify-review/prepare-modify-review.command";
 import { PrepareModifyReviewDto } from "../../../../dto/prepare-modify-review.dto";
 import { ReviewEntity } from "../../../../../../entities/review.entity";
 import { ReviewBody } from "../../../../../../dto/request/review-body.dto";
-import { CommonReviewCommandHelper } from "../../common-review-command.helper";
+import { CommonReviewCommandHelper } from "../../../../helpers/common-review-command.helper";
 import { ReplaceReviewMediaCommand } from "../../events/modify-review/replace-review-media.command";
 import { ModifyStarRateCommand } from "../../events/modify-review/modify-star-rate.command";
 

@@ -15,18 +15,18 @@ import { CartValidateRepository } from "./api/v1/repositories/cart-validate.repo
 import { OrderModule } from "../order/order.module";
 import { MediaModule } from "../media/media.module";
 import { AuthModule } from "../auth/auth.module";
-import { CreateCartCommandHandler } from "./api/v2/cqrs/commands/handlers/create-cart-command.handler";
-import { ModifyCartCommandHandler } from "./api/v2/cqrs/commands/handlers/modify-cart-command.handler";
-import { DeleteAllCartsCommandHandler } from "./api/v2/cqrs/commands/handlers/delete-all-carts-command.handler";
-import { DeleteCartCommandHandler } from "./api/v2/cqrs/commands/handlers/delete-cart-command.handler";
-import { FindAllCartsQueryHandler } from "./api/v2/cqrs/queries/handlers/find-all-carts-query.handler";
+import { CreateCartHandler } from "./api/v2/cqrs/commands/handlers/create-cart.handler";
+import { ModifyCartHandler } from "./api/v2/cqrs/commands/handlers/modify-cart.handler";
+import { DeleteAllCartsHandler } from "./api/v2/cqrs/commands/handlers/delete-all-carts.handler";
+import { DeleteCartHandler } from "./api/v2/cqrs/commands/handlers/delete-cart.handler";
+import { FindAllCartsHandler } from "./api/v2/cqrs/queries/handlers/find-all-carts.handler";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
-import { CartTransactionInitializer } from "./api/v1/transaction/cart-transaction.initializer";
-import { FindCartEntityQueryHandler } from "./api/v2/cqrs/queries/handlers/find-cart-entity-query.handler";
-import { CommonCartCommandHandler } from "./api/v2/cqrs/commands/handlers/common-cart-command.handler";
+import { CartTransactionInitializer } from "./api/common/cart-transaction.initializer";
+import { FindCartEntityHandler } from "./api/v2/cqrs/queries/handlers/find-cart-entity.handler";
+import { CommonCartCommandHelper } from "./api/v2/helpers/common-cart-command.helper";
 import { CqrsModule } from "@nestjs/cqrs";
 import { CartV2ClientController } from "./api/v2/controllers/cart-v2-client.controller";
-import { IsExistCartIdCommandHandler } from "./api/v2/cqrs/validations/db/handlers/is-exist-cart-id-command.handler";
+import { IsExistCartIdHandler } from "./api/v2/cqrs/validations/db/handlers/is-exist-cart-id.handler";
 
 @Module({
   imports: [
@@ -43,31 +43,24 @@ import { IsExistCartIdCommandHandler } from "./api/v2/cqrs/validations/db/handle
   providers: [
     { provide: "cart-select", useValue: cartSelect },
     { provide: Transactional, useClass: CartTransactionInitializer },
+    // common
+    ...[CartTransactionInitializer],
     // v1 logic
+    ...[CartService, CartSearchRepository, CartUpdateRepository, CartValidateRepository, CartSearcher, CartValidator],
+    // v2 logic
     ...[
-      CartService,
-      CartSearchRepository,
-      CartUpdateRepository,
-      CartValidateRepository,
-      CartSearcher,
-      CartValidator,
-      CartTransactionInitializer,
-    ],
-    // cqrs handlers
-    ...[
-      // commands
+      // cqrs handlers
       ...[
-        CommonCartCommandHandler,
-        CreateCartCommandHandler,
-        ModifyCartCommandHandler,
-        DeleteAllCartsCommandHandler,
-        DeleteCartCommandHandler,
+        // commands
+        ...[CreateCartHandler, ModifyCartHandler, DeleteAllCartsHandler, DeleteCartHandler],
+        // queries
+        ...[FindAllCartsHandler, FindCartEntityHandler],
+        // validations
+        ...[IsExistCartIdHandler],
       ],
-      // queries
-      ...[FindAllCartsQueryHandler, FindCartEntityQueryHandler],
-      // validations
-      ...[IsExistCartIdCommandHandler],
     ],
+    // helpers
+    ...[CommonCartCommandHelper],
   ],
   exports: [CartSearcher, CartService],
 })

@@ -10,7 +10,7 @@ import { ReviewV1ClientController } from "./api/v1/controllers/review-v1-client.
 import { reviewSelect } from "src/common/config/repository-select-configs/review.select";
 import { ReviewUpdateRepository } from "./api/v1/repositories/review-update.repository";
 import { ReviewService } from "./api/v1/services/review.service";
-import { ReviewTransactionInitializer } from "./api/v1/transaction/review-transaction.initializer";
+import { ReviewTransactionInitializer } from "./api/common/review-transaction.initializer";
 import { ReviewTransactionExecutor } from "./api/v1/transaction/review-transaction.executor";
 import { ReviewSearcher } from "./api/v1/services/review.searcher";
 import { ReviewSearchRepository } from "./api/v1/repositories/review-search.repository";
@@ -37,7 +37,7 @@ import { ReviewV2ClientController } from "./api/v2/controllers/review-v2-client.
 import { CqrsModule } from "@nestjs/cqrs";
 import { FindAllReviewsFromClientHandler } from "./api/v2/cqrs/queries/handlers/find-all-reviews-from-client.handler";
 import { FindDetailReviewHandler } from "./api/v2/cqrs/queries/handlers/find-detail-review.handler";
-import { CommonReviewCommandHelper } from "./api/v2/cqrs/commands/common-review-command.helper";
+import { CommonReviewCommandHelper } from "./api/v2/helpers/common-review-command.helper";
 import { PrepareCreateReviewHandler } from "./api/v2/cqrs/commands/handlers/create-review/prepare-create-review.handler";
 import { FollowupCreateReviewHandler } from "./api/v2/cqrs/commands/handlers/create-review/followup-create-review.handler";
 import { PrepareModifyReviewHandler } from "./api/v2/cqrs/commands/handlers/modify-review/prepare-modify-review.handler";
@@ -49,6 +49,8 @@ import { ReviewImageEntity } from "../media/entities/review-image.entity";
 import { ReviewVideoEntity } from "../media/entities/review-video.entity";
 import { PrepareDeleteReviewHandler } from "./api/v2/cqrs/commands/handlers/delete-review/prepare-delete-review.handler";
 import { FollowupDeleteReviewHandler } from "./api/v2/cqrs/commands/handlers/delete-review/followup-delete-review.handler";
+import { DeleteReviewMediaFilesListener } from "./api/v2/events/delete-review-media-files.listener";
+import { ReviewMediaFileEraser } from "./scheduler/review-media-file.eraser";
 
 const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id" };
 
@@ -68,46 +70,56 @@ const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id
     { provide: "review-select", useValue: reviewSelect },
     { provide: Transactional, useClass: ReviewTransactionInitializer },
     reviewIdFilter,
-    // v1 logic
+    // api
     ...[
-      ReviewSearcher,
-      ReviewTransactionExecutor,
-      ReviewService,
-      ReviewUpdateRepository,
       ReviewTransactionInitializer,
-      ReviewSearchRepository,
-      ReviewUtils,
-      ReviewValidator,
-      ReviewIdValidatePipe,
-      ReviewValidateRepository,
-      ReviewTransactionContext,
-      ReviewTransactionSearcher,
-    ],
-    // cqrs handlers
-    ...[
-      // queries
+      // v1 logic
       ...[
-        FindReviewEntityHandler,
-        FindReviewImageEntityHandler,
-        FindReviewVideoEntityHandler,
-        FindAllReviewsFromAdminHandler,
-        FindAllReviewsFromClientHandler,
-        FindDetailReviewHandler,
+        ReviewSearcher,
+        ReviewTransactionExecutor,
+        ReviewService,
+        ReviewUpdateRepository,
+        ReviewSearchRepository,
+        ReviewUtils,
+        ReviewValidator,
+        ReviewIdValidatePipe,
+        ReviewValidateRepository,
+        ReviewTransactionContext,
+        ReviewTransactionSearcher,
       ],
-      // commands
+      // v2 logic
       ...[
-        // helper
+        // cqrs handlers
+        ...[
+          // queries
+          ...[
+            FindReviewEntityHandler,
+            FindReviewImageEntityHandler,
+            FindReviewVideoEntityHandler,
+            FindAllReviewsFromAdminHandler,
+            FindAllReviewsFromClientHandler,
+            FindDetailReviewHandler,
+          ],
+          // commands
+          ...[
+            // create-review
+            ...[PrepareCreateReviewHandler, CreateReviewHandler, FollowupCreateReviewHandler],
+            // modify-review
+            ...[PrepareModifyReviewHandler, ModifyReviewHandler, ReplaceReviewMediaHandler, ModifyStarRateHandler],
+            // delete-review
+            ...[PrepareDeleteReviewHandler, DeleteReviewHandler, FollowupDeleteReviewHandler],
+          ],
+          // validations
+          ...[IsExistReviewIdHandler],
+        ],
+        // helpers
         ...[CommonReviewCommandHelper],
-        // create-review
-        ...[PrepareCreateReviewHandler, CreateReviewHandler, FollowupCreateReviewHandler],
-        // modify-review
-        ...[PrepareModifyReviewHandler, ModifyReviewHandler, ReplaceReviewMediaHandler, ModifyStarRateHandler],
-        // delete-review
-        ...[PrepareDeleteReviewHandler, DeleteReviewHandler, FollowupDeleteReviewHandler],
+        // events
+        ...[DeleteReviewMediaFilesListener],
       ],
-      // validations
-      ...[IsExistReviewIdHandler],
     ],
+    // scheduler
+    ...[ReviewMediaFileEraser],
   ],
   exports: [reviewIdFilter],
 })
@@ -116,8 +128,8 @@ export class ReviewModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(DeleteReviewMediaMiddleware)
-      .forRoutes({ path: "*/client/review/*", method: RequestMethod.PUT })
+      .forRoutes({ path: "*/client/review/*", method: RequestMethod.PUT, version: "1" })
       .apply(DeleteReviewMediaMiddleware)
-      .forRoutes({ path: "*/client/review/*", method: RequestMethod.DELETE });
+      .forRoutes({ path: "*/client/review/*", method: RequestMethod.DELETE, version: "1" });
   }
 }

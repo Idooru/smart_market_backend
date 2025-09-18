@@ -8,9 +8,9 @@ export class IsNotLoginGuard implements CanActivate {
   @Implemented()
   public canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest<Request>();
-    const accessToken = req.headers["access-token"];
+    const authorization = req.headers["authorization"];
 
-    if (accessToken) {
+    if (authorization && authorization.includes("Bearer")) {
       const message = "현재 로그인 중이므로 해당 작업을 수행할 수 없습니다.";
       loggerFactory("AlreadyLogin").error(message);
       throw new BadRequestException(message);

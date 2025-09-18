@@ -17,6 +17,10 @@ export class CommonProductCommandHelper {
     private readonly hangulLibrary: HangulLibrary,
   ) {}
 
+  public async parseMediaFiles(mediaFiles: Express.Multer.File[]): Promise<Express.Multer.File[]> {
+    return this.mediaUtils.parseMediaFiles(mediaFiles, "product_image");
+  }
+
   public getChoseong(name: string): string {
     return this.hangulLibrary.getChoseong(name);
   }
@@ -44,13 +48,5 @@ export class CommonProductCommandHelper {
           .execute(),
       ),
     ]);
-  }
-
-  public setDeleteProductImageFilesEvent(productImages: ProductImageEntity[]): void {
-    this.mediaUtils.deleteMediaFiles({
-      images: productImages,
-      mediaEntity: "product",
-      callWhere: "remove media entity",
-    });
   }
 }

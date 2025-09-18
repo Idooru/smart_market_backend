@@ -9,14 +9,13 @@ import { TransactionInterceptor } from "../../../../../common/interceptors/gener
 import { LoginCommand } from "../cqrs/commands/events/login.command";
 import { FetchInterceptor } from "../../../../../common/interceptors/general/fetch.interceptor";
 import { IsLoginGuard } from "../../../../../common/guards/authenticate/is-login.guard";
-import { IsRefreshTokenAvailableGuard } from "../../../../../common/guards/authenticate/is-refresh-token-available.guard";
 import { GetJWT } from "../../../../../common/decorators/get.jwt.decorator";
 import { RefreshTokenCommand } from "../cqrs/commands/events/refresh-token.command";
-import { LogoutGuard } from "../../../../../common/guards/authenticate/logout.guard";
 import { JwtAccessTokenPayload } from "../../../jwt/jwt-access-token-payload.interface";
 import { LogoutCommand } from "../cqrs/commands/events/logout.command";
 import { FindForgottenEmailQuery } from "../cqrs/queries/events/find-forgotten-email.query";
 import { FindForgottenEmailDto } from "../dto/find-forgotten-email.dto";
+import { ResetPasswordCommand } from "../../../../user/api/v2/cqrs/commands/events/reset-password.command";
 
 @ApiTags("v2 공용 Auth API")
 @Controller({ path: "/auth", version: "2" })
@@ -47,7 +46,7 @@ export class AuthV2Controller {
 
   // @RefreshTokenSwagger()
   @UseInterceptors(TransactionInterceptor)
-  @UseGuards(IsRefreshTokenAvailableGuard)
+  @UseGuards(IsLoginGuard)
   @Patch("/refresh-token")
   public async refreshToken(@GetJWT() { userId }: JwtAccessTokenPayload): Promise<ApiResultInterface<string>> {
     const command = new RefreshTokenCommand(userId);
@@ -62,7 +61,7 @@ export class AuthV2Controller {
 
   // @LogoutSwagger()
   @UseInterceptors(TransactionInterceptor)
-  @UseGuards(LogoutGuard)
+  @UseGuards(IsLoginGuard)
   @Delete("/logout")
   public async logout(@GetJWT() { userId }: JwtAccessTokenPayload): Promise<ApiResultInterface<void>> {
     const command = new LogoutCommand(userId);
@@ -79,15 +78,28 @@ export class AuthV2Controller {
   @UseGuards(IsNotLoginGuard)
   @Get("/forgotten-email")
   public async findForgottenEmail(
-    @Query() { realName, phoneNumber, nickName }: FindForgottenEmailDto,
+    @Query() { realName, phoneNumber }: FindForgottenEmailDto,
   ): Promise<ApiResultInterface<string>> {
-    const query = new FindForgottenEmailQuery(realName, phoneNumber, nickName);
+    const query = new FindForgottenEmailQuery(realName, phoneNumber);
     const email: string = await this.queryBus.execute(query);
 
     return {
       statusCode: 200,
       message: "이메일 정보를 가져옵니다.",
       result: email,
+    };
+  }
+
+  @UseInterceptors(TransactionInterceptor)
+  @UseGuards(IsNotLoginGuard)
+  @Patch("/reset-password")
+  public async resetPassword(@GetBasicAuth() { email, password }: BasicAuthDto): Promise<ApiResultInterface<void>> {
+    const command = new ResetPasswordCommand(email, password);
+    await this.commandBus.execute(command);
+
+    return {
+      statusCode: 200,
+      message: "사용자 비밀번호를 재설정 하였습니다.",
     };
   }
 }

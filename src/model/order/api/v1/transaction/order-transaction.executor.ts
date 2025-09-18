@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Transactional } from "../../../../../common/interfaces/initializer/transactional";
-import { OrderRepositoryPayload } from "./order-repository.payload";
+import { OrderRepositoryPayload } from "../../common/order-repository.payload";
 import { OrderTransactionSearcher } from "./order-transaction.searcher";
 import { OrderTransactionContext } from "./order-transaction.context";
 import { CreateOrderDto } from "../../../dto/request/create-order.dto";

@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler, QueryBus } from "@nestjs/cqrs";
 import { PrepareDeleteReviewCommand } from "../../events/delete-review/prepare-delete-review.command";
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
-import { CommonReviewCommandHelper } from "../../common-review-command.helper";
+import { CommonReviewCommandHelper } from "../../../../helpers/common-review-command.helper";
 import { ReviewEntity } from "../../../../../../entities/review.entity";
 import { FindReviewEntityQuery } from "../../../queries/events/find-review-entity.query";
 import { ProductEntity } from "../../../../../../../product/entities/product.entity";

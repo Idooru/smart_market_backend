@@ -10,7 +10,6 @@ import { ProductBody } from "../../../dto/request/product-body.dto";
 import { GetJWT } from "../../../../../common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "../../../../auth/jwt/jwt-access-token-payload.interface";
 import { ApiResultInterface } from "../../../../../common/interceptors/interface/api-result.interface";
-import { MediaUtils } from "../../../../media/logic/media.utils";
 import { CreateProductCommand } from "../cqrs/commands/classes/create-product.command";
 import { ModifyProductCommand } from "../cqrs/commands/classes/modify-product.command";
 import { RemoveProductCommand } from "../cqrs/commands/classes/remove-product.command";
@@ -23,7 +22,7 @@ import { ValidateProductBodyPipe } from "../pipes/validate-product-body.pipe";
 @UseGuards(IsLoginGuard)
 @Controller({ path: "/admin/product", version: "2" })
 export class ProductV2AdminController {
-  constructor(private readonly commandBus: CommandBus, private readonly mediaUtils: MediaUtils) {}
+  constructor(private readonly commandBus: CommandBus) {}
 
   @UseInterceptors(
     TransactionInterceptor,
@@ -38,11 +37,7 @@ export class ProductV2AdminController {
     @Body(ValidateProductBodyPipe) body: ProductBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
   ): Promise<ApiResultInterface<void>> {
-    const command = new CreateProductCommand(
-      body,
-      userId,
-      this.mediaUtils.parseMediaFiles(mediaFiles, "product_image"),
-    );
+    const command = new CreateProductCommand(body, userId, mediaFiles);
 
     await this.commandBus.execute(command);
 
@@ -70,11 +65,7 @@ export class ProductV2AdminController {
     @Param("productId", IsExistProductIdPipe) productId: string,
     @Body(ValidateProductBodyPipe) body: ProductBody,
   ): Promise<ApiResultInterface<void>> {
-    const command = new ModifyProductCommand(
-      body,
-      productId,
-      this.mediaUtils.parseMediaFiles(mediaFiles, "product_image"),
-    );
+    const command = new ModifyProductCommand(body, productId, mediaFiles);
 
     await this.commandBus.execute(command);
 

@@ -8,8 +8,4 @@ export class FindForgottenEmailDto {
   @IsNotEmpty()
   @IsString()
   public phoneNumber: string;
-
-  @IsNotEmpty()
-  @IsString()
-  public nickName: string;
 }

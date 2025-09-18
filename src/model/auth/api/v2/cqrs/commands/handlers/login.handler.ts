@@ -31,10 +31,10 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
   }
 
   private async comparePassword(password: string, user: UserEntity): Promise<void> {
-    const compared = await bcrypt.compare(password, user.UserAuth.password);
+    const compared = user && (await bcrypt.compare(password, user.UserAuth.password));
 
     if (!compared) {
-      const message = "아이디 혹은 비밀번호가 일치하지 않습니다.";
+      const message = "이메일 혹은 비밀번호가 일치하지 않습니다.";
       loggerFactory("Authenticate").error(message);
       throw new BadRequestException(message);
     }

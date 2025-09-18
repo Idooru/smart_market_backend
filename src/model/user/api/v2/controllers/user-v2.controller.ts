@@ -1,5 +1,5 @@
 import { ApiTags } from "@nestjs/swagger";
-import { Body, Controller, Delete, Get, Patch, Post, Put, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Post, Put, UseGuards, UseInterceptors } from "@nestjs/common";
 import { TransactionInterceptor } from "../../../../../common/interceptors/general/transaction.interceptor";
 import { IsNotLoginGuard } from "../../../../../common/guards/authenticate/is-not-login.guard";
 import { RegisterUserDto } from "../../../dto/request/register-user.dto";
@@ -15,9 +15,6 @@ import { FindProfileQuery } from "../cqrs/queries/events/find-profile.query";
 import { ModifyUserBody } from "../../../dto/request/modify-user.dto";
 import { ModifyUserCommand } from "../cqrs/commands/events/modify-user.command";
 import { ResignUserCommand } from "../cqrs/commands/events/resign-user.command";
-import { GetBasicAuth } from "../../../../../common/decorators/get-basic-auth.decorator";
-import { BasicAuthDto } from "../../../dto/request/basic-auth.dto";
-import { ResetPasswordCommand } from "../cqrs/commands/events/reset-password.command";
 
 @ApiTags("v2 공용 User API")
 @Controller({ path: "/user", version: "2" })
@@ -79,19 +76,6 @@ export class UserV2Controller {
     return {
       statusCode: 200,
       message: "사용자 정보를 삭제하였습니다.",
-    };
-  }
-
-  @UseInterceptors(TransactionInterceptor)
-  @UseGuards(IsNotLoginGuard)
-  @Patch("/reset-password")
-  public async resetPassword(@GetBasicAuth() { email, password }: BasicAuthDto): Promise<ApiResultInterface<void>> {
-    const command = new ResetPasswordCommand(email, password);
-    await this.commandBus.execute(command);
-
-    return {
-      statusCode: 200,
-      message: "사용자 비밀번호를 재설정 하였습니다.",
     };
   }
 }

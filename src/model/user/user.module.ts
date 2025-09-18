@@ -53,6 +53,7 @@ import { ValidateAddressHandler } from "./api/v2/cqrs/validations/ui/handlers/va
 import { ValidateEmailHandler } from "./api/v2/cqrs/validations/ui/handlers/validate-email.handler";
 import { ValidatePasswordHandler } from "./api/v2/cqrs/validations/ui/handlers/validate-password.handler";
 import { FindUserEntityHandler } from "./api/v2/cqrs/queries/handlers/find-user-entity.handler";
+import { SendMailRegisterListener } from "./api/v2/events/send-mail-register.listener";
 
 const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
 
@@ -117,6 +118,8 @@ const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
       ],
       // helpers
       ...[CommonUserCommandHelper],
+      // events
+      ...[SendMailRegisterListener],
     ],
   ],
   exports: [userIdFilter, UserSearcher, UserValidator, UserService, UserUpdateRepository],
@@ -124,6 +127,8 @@ const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
 export class UserModule implements NestModule {
   @Implemented()
   public configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(UserRegisterEventMiddleware).forRoutes({ path: "*/register", method: RequestMethod.POST });
+    consumer
+      .apply(UserRegisterEventMiddleware)
+      .forRoutes({ path: "*/register", method: RequestMethod.POST, version: "1" });
   }
 }

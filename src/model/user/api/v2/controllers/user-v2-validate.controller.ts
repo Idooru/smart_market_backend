@@ -1,5 +1,5 @@
 import { ApiTags } from "@nestjs/swagger";
-import { Controller, Get, Query } from "@nestjs/common";
+import { Body, Controller, Get, Query } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
 import { ValidateNicknameCommand } from "../cqrs/validations/ui/events/validate-nickname.command";
 import { ValidatePhoneNumberCommand } from "../cqrs/validations/ui/events/validate-phonenumber.command";
@@ -7,6 +7,7 @@ import { ValidateAddressCommand } from "../cqrs/validations/ui/events/validate-a
 import { ValidateEmailCommand } from "../cqrs/validations/ui/events/validate-email.command";
 import { ValidatePasswordCommand } from "../cqrs/validations/ui/events/validate-password.command";
 import { ResponseValidateDto } from "../../../../../common/classes/v2/response-validate.dto";
+import { ValidatePasswordDto } from "../dto/validate-password.dto";
 
 @ApiTags("v2 검증 User API")
 @Controller({ path: "/validate/user", version: "2" })
@@ -53,10 +54,7 @@ export class UserV2ValidateController {
   }
 
   @Get("/password")
-  public validatePassword(
-    @Query("new-password") newPassword: string,
-    @Query("match-password") matchPassword: string,
-  ): Promise<ResponseValidateDto> {
+  public validatePassword(@Body() { newPassword, matchPassword }: ValidatePasswordDto): Promise<ResponseValidateDto> {
     const command = new ValidatePasswordCommand(newPassword, matchPassword);
     return this.commandBus.execute(command);
   }

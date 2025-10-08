@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { FetchInterceptor } from "../../../../../common/interceptors/general/fetch.interceptor";
 import { GetJWT } from "../../../../../common/decorators/get.jwt.decorator";
@@ -13,6 +13,8 @@ import { ApiResultInterface } from "../../../../../common/interceptors/interface
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { FindAllOrdersQuery } from "../cqrs/queries/events/find-all-orders.query";
 import { CreateOrderCommand } from "../cqrs/commands/events/create-order/create-order.command";
+import { IsExistOrderIdPipe } from "../pipes/is-exist-order-id.pipe";
+import { CancelOrderCommand } from "../cqrs/commands/events/cancel-order/cancel-order.command";
 
 @ApiTags("v2 고객 Order API")
 @UseGuards(IsClientGuard)
@@ -51,6 +53,21 @@ export class OrderV2ClientController {
     return {
       statusCode: 201,
       message: "결제 주문이 완료되었습니다.",
+    };
+  }
+
+  @UseInterceptors(TransactionInterceptor)
+  @Patch("/cancel/orderId/:orderId")
+  public async cancelOrder(
+    @GetJWT() { userId }: JwtAccessTokenPayload,
+    @Param("orderId", IsExistOrderIdPipe) orderId: string,
+  ): Promise<ApiResultInterface<void>> {
+    const command = new CancelOrderCommand(orderId, userId);
+    await this.commandBus.execute(command);
+
+    return {
+      statusCode: 200,
+      message: "주문 취소가 완료되었습니다.",
     };
   }
 }

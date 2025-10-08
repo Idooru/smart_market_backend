@@ -25,10 +25,17 @@ import { CqrsModule } from "@nestjs/cqrs";
 import { FindAllOrdersHandler } from "./api/v2/cqrs/queries/handlers/find-all-orders.handler";
 import { CreateOrderHandler } from "./api/v2/cqrs/commands/handlers/create-order/create-order.handler";
 import { PrepareCreateOrderHandler } from "./api/v2/cqrs/commands/handlers/create-order/prepare-create-order.handler";
-import { DestructResourceHandler } from "./api/v2/cqrs/commands/handlers/create-order/destruct-resource.handler";
-import { TradeBalanceHandler } from "./api/v2/cqrs/commands/handlers/create-order/trade-balance.handler";
 import { CommonOrderCommandHelper } from "./api/v2/helpers/common-order-command.helper";
-import { ConstructResourceHandler } from "./api/v2/cqrs/commands/handlers/create-order/construct-resource.handler";
+import { CancelOrderHandler } from "./api/v2/cqrs/commands/handlers/cancel-order/cancel-order.handler";
+import { FindOrderEntityHandler } from "./api/v2/cqrs/queries/handlers/find-order-entity.handler";
+import { IsExistOrderIdHandler } from "./api/v2/cqrs/validation/db/handlers/is-exist-order-id.handler";
+import { PrepareCancelOrderHandler } from "./api/v2/cqrs/commands/handlers/cancel-order/prepare-cancel-order.handler";
+import { FindPaymentEntityHandler } from "./api/v2/cqrs/queries/handlers/find-payment-entity.handler";
+import { DestructResourceHandler as CreateOrderDestructResourceHandler } from "./api/v2/cqrs/commands/handlers/create-order/destruct-resource.handler";
+import { TradeBalanceHandler as CreateOrderTradeBalanceHandler } from "./api/v2/cqrs/commands/handlers/create-order/trade-balance.handler";
+import { ConstructResourceHandler as CreateOrderConstructResourceHandler } from "./api/v2/cqrs/commands/handlers/create-order/construct-resource.handler";
+import { TradeBalanceHandler as CancelOrderTradeBalanceHandler } from "./api/v2/cqrs/commands/handlers/cancel-order/trade-balance.handler";
+import { ConstructResourceHandler as CancelOrderConstructResourceHandler } from "./api/v2/cqrs/commands/handlers/cancel-order/construct-resource.handler";
 
 @Module({
   imports: [
@@ -71,11 +78,22 @@ import { ConstructResourceHandler } from "./api/v2/cqrs/commands/handlers/create
           ...[
             CreateOrderHandler,
             PrepareCreateOrderHandler,
-            DestructResourceHandler,
-            TradeBalanceHandler,
-            ConstructResourceHandler,
+            CreateOrderDestructResourceHandler,
+            CreateOrderTradeBalanceHandler,
+            CreateOrderConstructResourceHandler,
+          ],
+          // cancel-order
+          ...[
+            CancelOrderHandler,
+            PrepareCancelOrderHandler,
+            CancelOrderTradeBalanceHandler,
+            CancelOrderConstructResourceHandler,
           ],
         ],
+        // queries
+        ...[FindOrderEntityHandler, FindPaymentEntityHandler],
+        // validations
+        ...[IsExistOrderIdHandler],
       ],
       // helpers
       ...[CommonOrderCommandHelper],

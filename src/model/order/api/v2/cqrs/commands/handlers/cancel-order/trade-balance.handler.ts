@@ -3,7 +3,7 @@ import { TradeBalanceCommand } from "../../events/cancel-order/trade-balance.com
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
 import { OrderRepositoryPayload } from "../../../../../common/order-repository.payload";
 import { Transactional } from "../../../../../../../../common/interfaces/initializer/transactional";
-import { Inject } from "@nestjs/common";
+import { ForbiddenException, Inject } from "@nestjs/common";
 import { PaymentEntity } from "../../../../../../entities/payment.entity";
 import { AccountEntity } from "../../../../../../../account/entities/account.entity";
 import { FindAccountEntityQuery } from "../../../../../../../account/api/v2/cqrs/queries/events/find-account-entity.query";
@@ -11,11 +11,12 @@ import { CommonOrderCommandHelper } from "../../../../helpers/common-order-comma
 import { ProductQuantity } from "../../../../../../types/product-quantity.type";
 import { DivideBalanceDto } from "../../../../dto/divide-balance.dto";
 import { BalanceGroup } from "../../../../../../types/balance-group.type";
+import { loggerFactory } from "../../../../../../../../common/functions/logger.factory";
 
 class EntityFinder {
   constructor(private readonly queryBus: QueryBus) {}
 
-  public findAccount(userId: string): Promise<AccountEntity> {
+  public async findAccount(userId: string): Promise<AccountEntity> {
     const query = new FindAccountEntityQuery({
       property: "account.userId = :id",
       alias: { id: userId },
@@ -54,6 +55,14 @@ export class TradeBalanceHandler implements ICommandHandler<TradeBalanceCommand>
     const withdrawing = groups.map(async (group) => {
       const { userId, balance, totalPrice, hasSurtax } = group;
       const withdrawBalance = hasSurtax ? balance - (totalPrice + this.surtaxPrice) : balance - totalPrice;
+
+      if (withdrawBalance < 0) {
+        const message = `userId(${userId})의 잔고에서 현재 잔액(${balance})보다 더 많은 금액(${
+          hasSurtax ? totalPrice + this.surtaxPrice : totalPrice
+        })을 출금 할 수 없습니다.`;
+        loggerFactory("overflow withdraw").error(message);
+        throw new ForbiddenException(message);
+      }
 
       await this.transaction
         .getRepository()

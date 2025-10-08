@@ -1,4 +1,4 @@
-import { CommandHandler, ICommandHandler, QueryBus } from "@nestjs/cqrs";
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { TradeBalanceCommand } from "../../events/create-order/trade-balance.command";
 import { Implemented } from "../../../../../../../../common/decorators/implemented.decoration";
 import { Transactional } from "../../../../../../../../common/interfaces/initializer/transactional";
@@ -7,10 +7,6 @@ import { ForbiddenException, Inject } from "@nestjs/common";
 import { AccountEntity } from "../../../../../../../account/entities/account.entity";
 import { QueryFailedError } from "typeorm";
 import { loggerFactory } from "../../../../../../../../common/functions/logger.factory";
-import { ProductQuantity } from "../../../../../../types/product-quantity.type";
-import { ProductEntity } from "../../../../../../../product/entities/product.entity";
-import { FindProductEntityQuery } from "../../../../../../../product/api/v2/cqrs/queries/classes/find-product-entity.query";
-import { AdminUserEntity } from "../../../../../../../user/entities/admin-user.entity";
 import { CommonOrderCommandHelper } from "../../../../helpers/common-order-command.helper";
 import { DivideBalanceDto } from "../../../../dto/divide-balance.dto";
 import { BalanceGroup } from "../../../../../../types/balance-group.type";
@@ -21,19 +17,8 @@ export class TradeBalanceHandler implements ICommandHandler<TradeBalanceCommand>
     private readonly common: CommonOrderCommandHelper,
     @Inject("surtax-price")
     private readonly surtaxPrice: number,
-    private readonly queryBus: QueryBus,
     private readonly transaction: Transactional<OrderRepositoryPayload>,
   ) {}
-
-  private findProduct(productId: string): Promise<ProductEntity> {
-    const query = new FindProductEntityQuery({
-      property: "product.id = :id",
-      alias: { id: productId },
-      getOne: true,
-      entities: [AdminUserEntity],
-    });
-    return this.queryBus.execute(query);
-  }
 
   private async withdrawClientBalance(hasSurtax: boolean, balance: number, accountId: string): Promise<void> {
     if (hasSurtax) balance += this.surtaxPrice;
@@ -52,61 +37,6 @@ export class TradeBalanceHandler implements ICommandHandler<TradeBalanceCommand>
           throw new ForbiddenException(message);
         }
       });
-  }
-
-  private async divideBalance(productQuantities: Array<ProductQuantity>): Promise<DivideBalanceDto> {
-    const balances = await Promise.all(
-      productQuantities.map(async (productQuantity) => {
-        const { product } = productQuantity;
-        // 상품 아이디로 상품을 생성한 관리자 계정의 아이디를 구함
-        const found: ProductEntity = await this.findProduct(product.id);
-        const userId = found.AdminUser.id;
-
-        // 관리자 계정의 아이디로 계정들을 찾은 후 그 중 메인 계정의 잔액을 찾음
-        const accounts: AccountEntity[] = await this.common.findAccounts(userId);
-        const mainAccount = accounts.find((account) => account.isMainAccount);
-        const balance = mainAccount.balance;
-
-        return { userId, balance };
-      }),
-    );
-
-    const totalPrices = await Promise.all(
-      productQuantities.map(async (productQuantity) => {
-        const { product, quantity } = productQuantity;
-
-        // 상품 아이디로 상품을 생성한 관리자 계정의 아이디를 구함
-        const found = await this.findProduct(product.id);
-        const userId = found.AdminUser.id;
-
-        // 상품의 가격과 수량을 곱하여 총 금액을 구함
-        const totalPrice = product.price * quantity;
-
-        return { userId, totalPrice };
-      }),
-    );
-
-    return {
-      balances,
-      totalPrices,
-    };
-  }
-
-  private generateBalanceGroups(dto: DivideBalanceDto, hasSurtax: boolean): BalanceGroup[] {
-    const { balances, totalPrices } = dto;
-    const map = new Map<string, BalanceGroup>();
-
-    balances.forEach(({ userId, balance }) => {
-      map.set(userId, { userId, balance, totalPrice: 0, hasSurtax });
-    });
-
-    totalPrices.forEach(({ userId, totalPrice }) => {
-      map.has(userId)
-        ? (map.get(userId).totalPrice += totalPrice)
-        : map.set(userId, { userId, balance: 0, totalPrice, hasSurtax });
-    });
-
-    return Array.from(map.values());
   }
 
   private async depositAdminBalance(groups: BalanceGroup[]): Promise<void> {
@@ -133,8 +63,8 @@ export class TradeBalanceHandler implements ICommandHandler<TradeBalanceCommand>
 
     await this.withdrawClientBalance(hasSurtax, balance, accountId);
 
-    const dto: DivideBalanceDto = await this.divideBalance(productQuantities);
-    const groups = this.generateBalanceGroups(dto, hasSurtax);
+    const dto: DivideBalanceDto = await this.common.divideBalance(productQuantities);
+    const groups = this.common.generateBalanceGroups(dto, hasSurtax);
 
     await this.depositAdminBalance(groups);
   }

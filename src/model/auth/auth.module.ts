@@ -3,7 +3,6 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { forwardRef, Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { UserAuthEntity } from "../user/entities/user-auth.entity";
-import { ConfigService } from "@nestjs/config";
 import { LibraryModule } from "src/common/lib/library.module";
 import { SecurityLibrary } from "src/model/auth/providers/security.library";
 import { UserModule } from "../user/user.module";
@@ -29,13 +28,20 @@ import { FindRefreshTokenHandler } from "./api/v2/cqrs/queries/handlers/find-ref
 import { ValidateAccessTokenHandler } from "./api/v2/cqrs/validations/jwt/handlers/validate-access-token.handler";
 import { ValidateRefreshTokenHandler } from "./api/v2/cqrs/validations/jwt/handlers/validate-refresh-token.handler";
 
+const initJwtModuleOptions = (key: string) =>
+  JwtModule.registerAsync({
+    extraProviders: [SecurityLibrary],
+    useFactory: (securityLibrary: SecurityLibrary) => securityLibrary[key],
+    inject: [SecurityLibrary],
+  });
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity, ClientUserEntity, AdminUserEntity, UserProfileEntity, UserAuthEntity]),
     forwardRef(() => UserModule),
     forwardRef(() => LibraryModule),
-    JwtModule.registerAsync(new SecurityLibrary(new ConfigService()).jwtAccessTokenForJwtModule),
-    JwtModule.registerAsync(new SecurityLibrary(new ConfigService()).jwtRefreshTokenForJwtModule),
+    initJwtModuleOptions("jwtAccessTokenModuleOption"),
+    initJwtModuleOptions("jwtRefreshTokenModuleOption"),
     CqrsModule,
   ],
   controllers: [AuthV1Controller, AuthV2Controller],

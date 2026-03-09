@@ -46,6 +46,7 @@ export class SecurityLibrary {
       expiresIn: this.configService.get<string>("JWT_ACCESS_TOKEN_EXPIRES"),
     },
   };
+  q;
 
   private readonly _jwtRefreshTokenModuleOption: JwtModuleOptions = {
     secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
@@ -76,17 +77,5 @@ export class SecurityLibrary {
 
   public get jwtRefreshTokenModuleOption(): JwtModuleOptions {
     return this._jwtRefreshTokenModuleOption;
-  }
-
-  public get jwtAccessTokenForJwtModule(): JwtModuleAsyncOptions {
-    return {
-      useFactory: () => this.jwtAccessTokenModuleOption,
-    };
-  }
-
-  public get jwtRefreshTokenForJwtModule(): JwtModuleAsyncOptions {
-    return {
-      useFactory: () => this.jwtRefreshTokenModuleOption,
-    };
   }
 }

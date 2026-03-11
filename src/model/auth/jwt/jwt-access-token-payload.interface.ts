@@ -1,4 +1,4 @@
-import { UserRole } from "aws-sdk/clients/workmail";
+import { UserRole } from "../../user/types/user-role.type";
 
 export interface JwtAccessTokenPayload {
   userId: string;

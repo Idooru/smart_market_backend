@@ -76,12 +76,14 @@ const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
     UserV2ValidateController,
   ],
   providers: [
-    { provide: "user-select", useValue: userSelect },
-    { provide: "mail-event-map", useValue: mailEventMap },
-    { provide: Transactional, useClass: UserTransactionInitializer },
-    userIdFilter,
-    UserEventMapSetter,
-    UserTransactionInitializer,
+    // common
+    ...[
+      { provide: "user-select", useValue: userSelect },
+      { provide: "mail-event-map", useValue: mailEventMap },
+      { provide: Transactional, useClass: UserTransactionInitializer },
+      userIdFilter,
+      UserEventMapSetter,
+    ],
     // v1 logic
     ...[
       UserValidator,

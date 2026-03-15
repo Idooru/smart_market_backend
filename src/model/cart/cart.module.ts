@@ -27,7 +27,6 @@ import { CommonCartCommandHelper } from "./api/v2/helpers/common-cart-command.he
 import { CqrsModule } from "@nestjs/cqrs";
 import { CartV2ClientController } from "./api/v2/controllers/cart-v2-client.controller";
 import { IsExistCartIdHandler } from "./api/v2/cqrs/validations/db/handlers/is-exist-cart-id.handler";
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([CartEntity]),
@@ -41,10 +40,11 @@ import { IsExistCartIdHandler } from "./api/v2/cqrs/validations/db/handlers/is-e
   ],
   controllers: [CartV1ClientController, CartV2ClientController],
   providers: [
-    { provide: "cart-select", useValue: cartSelect },
-    { provide: Transactional, useClass: CartTransactionInitializer },
     // common
-    ...[CartTransactionInitializer],
+    ...[
+      { provide: "cart-select", useValue: cartSelect },
+      { provide: Transactional, useClass: CartTransactionInitializer },
+    ],
     // v1 logic
     ...[CartService, CartSearchRepository, CartUpdateRepository, CartValidateRepository, CartSearcher, CartValidator],
     // v2 logic

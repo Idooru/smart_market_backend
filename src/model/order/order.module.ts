@@ -51,11 +51,12 @@ import { ConstructResourceHandler as CancelOrderConstructResourceHandler } from 
   ],
   controllers: [OrderV1ClientController, OrderV2ClientController],
   providers: [
-    { provide: "order-select", useValue: orderSelect },
-    { provide: Transactional, useClass: OrderTransactionInitializer },
-    { provide: "surtax-price", useValue: 5000 },
     // common
-    ...[OrderTransactionInitializer],
+    ...[
+      { provide: "order-select", useValue: orderSelect },
+      { provide: "surtax-price", useValue: 5000 },
+      { provide: Transactional, useClass: OrderTransactionInitializer },
+    ],
     // v1 logic
     ...[
       OrderTransactionExecutor,

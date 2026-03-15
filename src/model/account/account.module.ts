@@ -44,10 +44,11 @@ import { AccountV2ValidateController } from "./api/v2/controllers/account-v2-val
   ],
   controllers: [AccountV1Controller, AccountV1ValidateController, AccountV2Controller, AccountV2ValidateController],
   providers: [
-    { provide: "account-select", useValue: accountSelect },
-    { provide: Transactional, useClass: AccountTransactionInitializer },
     // common
-    ...[AccountTransactionInitializer],
+    ...[
+      { provide: "account-select", useValue: accountSelect },
+      { provide: Transactional, useClass: AccountTransactionInitializer },
+    ],
     // v1 logic
     ...[
       AccountSearcher,

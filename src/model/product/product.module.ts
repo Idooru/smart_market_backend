@@ -62,10 +62,13 @@ const productIdFilter = { provide: "product-id-filter", useValue: "product.id = 
   ],
   controllers: [ProductV1Controller, ProductV1AdminController, ProductV2Controller, ProductV2AdminController],
   providers: [
-    { provide: "product-media-header-key", useValue: productMediaHeaderKey },
-    { provide: "product-select", useValue: productSelect },
-    { provide: Transactional, useClass: ProductTransactionInitializer },
-    productIdFilter,
+    // common
+    ...[
+      { provide: "product-media-header-key", useValue: productMediaHeaderKey },
+      { provide: "product-select", useValue: productSelect },
+      { provide: Transactional, useClass: ProductTransactionInitializer },
+      productIdFilter,
+    ],
     // api
     ...[
       ProductTransactionInitializer, // v1 logic

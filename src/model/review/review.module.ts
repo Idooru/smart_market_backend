@@ -51,6 +51,8 @@ import { PrepareDeleteReviewHandler } from "./api/v2/cqrs/commands/handlers/dele
 import { FollowupDeleteReviewHandler } from "./api/v2/cqrs/commands/handlers/delete-review/followup-delete-review.handler";
 import { DeleteReviewMediaFilesListener } from "./api/v2/events/delete-review-media-files.listener";
 import { ReviewMediaFileEraser } from "./scheduler/review-media-file.eraser";
+import { QueryRunnerHandler } from "../../common/lib/handler/query-runner.handler";
+import { TransactionInterceptor } from "../../common/interceptors/general/transaction.interceptor";
 
 const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id" };
 
@@ -66,10 +68,13 @@ const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id
   ],
   controllers: [ReviewV1AdminController, ReviewV1ClientController, ReviewV2AdminController, ReviewV2ClientController],
   providers: [
-    { provide: "review-media-header-key", useValue: reviewMediaHeaderKey },
-    { provide: "review-select", useValue: reviewSelect },
-    { provide: Transactional, useClass: ReviewTransactionInitializer },
-    reviewIdFilter,
+    // common
+    ...[
+      { provide: "review-media-header-key", useValue: reviewMediaHeaderKey },
+      { provide: "review-select", useValue: reviewSelect },
+      { provide: Transactional, useClass: ReviewTransactionInitializer },
+      reviewIdFilter,
+    ],
     // api
     ...[
       ReviewTransactionInitializer,

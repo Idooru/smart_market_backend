@@ -1,31 +1,39 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
-import { catchError, map, Observable, tap } from "rxjs";
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor, Scope } from "@nestjs/common";
+import { catchError, finalize, map, Observable, switchMap } from "rxjs";
 import { Implemented } from "../../decorators/implemented.decoration";
 import { DataSource } from "typeorm";
-import { TransactionHandler } from "../../lib/handler/transaction.handler";
+import { QueryRunnerHandler } from "../../lib/handler/query-runner.handler";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { Request, Response } from "express";
 import { ApiResultInterface } from "../interface/api-result.interface";
 import { ResponseHandler } from "../../lib/handler/response.handler";
+import { queryRunnerStorage } from "../../lib/database/query-runner.storage";
 
 @Injectable()
 export class TransactionInterceptor<T> implements NestInterceptor {
   constructor(
     private readonly dataSource: DataSource,
-    private readonly handler: TransactionHandler,
+    private readonly handler: QueryRunnerHandler,
     private readonly timeLogger: TimeLoggerLibrary,
     private readonly responseHandler: ResponseHandler,
   ) {}
 
-  private async catchError(err: Error): Promise<void> {
-    await this.handler.rollback(err);
-    await this.handler.release();
-  }
+  private commit = async (payload: ApiResultInterface<T>) => {
+    const queryRunner = this.handler.getQueryRunner();
+    await queryRunner.commitTransaction();
+    return payload;
+  };
 
-  private async commitTransaction(): Promise<void> {
-    await this.handler.commit();
-    await this.handler.release();
-  }
+  private rollback = async (err: Error) => {
+    const queryRunner = this.handler.getQueryRunner();
+    await queryRunner.rollbackTransaction();
+    throw err;
+  };
+
+  private release = async () => {
+    const queryRunner = this.handler.getQueryRunner();
+    await queryRunner.release();
+  };
 
   @Implemented()
   public async intercept(context: ExecutionContext, next: CallHandler<any>): Promise<Observable<any>> {
@@ -38,12 +46,19 @@ export class TransactionInterceptor<T> implements NestInterceptor {
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
-    this.handler.setQueryRunner(queryRunner);
-
-    return next.handle().pipe(
-      catchError((err: Error) => this.catchError(err)),
-      tap(() => this.commitTransaction()),
-      map((payload: ApiResultInterface<T>) => this.responseHandler.response(req, res, payload)),
-    );
+    return new Observable((observer) => {
+      // ✅ AsyncLocalStorage로 QueryRunner를 컨텍스트에 저장
+      queryRunnerStorage.run(queryRunner, () => {
+        next
+          .handle()
+          .pipe(
+            switchMap(this.commit),
+            catchError(this.rollback),
+            finalize(this.release),
+            map((payload: ApiResultInterface<T>) => this.responseHandler.response(req, res, payload)),
+          )
+          .subscribe(observer);
+      });
+    });
   }
 }

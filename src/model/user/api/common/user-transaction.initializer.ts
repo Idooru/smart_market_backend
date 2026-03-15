@@ -4,16 +4,16 @@ import { AdminUserEntity } from "../../entities/admin-user.entity";
 import { ClientUserEntity } from "../../entities/client-user.entity";
 import { UserProfileEntity } from "../../entities/user-profile.entity";
 import { UserAuthEntity } from "../../entities/user-auth.entity";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Scope } from "@nestjs/common";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { Implemented } from "../../../../common/decorators/implemented.decoration";
-import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
+import { QueryRunnerHandler } from "../../../../common/lib/handler/query-runner.handler";
 
 @Injectable()
 export class UserTransactionInitializer extends Transactional<UserRepositoryPayload> {
   private payload: UserRepositoryPayload;
 
-  constructor(private readonly handler: TransactionHandler) {
+  constructor(private readonly handler: QueryRunnerHandler) {
     super();
   }
 

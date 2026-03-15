@@ -149,7 +149,7 @@ smart market 프로젝트의 백엔드 코드를 저장하는 리파지토리입
 ┃ ┃ ┣ 📂event
 ┃ ┃ ┃ ┗ 📜event-adapt.module.ts
 ┃ ┃ ┣ 📂handler
-┃ ┃ ┃ ┗ 📜transaction.handler.ts
+┃ ┃ ┃ ┗ 📜query-runner.handler.ts
 ┃ ┃ ┣ 📂jwt
 ┃ ┃ ┃ ┣ 📜jwt-error-handler.library.ts
 ┃ ┃ ┃ ┗ 📜jwt-exception-followup.ts

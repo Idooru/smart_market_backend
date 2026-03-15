@@ -3,13 +3,13 @@ import { AccountRepositoryPayload } from "../v1/transaction/account-repository.p
 import { Implemented } from "src/common/decorators/implemented.decoration";
 import { AccountEntity } from "../../entities/account.entity";
 import { Injectable } from "@nestjs/common";
-import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
+import { QueryRunnerHandler } from "../../../../common/lib/handler/query-runner.handler";
 
 @Injectable()
 export class AccountTransactionInitializer extends Transactional<AccountRepositoryPayload> {
   private payload: AccountRepositoryPayload;
 
-  constructor(private readonly handler: TransactionHandler) {
+  constructor(private readonly handler: QueryRunnerHandler) {
     super();
   }
 

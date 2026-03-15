@@ -7,13 +7,13 @@ import { ReviewImageEntity } from "../../../media/entities/review-image.entity";
 import { ReviewVideoEntity } from "../../../media/entities/review-video.entity";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { Implemented } from "../../../../common/decorators/implemented.decoration";
-import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
+import { QueryRunnerHandler } from "../../../../common/lib/handler/query-runner.handler";
 
 @Injectable()
 export class ReviewTransactionInitializer extends Transactional<ReviewRepositoryPayload> {
   private payload: ReviewRepositoryPayload;
 
-  constructor(private readonly handler: TransactionHandler) {
+  constructor(private readonly handler: QueryRunnerHandler) {
     super();
   }
 

@@ -7,13 +7,13 @@ import { PaymentEntity } from "../../entities/payment.entity";
 import { AccountEntity } from "../../../account/entities/account.entity";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { Implemented } from "../../../../common/decorators/implemented.decoration";
-import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
+import { QueryRunnerHandler } from "../../../../common/lib/handler/query-runner.handler";
 
 @Injectable()
 export class OrderTransactionInitializer extends Transactional<OrderRepositoryPayload> {
   private payload: OrderRepositoryPayload;
 
-  constructor(private readonly handler: TransactionHandler) {
+  constructor(private readonly handler: QueryRunnerHandler) {
     super();
   }
 

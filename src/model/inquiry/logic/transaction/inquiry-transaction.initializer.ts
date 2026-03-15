@@ -8,13 +8,13 @@ import { InquiryResponseImageEntity } from "../../../media/entities/inquiry-resp
 import { InquiryResponseVideoEntity } from "../../../media/entities/inquiry-response-video.entity";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { Implemented } from "../../../../common/decorators/implemented.decoration";
-import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
+import { QueryRunnerHandler } from "../../../../common/lib/handler/query-runner.handler";
 
 @Injectable()
 export class InquiryTransactionInitializer extends Transactional<InquiryRepositoryPayload> {
   private payload: InquiryRepositoryPayload;
 
-  constructor(private readonly handler: TransactionHandler) {
+  constructor(private readonly handler: QueryRunnerHandler) {
     super();
   }
 

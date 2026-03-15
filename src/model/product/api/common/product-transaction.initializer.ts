@@ -4,14 +4,14 @@ import { StarRateEntity } from "../../../review/entities/star-rate.entity";
 import { ProductImageEntity } from "../../../media/entities/product-image.entity";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { Implemented } from "../../../../common/decorators/implemented.decoration";
-import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
+import { QueryRunnerHandler } from "../../../../common/lib/handler/query-runner.handler";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class ProductTransactionInitializer extends Transactional<ProductRepositoryPayload> {
   private payload: ProductRepositoryPayload;
 
-  constructor(private readonly handler: TransactionHandler) {
+  constructor(private readonly handler: QueryRunnerHandler) {
     super();
   }
 

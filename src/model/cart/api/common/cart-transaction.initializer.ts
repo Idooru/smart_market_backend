@@ -1,6 +1,6 @@
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { CartRepositoryPayload } from "./cart-repository.payload";
-import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
+import { QueryRunnerHandler } from "../../../../common/lib/handler/query-runner.handler";
 import { Implemented } from "../../../../common/decorators/implemented.decoration";
 import { CartEntity } from "../../entities/cart.entity";
 import { Injectable } from "@nestjs/common";
@@ -9,7 +9,7 @@ import { Injectable } from "@nestjs/common";
 export class CartTransactionInitializer extends Transactional<CartRepositoryPayload> {
   private payload: CartRepositoryPayload;
 
-  constructor(private readonly handler: TransactionHandler) {
+  constructor(private readonly handler: QueryRunnerHandler) {
     super();
   }
 

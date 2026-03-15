@@ -10,11 +10,11 @@ import { TypeormAdaptModule } from "./database/typeorm-adapt.module";
 import { MailerAdaptModule } from "./email/mailer-adapt.module";
 import { EventAdaptModule } from "./event/event-adapt.module";
 import { MulterAdaptModule } from "./media/multer-adapt.module";
-import { TransactionHandler } from "./handler/transaction.handler";
 import { HangulLibrary } from "./util/hangul.library";
 import { ResponseHandler } from "./handler/response.handler";
 import { CacheManagerAdaptModule } from "./cache/cache-manager-adapt.module";
 import { ScheduleAdaptModule } from "./scheduler/schedule-adapt.module";
+import { QueryRunnerHandler } from "./handler/query-runner.handler";
 
 @Module({
   imports: [
@@ -32,20 +32,20 @@ import { ScheduleAdaptModule } from "./scheduler/schedule-adapt.module";
     TimeLoggerLibrary,
     MediaLoggerLibrary,
     ValidateLibrary,
-    TransactionHandler,
     ResponseHandler,
     CatchCallbackFactoryLibrary,
     HangulLibrary,
+    QueryRunnerHandler,
   ],
   exports: [
     EmailSenderLibrary,
     TimeLoggerLibrary,
     MediaLoggerLibrary,
     ValidateLibrary,
-    TransactionHandler,
     ResponseHandler,
     CatchCallbackFactoryLibrary,
     HangulLibrary,
+    QueryRunnerHandler,
   ],
 })
 export class LibraryModule {}

@@ -8,6 +8,7 @@ import { Repository, SelectQueryBuilder } from "typeorm";
 import { ProductEntity } from "../../../../../entities/product.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProductBasicRawDto } from "../../../../../dto/response/product-basic-raw.dto";
+import { SearchProductsDto } from "../../../../../dto/request/search-product.dto";
 
 @QueryHandler(SearchProductsQuery)
 export class SearchProductsHandler implements IQueryHandler<SearchProductsQuery> {
@@ -29,7 +30,18 @@ export class SearchProductsHandler implements IQueryHandler<SearchProductsQuery>
       .leftJoin("product.Review", "Review");
   }
 
-  private async getManyProducts(qb: SelectQueryBuilder<ProductEntity>): Promise<ProductBasicRawDto[]> {
+  private async getManyProducts(
+    qb: SelectQueryBuilder<ProductEntity>,
+    { count, sequence, align }: SearchProductsDto,
+  ): Promise<ProductBasicRawDto[]> {
+    if (sequence) {
+      const direction = align === "ASC" ? ">=" : "<=";
+      qb.andWhere(`product.sequence ${direction} :sequence`, { sequence });
+    }
+
+    qb.orderBy("product.sequence", "ASC");
+    qb.take(count);
+
     const products = await qb.getMany();
     return this.common.getManyProducts(products);
   }
@@ -46,6 +58,6 @@ export class SearchProductsHandler implements IQueryHandler<SearchProductsQuery>
       qb.where("product.category = :category", { category: keyword });
     }
 
-    return this.getManyProducts(qb);
+    return this.getManyProducts(qb, query.dto);
   }
 }

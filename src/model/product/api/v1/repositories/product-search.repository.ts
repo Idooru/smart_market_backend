@@ -51,6 +51,7 @@ export class ProductSearchRepository extends SearchRepository<ProductEntity, Fin
       name: product.name,
       price: product.price,
       category: product.category,
+      sequence: product.sequence,
       createdAt: formatDate(product.createdAt),
       imageUrls: product.ProductImage.length
         ? product.ProductImage.map((image) => this.mediaUtils.setUrl(image.filePath))

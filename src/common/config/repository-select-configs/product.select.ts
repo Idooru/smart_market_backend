@@ -10,6 +10,7 @@ export const productSelect: ProductSelect = {
     "product.price",
     "product.category",
     "product.createdAt",
+    "product.sequence",
     "Image.filePath",
     "StarRate.averageScore",
     "Review.id",

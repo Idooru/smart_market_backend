@@ -22,5 +22,5 @@ export class SearchProductsDto {
 
   @IsOptional()
   @IsEnum(align, { message: warnEnumMessage(align) })
-  public align: Align = "DESC";
+  public align: Align = "ASC";
 }

@@ -4,6 +4,7 @@ export class ProductBasicRawDto {
   price: number;
   category: string;
   createdAt: string;
+  sequence: number;
   imageUrls: string[];
   averageScore: string;
   reviewCount: number;

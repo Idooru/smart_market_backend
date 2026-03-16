@@ -45,6 +45,7 @@ export class CommonProductQueryHelper {
       price: product.price,
       category: product.category,
       createdAt: formatDate(product.createdAt),
+      sequence: product.sequence,
       imageUrls: product.ProductImage.length
         ? product.ProductImage.map((image) => this.setUrl(image.filePath))
         : [this.setUrl("/media/product/images/default_product_image.jpg")],

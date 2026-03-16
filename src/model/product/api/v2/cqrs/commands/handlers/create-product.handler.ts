@@ -9,6 +9,8 @@ import { ProductBody } from "../../../../../dto/request/product-body.dto";
 import { CommonProductCommandHelper } from "../../validations/common-product-command.helper";
 import { FindUserEntityQuery } from "../../../../../../user/api/v2/cqrs/queries/events/find-user-entity.query";
 import { UserAuthEntity } from "../../../../../../user/entities/user-auth.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
 @CommandHandler(CreateProductCommand)
 export class CreateProductHandler implements ICommandHandler<CreateProductCommand> {
@@ -16,6 +18,8 @@ export class CreateProductHandler implements ICommandHandler<CreateProductComman
     private readonly common: CommonProductCommandHelper,
     private readonly queryBus: QueryBus,
     private readonly transaction: Transactional<ProductRepositoryPayload>,
+    @InjectRepository(ProductEntity)
+    private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
   private async findAdminUser(userId: string): Promise<AdminUserEntity> {
@@ -30,11 +34,22 @@ export class CreateProductHandler implements ICommandHandler<CreateProductComman
     return user.AdminUser;
   }
 
-  private createProduct(body: ProductBody, admin: AdminUserEntity): Promise<ProductEntity> {
+  private findPrevProduct(): Promise<ProductEntity> {
+    return this.productRepository
+      .createQueryBuilder("product")
+      .select(["product.sequence"])
+      .orderBy("product.sequence", "DESC")
+      .getOne();
+  }
+
+  private async createProduct(body: ProductBody, admin: AdminUserEntity): Promise<ProductEntity> {
+    const prevProduct = await this.findPrevProduct();
+
     const newProduct = {
       ...body,
       AdminUser: admin,
       choseong: this.common.getChoseong(body.name),
+      sequence: prevProduct ? prevProduct.sequence + 1 : 1,
     };
 
     return this.transaction.getRepository().product.save(newProduct);

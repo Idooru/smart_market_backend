@@ -49,6 +49,10 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "int", unsigned: true, default: 100 })
   public stock: number;
 
+  @IsPositive()
+  @Column({ type: "int", unsigned: true })
+  public sequence: number;
+
   @OneToOne(() => StarRateEntity, (starRate) => starRate.Product, { cascade: true })
   public StarRate: StarRateEntity;
 

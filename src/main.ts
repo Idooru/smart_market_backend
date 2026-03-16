@@ -57,6 +57,9 @@ class NestCoreConfig {
         transform: true,
         whitelist: true,
         forbidNonWhitelisted: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
         exceptionFactory: (validationErrors: ValidationError[]) => {
           loggerFactory("ValidationException").error(
             `reason: \n${JSON.stringify(
